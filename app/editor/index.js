@@ -10,6 +10,7 @@ module.exports = {
   ready: function() {
     this.ace = ace.edit('editor');
     this.ace.getSession().setMode('ace/mode/javascript');
+    this.ace.focus();
     this.$on('open-file', this.openFile);
     //this.$on('open-project', this.openProject);
   },

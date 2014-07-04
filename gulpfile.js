@@ -5,7 +5,6 @@ var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 var notify = require("gulp-notify");
 
-var source = require('vinyl-source-stream')
 var browserify = require('gulp-browserify');
 var partialify = require('partialify');
 
