@@ -3,22 +3,26 @@ var plumber = require('gulp-plumber');
 var sass = require('gulp-sass');
 var rename = require('gulp-rename');
 var concat = require('gulp-concat');
+var notify = require("gulp-notify");
 
 var source = require('vinyl-source-stream')
-var browserify = require('browserify');
+var browserify = require('gulp-browserify');
 var partialify = require('partialify');
 
-var jsPath = './app/**/*';
+var jsPath = ['./app/*.js', './app/**/*.js'];
 var cssPath = './app/**/*.scss';
 
 gulp.task('browserify', function() {
-  var bundleStream = browserify('./app/main.js')
-    .transform(partialify)
-    .bundle();
-
-  bundleStream
+  gulp.src('./app/main.js', { read: false })
     .pipe(plumber())
-    .pipe(source('main.js'))
+    .pipe(browserify({
+      transform: [partialify]
+    }))
+    .on("error", notify.onError({
+      message: "<%= error.message %>",
+      title: "Error"
+    }))
+    .pipe(rename('main.js'))
     .pipe(gulp.dest('./public/js/'));
 });
 

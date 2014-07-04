@@ -26,7 +26,7 @@ module.exports = {
       //this.openFile(path);
     //}
 
-    openFile(fileObject) {
+    openFile: function(fileObject) {
       this.ace.session.setValue(fileObject.contents);
     }
   }

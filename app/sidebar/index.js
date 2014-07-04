@@ -7,7 +7,7 @@ module.exports = {
   },
 
   created: function() {
-    this.$on('open-project', this.openProject(path));
+    this.$on('open-project', this.openProject);
     //setup listener for open-project
   },
 
