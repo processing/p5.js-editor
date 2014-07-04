@@ -10,16 +10,24 @@ module.exports = {
   ready: function() {
     this.ace = ace.edit('editor');
     this.ace.getSession().setMode('ace/mode/javascript');
-    this.$on('open-file', this.openFile);//.bind(this));
+    this.$on('open-file', this.openFile);
+    //this.$on('open-project', this.openProject);
   },
 
   methods: {
-    openFile: function(path) {
-      var self = this;
-      fs.readFile(path, "utf8", function(err, file) {
-        self.ace.setReadOnly(false);
-        self.ace.session.setValue(file);
-      });
+    //openFile: function(path) {
+      //var self = this;
+      //fs.readFile(path, "utf8", function(err, file) {
+        //self.ace.setReadOnly(false);
+        //self.ace.session.setValue(file);
+      //});
+    //}
+    //openProject: function(path) {
+      //this.openFile(path);
+    //}
+
+    openFile(fileObject) {
+      this.ace.session.setValue(fileObject.contents);
     }
   }
 };

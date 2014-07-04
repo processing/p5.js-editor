@@ -1,12 +1,20 @@
 module.exports = {
   template: require('./template.html'),
-  data: {},
+
+  data: {
+    projectName: '',
+    file: []
+  },
+
   created: function() {
+    this.$on('open-project', this.openProject(path));
     //setup listener for open-project
-  }
+  },
+
   methods: {
     openProject: function(path) {
-      //this.data = the list of files
+      //this.files = the list of files
+      //this.projectName = name_of_project
     }
   }
 }

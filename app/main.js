@@ -17,7 +17,8 @@ var app = new Vue({
     title: 'Hello Node Webkit, Browserify and Vue.js!',
     projectName: 'test project',
     projectPath: window.PATH,
-    windowURL: window.location.href
+    windowURL: window.location.href,
+    files: {}
   },
 
   ready: function() {
@@ -25,7 +26,10 @@ var app = new Vue({
     //this.$on('new-project', mode.)
     if (this.projectPath) {
       this.$broadcast('open-project', this.projectPath);
-      //this.$broadcast('open-file', this.projectPath);
+      //instantiate a file object, using the project path
+      //insert it into the files dictionary
+      //broadcast the fileObject
+      this.$broadcast('open-file', fileObject);
     } else {
       this.$broadcast('new-project');
     }
