@@ -1,0 +1,33 @@
+#filetree {
+  margin-left: 10px;
+  overflow: scroll;
+  flex: 1;
+
+  .icon {
+    width: 10px;
+    height: 13px;
+    position: absolute;
+    margin-left: -15px;
+    top: 4px;
+    background-size: 10px auto;
+    background-repeat: no-repeat;
+  }
+
+  .icon.file {
+    background-image: url('images/file.png');
+  }
+
+  .icon.db {
+    background-image: url('images/db.png');
+  }
+
+  .icon.folder {
+    background-image: url('images/folder.png');
+    background-size: 12px auto;
+    top: 5px;
+  }
+
+  .icon.image {
+    background-image: url('images/image.png');
+  }
+}

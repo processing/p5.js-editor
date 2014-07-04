@@ -1,0 +1,16 @@
+#main {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  -webkit-flex: 1;
+  display: -webkit-flex;
+  -webkit-flex-direction: column;
+  -webkit-justify-content: flex-start;
+  align-items: stretch;
+}
+
+#editor {
+  font: 14px source-code;
+  border-radius: 7px;
+   -webkit-flex: 1;
+ }
+

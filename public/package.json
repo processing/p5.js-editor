@@ -1,0 +1,14 @@
+{
+  "name": "node-webkit-boilerplate",
+  "main": "index.html",
+  "window": {
+    "title": "Node Webkit Boilerplate",
+    "toolbar": true,
+    "frame": true,
+    "position": "center",
+    "width": 1024,
+    "height": 768,
+    "show": true,
+    "resizable": true
+  }
+}

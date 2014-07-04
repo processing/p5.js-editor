@@ -1,0 +1,133 @@
+#sidebar-container {
+  -webkit-user-select: none;
+  width: 200px;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-justify-content: flex-start;
+  position: relative;
+}
+
+#sidebar {
+  -webkit-flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.runfile {
+  position: absolute;
+  margin-left: -30px;
+	width: 0;
+	height: 0;
+	border-top: 6px solid transparent;
+	border-bottom: 6px solid transparent;
+	border-left: 10px solid #38B449;
+  top: 4px;
+  display: none;
+  cursor: pointer;
+  opacity: .4;
+}
+
+.jqtree-element:hover .runfile {
+  display: block;
+}
+
+.runfile.mainfile {
+  opacity: 1;
+  display: block;
+}
+
+#sidebar-drag {
+  -webkit-flex: none;
+  cursor: col-resize;
+  background-color: none;
+  position: absolute;
+  width: 7px;
+  height: 100%;
+  right: 0;
+  top: 0;
+}
+
+#toolbar {
+  height: 60px;
+  width: 100%;
+}
+
+#actions {
+  border-top: 1px solid #959192;
+  margin: 10px;
+  padding-top: 10px;
+  overflow: auto;
+
+  button {
+    border: 0;
+    cursor: pointer;
+    background: none;
+    margin: 0;
+    padding: 0;
+    margin-right: 15px;
+    outline: 0;
+  }
+
+  button, button img {
+    width: 22px;
+  }
+
+  button img {
+    opacity: .6;
+  }
+
+  button img:hover {
+    opacity: 1;
+  }
+
+  #add, #export {
+    float: left;
+  }
+
+  #settings {
+    float: right;
+    margin-right: 0;
+  }
+}
+
+#project-name {
+  padding-left: 20px;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+
+#filetree {
+  margin-left: 10px;
+  overflow: scroll;
+  flex: 1;
+
+  .icon {
+    width: 10px;
+    height: 13px;
+    position: absolute;
+    margin-left: -15px;
+    top: 4px;
+    background-size: 10px auto;
+    background-repeat: no-repeat;
+  }
+
+  .icon.file {
+    background-image: url('images/file.png');
+  }
+
+  .icon.db {
+    background-image: url('images/db.png');
+  }
+
+  .icon.folder {
+    background-image: url('images/folder.png');
+    background-size: 12px auto;
+    top: 5px;
+  }
+
+  .icon.image {
+    background-image: url('images/image.png');
+  }
+}
+

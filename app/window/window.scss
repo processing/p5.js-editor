@@ -1,0 +1,34 @@
+@font-face {
+	font-family: karla;
+	src: url('../fonts/karla/Karla-Regular.ttf');
+}
+
+@font-face {
+	font-family: karla-bold;
+	src: url('../fonts/karla/Karla-Bold.ttf');
+}
+
+@font-face {
+	font-family: source-code;
+	src: url('../fonts/Source_Code_Pro/SourceCodePro-Regular.ttf');
+}
+
+body, html {
+  background: #c8c5c2;
+  color: #231f20;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font: 14px karla, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.file-handler {
+  /*display: none;*/
+}

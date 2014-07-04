@@ -1,0 +1,6 @@
+.org.chromium.*
+*.sublime-*
+node_modules/
+dist/
+public/js
+public/css
