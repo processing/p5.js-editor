@@ -1,0 +1,6 @@
+<div class="item folder" v-on="click: toggleFolder(this)">
+  {{label}} [{{open ? '-' : '+'}}]
+</div>
+<ul v-show="open">
+  <li v-repeat="children | orderBy 'label'" v-component="{{type}}"></li>
+</ul>

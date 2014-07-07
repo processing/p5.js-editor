@@ -1,6 +1,10 @@
 <div id="sidebar">
-  <h1 v-text="projectName"></h1>
-  <div id="filetree"></div>
+  <h1 id="project-name" v-text="projectName"></h1>
+  <div id="filetree">
+    <ul>
+      <li v-repeat="files | orderBy 'label'" v-component="{{type}}"></li>
+    </ul>
+  </div>
   <div id="toolbar">
     <div id="actions">
       <button id="add" title="New file"><img src="images/add.png"></button>

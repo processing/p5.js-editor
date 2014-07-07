@@ -8,27 +8,32 @@ module.exports = {
   template: require('./template.html'),
 
   ready: function() {
+    this.$on('open-file', this.openFile);
+
     this.ace = ace.edit('editor');
     this.ace.getSession().setMode('ace/mode/javascript');
+    this.ace.setTheme('ace/theme/tomorrow');
     this.ace.focus();
-    this.$on('open-file', this.openFile);
-    //this.$on('open-project', this.openProject);
+
+    var self = this;
+    this.ace.on('change', function() {
+      self.$root.currentFile.contents = self.ace.getValue();
+      //if (self.fileObject.modified) {
+
+      //}
+      //if (self.openedFiles[self.filePath] != self.fileBuffer[self.filePath]) {
+        //self.window.title = (self.currentFile || 'Untitled') + ' *';
+      //} else {
+        //self.window.title = self.currentFile || 'Untitled';
+      //}
+    });
   },
 
   methods: {
-    //openFile: function(path) {
-      //var self = this;
-      //fs.readFile(path, "utf8", function(err, file) {
-        //self.ace.setReadOnly(false);
-        //self.ace.session.setValue(file);
-      //});
-    //}
-    //openProject: function(path) {
-      //this.openFile(path);
-    //}
-
     openFile: function(fileObject) {
-      this.ace.session.setValue(fileObject.contents);
+      //this.fileObject = fileObject;
+      this.ace.session.setValue(this.$root.currentFile.contents);
+      this.ace.focus();
     }
   }
 };
