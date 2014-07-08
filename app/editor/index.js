@@ -2,7 +2,22 @@ var fs = nodeRequire('fs');
 
 var ace = require('brace');
 require('brace/mode/javascript');
+require('brace/mode/html');
+require('brace/mode/ejs');
+require('brace/mode/css');
+require('brace/mode/json');
+require('brace/mode/text');
 require('brace/theme/tomorrow');
+
+var modes = {
+  ".html": "ejs",
+  ".htm": "ejs",
+  ".js": "javascript",
+  ".css": "css",
+  ".json": "json",
+  ".txt": "text"
+};
+
 
 module.exports = {
   template: require('./template.html'),
@@ -33,6 +48,7 @@ module.exports = {
     openFile: function(fileObject) {
       //this.fileObject = fileObject;
       this.ace.session.setValue(this.$root.currentFile.contents);
+      this.ace.getSession().setMode("ace/mode/" + modes[fileObject.ext]);
       this.ace.focus();
     }
   }
