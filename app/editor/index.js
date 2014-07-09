@@ -1,5 +1,6 @@
-var fs = nodeRequire('fs');
+var Path = nodeRequire('path');
 
+var _ = require('underscore');
 var ace = require('brace');
 require('brace/mode/javascript');
 require('brace/mode/html');
@@ -23,33 +24,46 @@ module.exports = {
   template: require('./template.html'),
 
   ready: function() {
+    this.sessions = [];
+
     this.$on('open-file', this.openFile);
+    this.$on('save-project-as', this.saveProjectAs);
 
     this.ace = ace.edit('editor');
-    this.ace.getSession().setMode('ace/mode/javascript');
     this.ace.setTheme('ace/theme/tomorrow');
-    this.ace.focus();
-
-    var self = this;
-    this.ace.on('change', function() {
-      self.$root.currentFile.contents = self.ace.getValue();
-      //if (self.fileObject.modified) {
-
-      //}
-      //if (self.openedFiles[self.filePath] != self.fileBuffer[self.filePath]) {
-        //self.window.title = (self.currentFile || 'Untitled') + ' *';
-      //} else {
-        //self.window.title = self.currentFile || 'Untitled';
-      //}
-    });
   },
 
   methods: {
     openFile: function(fileObject) {
-      //this.fileObject = fileObject;
-      this.ace.session.setValue(this.$root.currentFile.contents);
-      this.ace.getSession().setMode("ace/mode/" + modes[fileObject.ext]);
+      var session = _.findWhere(this.sessions, {path: fileObject.path});
+
+      if (!session) {
+        var doc = ace.createEditSession(fileObject.contents, "ace/mode/" + modes[fileObject.ext]);
+
+        var self = this;
+        doc.on('change', function() {
+          var file = _.findWhere(self.$root.files, {path: fileObject.path});
+          file.contents = doc.getValue();
+          self.$root.modified = file.contents !== file.originalContents;
+        });
+
+        var session = {
+          path: fileObject.path,
+          doc: doc
+        };
+
+        this.sessions.push(session);
+      }
+
+      this.$root.modified = fileObject.contents !== fileObject.originalContents;
+      this.ace.setSession(session.doc);
       this.ace.focus();
+    },
+
+    saveProjectAs: function(path) {
+      this.sessions.forEach(function(session) {
+        session.path = Path.join(path, Path.basename(session.path));
+      });
     }
   }
 };

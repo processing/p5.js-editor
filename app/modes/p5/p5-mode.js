@@ -1,6 +1,7 @@
 var wrench = nodeRequire('wrench');
 var Path = nodeRequire('path');
 var os = nodeRequire('os');
+var fs = nodeRequire('fs');
 
 module.exports = {
   newProject: function() {
@@ -24,19 +25,33 @@ module.exports = {
 
   saveAs: function(path) {
     //save all files
-    for (var p in this.files) {
-      if (this.files.hasOwnProperty(p)) this.files[p].saveSync();
-    }
+    this.saveAll();
+
+    //copy the folder
     wrench.copyDirSyncRecursive(this.projectPath, path);
-    for (var p in this.files) {
-      if (this.files.hasOwnProperty(p)) this.files[p].saveSync();
-    }
+
+    //change file paths
+    this.files.forEach(function(file) {
+      file.path = Path.join(path, file.name);
+    });
+
+    this.$broadcast('save-project-as', path);
+
     this.projectPath = path;
     this.$broadcast('open-project', path);
     this.temp = false;
   },
 
   run: function() {
-    this.newWindow(Path.join(this.projectPath, 'index.html'));
+    this.saveAll();
+
+    var url = 'file://' + Path.join(this.projectPath, 'index.html');
+
+    if (this.outputWindow) {
+      this.outputWindow.window.location = url;
+      this.outputWindow.focus();
+    } else {
+      this.outputWindow = this.newWindow(url, {toolbar: true});
+    }
   }
 }

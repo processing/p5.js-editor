@@ -1,10 +1,11 @@
 //node modules
 var Path = nodeRequire('path');
+var fs = nodeRequire('fs');
 
 //front-end modules
 var Vue = require('vue');
 var $ = require('jquery');
-var File = require('./file')
+var _ = require('underscore');
 var keybindings = require('./keybindings');
 var modes = {
   p5: require('./modes/p5/p5-mode')
@@ -28,7 +29,8 @@ var app = new Vue({
     projectPath: window.PATH,
     windowURL: window.location.href,
     temp: true,
-    files: {}
+    files: [],
+    modified: false
   },
 
   ready: function() {
@@ -80,9 +82,9 @@ var app = new Vue({
     },
 
     //create a new window 50px below current window
-    newWindow: function(url) {
+    newWindow: function(url, options) {
       var currentWindow = gui.Window.get();
-      var win = gui.Window.open(url, {
+      var win = gui.Window.open(url, _.extend({
         x: currentWindow.x + 50,
         y: currentWindow.y + 50,
         width: 1024,
@@ -90,7 +92,7 @@ var app = new Vue({
         toolbar: false,
         focus: true,
         show: true
-      });
+      }, options));
       return win;
     },
 
@@ -111,10 +113,19 @@ var app = new Vue({
       $('#openFile').val('');
     },
 
+    //save all open files
+    saveAll: function() {
+      this.files.forEach(function(file) {
+        fs.writeFileSync(file.path, file.contents, "utf8");
+        file.originalContents = file.contents;
+      });
+      this.modified = false;
+    },
+
     //save the current file
     saveAs: function(event) {
       var file = event.target.files[0].path;
-      this.writeFile();
+      //this.writeFile();
       this.modeFunction('saveAs', file);
 
       //reset value in case the user wants to save the same filename more than once
@@ -130,27 +141,31 @@ var app = new Vue({
     },
 
     writeFile: function() {
-      var self = this;
-      this.currentFile.save(function() {
-        if (!self.projectPath) {
-          self.projectPath = Path.dirname(self.currentFile.path);
-          self.$broadcast('open-project', self.projectPath);
-        }
-      });
+      fs.writeFileSync(this.currentFile.path, this.currentFile.contents, "utf8");
+      this.currentFile.originalContents = this.currentFile.contents;
+      this.modified = false;
     },
 
     //open up a file - read its contents if it's not already opened
     openFile: function(path) {
       var self = this;
-      if (self.files[path]) {
-        self.title = self.files[path].name;
-        self.currentFile = self.files[path];
-        self.$broadcast('open-file', self.currentFile);
+
+      var file = _.findWhere(this.files, {path: path});
+      if (file) {
+        this.title = file.name;
+        this.currentFile = file;
+        this.$broadcast('open-file', this.currentFile);
       } else {
-        var fileObject = new File(path, function() {
-          self.files[path] = fileObject;
-          self.title = fileObject.name;
-          self.currentFile = fileObject;
+        var file = {};
+        fs.readFile(path, 'utf8', function(err, fileContents) {
+          if (err) throw err;
+          file.contents = file.originalContents = fileContents;
+          file.path = path;
+          file.ext = Path.extname(path);
+          file.name = Path.basename(path);
+          self.files.push(file);
+          self.title = file.name;
+          self.currentFile = file;
           self.$broadcast('open-file', self.currentFile);
         });
       }
