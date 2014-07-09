@@ -29,8 +29,7 @@ var app = new Vue({
     projectPath: window.PATH,
     windowURL: window.location.href,
     temp: true,
-    files: [],
-    modified: false
+    files: []
   },
 
   ready: function() {
@@ -119,13 +118,14 @@ var app = new Vue({
         fs.writeFileSync(file.path, file.contents, "utf8");
         file.originalContents = file.contents;
       });
-      this.modified = false;
     },
 
     //save the current file
     saveAs: function(event) {
+      //capture the filename selected by the user
       var file = event.target.files[0].path;
-      //this.writeFile();
+
+      //mode specific action
       this.modeFunction('saveAs', file);
 
       //reset value in case the user wants to save the same filename more than once
@@ -133,9 +133,11 @@ var app = new Vue({
     },
 
     saveFile: function() {
+      //if this is a new project then trigger a save-as
       if (this.temp) {
         $('#saveFile').trigger('click');
       } else {
+        //otherwise just write the current file
         this.writeFile();
       }
     },
@@ -143,7 +145,6 @@ var app = new Vue({
     writeFile: function() {
       fs.writeFileSync(this.currentFile.path, this.currentFile.contents, "utf8");
       this.currentFile.originalContents = this.currentFile.contents;
-      this.modified = false;
     },
 
     //open up a file - read its contents if it's not already opened

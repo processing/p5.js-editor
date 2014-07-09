@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" id="app">
   <head>
-    <title>{{title}} {{modified ? '*' : ''}}</title>
-    <!--<title>{{title}}</title>-->
+    <title>{{title}} {{currentFile.contents !== currentFile.originalContents ? '*' : ''}}</title>
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>

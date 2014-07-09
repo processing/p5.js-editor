@@ -44,7 +44,6 @@ module.exports = {
         doc.on('change', function() {
           var file = _.findWhere(self.$root.files, {path: fileObject.path});
           file.contents = doc.getValue();
-          self.$root.modified = file.contents !== file.originalContents;
         });
 
         var session = {
@@ -55,7 +54,6 @@ module.exports = {
         this.sessions.push(session);
       }
 
-      this.$root.modified = fileObject.contents !== fileObject.originalContents;
       this.ace.setSession(session.doc);
       this.ace.focus();
     },
