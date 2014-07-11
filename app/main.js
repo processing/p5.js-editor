@@ -8,6 +8,7 @@ var Vue = require('vue');
 var $ = require('jquery');
 var _ = require('underscore');
 var keybindings = require('./keybindings');
+var menu = require('./menu');
 var modes = {
   p5: require('./modes/p5/p5-mode')
 };
@@ -35,6 +36,7 @@ var app = new Vue({
 
   ready: function() {
     keybindings.setup(this);
+    menu.setup(this);
     this.setupFileListener();
 
     if (this.projectPath) {
