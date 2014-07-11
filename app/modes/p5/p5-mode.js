@@ -2,9 +2,13 @@ var wrench = nodeRequire('wrench');
 var Path = nodeRequire('path');
 var os = nodeRequire('os');
 var fs = nodeRequire('fs');
+var $ = require('jquery');
+var util = require('util');
+
 
 module.exports = {
   newProject: function() {
+    //copy the empty project folder to a temporary directory
     var emptyProject = Path.join(Path.dirname(window.location.pathname), '../app/modes/p5/empty_project');
     var tempProject = Path.join(os.tmpdir(), 'p5' + Date.now(), 'Untitled');
     wrench.mkdirSyncRecursive(tempProject);
@@ -13,10 +17,10 @@ module.exports = {
       inflateSymlinks: true,
       forceDelete: true
     });
+
     this.projectPath = tempProject;
     this.$broadcast('open-project', tempProject);
     this.openFile(Path.join(tempProject, 'sketch.js'));
-
   },
 
   exportProject: function() {
@@ -43,15 +47,56 @@ module.exports = {
   },
 
   run: function() {
+    var self = this;
     this.saveAll();
 
-    var url = 'file://' + Path.join(this.projectPath, 'index.html');
-
     if (this.outputWindow) {
-      this.outputWindow.window.location = url;
+      this.outputWindow.reloadIgnoringCache();
       this.outputWindow.focus();
     } else {
+      var url = 'file://' + Path.join(this.projectPath, 'index.html');
+      //this.outputWindow = this.newWindow(url, {toolbar: true, 'new-instance': true, 'nodejs': false});
+      //this.outputWindow = this.newWindow(url, {toolbar: true, 'nodejs': false});
       this.outputWindow = this.newWindow(url, {toolbar: true});
+
+      this.outputWindow.on('document-start', function() {
+        this.window.onerror = function (msg, url, num, column, errorObj) {
+          $('#debug').append('<pre class="error">Line ' + num + ': ' + msg + '</pre>');
+          $('#debug').scrollTop($('#debug')[0].scrollHeight);
+          return true;
+        };
+
+        var win = this.window;
+
+        var original = this.window.console;
+        this.window.console = {
+          log: function(msg){
+            var stack = Error().stack;
+            var line = stack.split('\n')[3];
+            line = (line.indexOf(' (') >= 0 ? line.split(' (')[1].substring(0, line.length - 1) : line.split('at ')[1]);
+            self.debugOut(msg, line, 'log');
+            original.log.apply(original, arguments)
+          },
+          warn: function(){
+            self.debugOut(msg, 'warn');
+            original.warn.apply(original, arguments)
+          },
+          error: function(){
+            self.debugOut(msg, 'error');
+            original.error.apply(original, arguments)
+          }
+        }
+      });
+
+      this.outputWindow.on("close", function(){
+        this.close(true);
+        self.outputWindow = null;
+      });
     }
-  }
+  },
+
 }
+
+
+
+

@@ -1,6 +1,7 @@
 //node modules
 var Path = nodeRequire('path');
 var fs = nodeRequire('fs');
+var os = nodeRequire('os');
 
 //front-end modules
 var Vue = require('vue');
@@ -125,8 +126,17 @@ var app = new Vue({
       //capture the filename selected by the user
       var file = event.target.files[0].path;
 
-      //mode specific action
-      this.modeFunction('saveAs', file);
+      if (this.temp) {
+        //mode specific action
+        this.modeFunction('saveAs', file);
+      } else {
+        var oldPath = this.currentFile.path;
+        this.currentFile.path = file;
+        this.writeFile();
+        this.openFile(file);
+        this.$broadcast('new-file', this.currentFile);
+        this.$broadcast('remove-file', oldPath);
+      }
 
       //reset value in case the user wants to save the same filename more than once
       $('#saveFile').val('');
@@ -134,7 +144,7 @@ var app = new Vue({
 
     saveFile: function() {
       //if this is a new project then trigger a save-as
-      if (this.temp) {
+      if (this.temp || this.currentFile.temp) {
         $('#saveFile').trigger('click');
       } else {
         //otherwise just write the current file
@@ -148,7 +158,7 @@ var app = new Vue({
     },
 
     //open up a file - read its contents if it's not already opened
-    openFile: function(path) {
+    openFile: function(path, callback) {
       var self = this;
 
       var file = _.findWhere(this.files, {path: path});
@@ -168,8 +178,30 @@ var app = new Vue({
           self.title = file.name;
           self.currentFile = file;
           self.$broadcast('open-file', self.currentFile);
+          if (typeof callback === 'function') callback(file);
         });
       }
+    },
+
+    newFile: function() {
+      var self = this;
+      var tmpfile = Path.join(os.tmpdir(), 'jside' + Date.now() + '.js');
+      fs.writeFile(tmpfile, '', 'utf8', function(err){
+        self.openFile(tmpfile, function(file){
+          var totalTemp = _.where(self.files, {temp: true}).length + 1;
+          file.temp = true;
+          file.name = 'untitled ' + totalTemp;
+          self.title = file.name;
+          self.$broadcast('new-file', file);
+        });
+      });
+
+    },
+
+    debugOut: function(msg, line, type) {
+      if (typeof msg === 'object') msg = JSON.stringify(msg);
+      $('#debug').append('<pre class="'+type+'">' + line + ': ' + msg + '</pre>');
+      $('#debug').scrollTop($('#debug')[0].scrollHeight);
     },
 
     run: function() {
@@ -179,6 +211,3 @@ var app = new Vue({
   }
 
 });
-
-
-

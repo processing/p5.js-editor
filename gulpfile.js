@@ -15,7 +15,7 @@ gulp.task('browserify', function() {
   gulp.src('./app/main.js', { read: false })
     .pipe(plumber())
     .pipe(browserify({
-      transform: [partialify]
+      transform: [partialify],
     }))
     .on("error", notify.onError({
       message: "<%= error.message %>",

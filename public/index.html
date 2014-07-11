@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" id="app">
   <head>
+    <script>
+      //save the gui as a global
+      var gui = window.require('nw.gui');
+
+      //preserve node's require function
+      var nodeRequire = require;
+    </script>
     <title>{{title}} {{currentFile.contents !== currentFile.originalContents ? '*' : ''}}</title>
     <link rel="stylesheet" href="css/main.css">
   </head>
@@ -12,13 +19,6 @@
     <input class="file-handler" id="openFile" type="file" />
     <input class="file-handler" id="saveFile" type="file" nwsaveas />
 
-    <script>
-      //save the gui as a global
-      var gui = require('nw.gui');
-
-      //preserve node's require function
-      var nodeRequire = require;
-    </script>
 
     <script src="js/main.js"></script>
   </body>

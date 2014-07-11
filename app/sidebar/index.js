@@ -1,6 +1,9 @@
 var Path = nodeRequire('path');
 var fs = nodeRequire('fs');
 
+var _ = require('underscore');
+var $ = require('jquery');
+
 module.exports = {
   template: require('./sidebar.html'),
 
@@ -24,6 +27,9 @@ module.exports = {
   created: function() {
     //setup listener for open-project
     this.$on('open-project', this.openProject);
+    this.$on('new-file', this.addToTree);
+    this.$on('remove-file', this.removeFromTree);
+    this.$on('update-file', this.updateTree);
   },
 
   methods: {
@@ -39,6 +45,38 @@ module.exports = {
 
     openFile: function(file) {
       this.$root.openFile(file.path);
+    },
+
+    addToTree: function(file) {
+      var f = _.findWhere(this.files, {path: file.path});
+      if (f) return false;
+      else {
+        var f = {
+          path: file.path,
+          label: file.name,
+          type: 'file',
+          id: file.path,
+          icon: 'file'
+        }
+        this.files.push(f);
+      }
+    },
+
+    removeFromTree: function(path) {
+      var f = _.findWhere(this.files, {path: path});
+      if (f) {
+        this.files.splice(_.indexOf(this.files, f), 1);
+      }
+    },
+
+    updateTree: function(path, file) {
+      var f = _.findWhere(this.files, {path: path});
+      if (f) {
+        var index = _.indexOf(this.files, f);
+        this.files[index].path = this.file[index].id = file.path;
+        this.file[index].label = file.name;
+        this.files[index].icon = f.type = 'file';
+      }
     },
 
     toggleFolder: function(folder) {
@@ -88,3 +126,16 @@ function listFiles(dir, callback) {
     });
   });
 }
+
+$(document).ready(function(){
+  var handle = $('#sidebar-drag');
+  handle.on('mousedown', function (e) {
+    var container = $(this).parent();
+    $(document).on('mousemove', function (e) {
+      container.css({width: e.clientX});
+      ace.resize();
+    }).on('mouseup', function (e) {
+      $(document).off('mouseup').off('mousemove');
+    });
+  });
+});

@@ -29,7 +29,7 @@ module.exports = {
     this.$on('open-file', this.openFile);
     this.$on('save-project-as', this.saveProjectAs);
 
-    this.ace = ace.edit('editor');
+    this.ace = window.ace = ace.edit('editor');
     this.ace.setTheme('ace/theme/tomorrow');
   },
 

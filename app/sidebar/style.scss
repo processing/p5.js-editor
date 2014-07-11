@@ -5,6 +5,7 @@
   -webkit-flex-direction: row;
   -webkit-justify-content: flex-start;
   position: relative;
+  min-width: 10px;
 }
 
 #sidebar {
@@ -113,21 +114,35 @@
       position: relative;
 
       div {
-        padding-left: 15px
+        padding: 3px;
+        padding-left: 35px;
+        cursor: pointer;
+      }
+
+      div.selected {
+        background-color: #f6f6f6;
       }
 
       ul {
         padding-left: 10px;
       }
     }
+
+  }
+
+  .toggle {
+    top: 1px;
+    left: 8px;
+    position: absolute;
+    font-size: 12px;
   }
 
   .icon {
     width: 10px;
     height: 13px;
     position: absolute;
-    left: 0;
-    top: 4px;
+    left: 20px;
+    top: 5px;
     background-size: 10px auto;
     background-repeat: no-repeat;
   }
