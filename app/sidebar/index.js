@@ -86,6 +86,16 @@ module.exports = {
           folder.children = files;
         });
       }
+    },
+
+    startDrag: function(e) {
+      var container = $('#sidebar-container');
+      $(document).on('mousemove', function (e) {
+        container.css({width: e.clientX});
+        ace.resize();
+      }).on('mouseup', function (e) {
+        $(document).off('mouseup').off('mousemove');
+      });
     }
   }
 }
@@ -126,16 +136,3 @@ function listFiles(dir, callback) {
     });
   });
 }
-
-$(document).ready(function(){
-  var handle = $('#sidebar-drag');
-  handle.on('mousedown', function (e) {
-    var container = $(this).parent();
-    $(document).on('mousemove', function (e) {
-      container.css({width: e.clientX});
-      ace.resize();
-    }).on('mouseup', function (e) {
-      $(document).off('mouseup').off('mousemove');
-    });
-  });
-});
