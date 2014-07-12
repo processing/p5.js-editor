@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
-    <div v-component="sidebar" id="sidebar-container"></div>
+    <div v-component="sidebar" v-with="files : files" id="sidebar-container"></div>
     <div v-component="editor" id="main"></div>
     <div v-component="debug" id="debug-container"></div>
 

@@ -1,8 +1,8 @@
 <div class="item folder" v-on="click: toggleFolder(this)">
   <span class="toggle">{{open ? '-' : '+'}}</span>
   <span class="icon {{icon}}"></span>
-  {{label}}
+  {{name}}
 </div>
 <ul v-show="open">
-  <li v-repeat="children | orderBy 'label'" v-component="{{type}}"></li>
+  <li v-repeat="children | orderBy 'name'" v-component="{{type}}"></li>
 </ul>

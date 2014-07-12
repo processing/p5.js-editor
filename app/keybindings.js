@@ -15,7 +15,7 @@ module.exports.setup = function(app) {
   });
 
   Mousetrap.bind(['command+shift+s', 'ctrl+shift+s'], function(e) {
-    app.saveAs();
+    $('#saveFile').trigger('click');
   });
 
   Mousetrap.bind(['command+n', 'ctrl+n'], function(e) {

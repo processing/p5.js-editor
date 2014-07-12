@@ -8,6 +8,7 @@ var Vue = require('vue');
 var $ = require('jquery');
 var _ = require('underscore');
 var keybindings = require('./keybindings');
+var File = require('./files');
 var menu = require('./menu');
 var modes = {
   p5: require('./modes/p5/p5-mode')
@@ -27,16 +28,22 @@ var app = new Vue({
 
   data: {
     title: 'Untitled',
-    projectName: '',
     projectPath: window.PATH,
     windowURL: window.location.href,
     temp: true,
     files: []
   },
 
+  computed: {
+    projectName: function() {
+      return Path.basename(this.projectPath);
+    }
+  },
+
   ready: function() {
     keybindings.setup(this);
     menu.setup(this);
+
     this.setupFileListener();
 
     if (this.projectPath) {
@@ -48,16 +55,15 @@ var app = new Vue({
       //set the projectPath to the enclosing folder
       this.projectPath = Path.dirname(this.projectPath);
 
-      //broadcast the open project event which sets up the filetree etc.
-      this.$broadcast('open-project', this.projectPath);
-
-      //open the file
-      this.openFile(filename);
+      //load the project and open the selected file
+      var self = this;
+      this.loadProject(this.projectPath, function(){
+        self.openFile(filename);
+      });
 
     } else {
       //if we don't have a project path global, create a new project
       this.modeFunction('newProject');
-      //this.$broadcast('new-project');
     }
   },
 
@@ -66,8 +72,7 @@ var app = new Vue({
       var mode = this.$options.mode;
       if (typeof mode[func] === 'function') {
         //make args an array if it isn't already
-        //typeof args won't work because it return 'object'
-        //nuts
+        //typeof args won't work because it returns 'object'
         if (Object.prototype.toString.call(args) !== '[object Array]') {
           args = [args];
         }
@@ -98,7 +103,7 @@ var app = new Vue({
       return win;
     },
 
-    //open a new window
+    //open an existing project with a new window
     open: function(event) {
       var currentWindow = gui.Window.get();
       var path = event.target.files[0].path;
@@ -115,9 +120,18 @@ var app = new Vue({
       $('#openFile').val('');
     },
 
+    //load project files
+    loadProject: function(path, callback) {
+      var self = this;
+      File.list(path, function(files){
+        self.files = files;
+        if (typeof callback === 'function') callback();
+      });
+    },
+
     //save all open files
     saveAll: function() {
-      this.files.forEach(function(file) {
+      _.where(this.files, {type: 'file'}).forEach(function(file) {
         fs.writeFileSync(file.path, file.contents, "utf8");
         file.originalContents = file.contents;
       });
@@ -134,10 +148,12 @@ var app = new Vue({
       } else {
         var oldPath = this.currentFile.path;
         this.currentFile.path = file;
+        this.currentFile.name = Path.basename(file);
+        this.currentFile.ext = Path.extname(file);
         this.writeFile();
         this.openFile(file);
-        this.$broadcast('new-file', this.currentFile);
-        this.$broadcast('remove-file', oldPath);
+        //this.$broadcast('new-file', this.currentFile);
+        //this.$broadcast('remove-file', oldPath);
       }
 
       //reset value in case the user wants to save the same filename more than once
@@ -164,19 +180,18 @@ var app = new Vue({
       var self = this;
 
       var file = _.findWhere(this.files, {path: path});
-      if (file) {
+      if (!file) {
+        file = {path: path}
+      }
+      if (file.open) {
         this.title = file.name;
         this.currentFile = file;
         this.$broadcast('open-file', this.currentFile);
       } else {
-        var file = {};
         fs.readFile(path, 'utf8', function(err, fileContents) {
           if (err) throw err;
           file.contents = file.originalContents = fileContents;
-          file.path = path;
-          file.ext = Path.extname(path);
-          file.name = Path.basename(path);
-          self.files.push(file);
+          file.open = true;
           self.title = file.name;
           self.currentFile = file;
           self.$broadcast('open-file', self.currentFile);
@@ -189,15 +204,11 @@ var app = new Vue({
       var self = this;
       var tmpfile = Path.join(os.tmpdir(), 'jside' + Date.now() + '.js');
       fs.writeFile(tmpfile, '', 'utf8', function(err){
-        self.openFile(tmpfile, function(file){
-          var totalTemp = _.where(self.files, {temp: true}).length + 1;
-          file.temp = true;
-          file.name = 'untitled ' + totalTemp;
-          self.title = file.name;
-          self.$broadcast('new-file', file);
-        });
+        var totalTemp = _.where(self.files, {temp: true}).length + 1;
+        var fileObject = File.setup(tmpfile, {temp: true, name: 'untitled ' + totalTemp});
+        self.files.push(fileObject);
+        self.openFile(tmpfile);
       });
-
     },
 
     debugOut: function(msg, line, type) {
@@ -213,3 +224,4 @@ var app = new Vue({
   }
 
 });
+

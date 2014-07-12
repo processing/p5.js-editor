@@ -25,7 +25,7 @@ module.exports.setup = function(app) {
   }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Save As \t\t\t\u21E7\u2318S', click: function(){
-    app.saveAs();
+    $('#saveFile').trigger('click');
   }}));
 
   fileMenu.append(new gui.MenuItem({ type: 'separator' }));

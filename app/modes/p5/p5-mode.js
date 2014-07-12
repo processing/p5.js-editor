@@ -19,8 +19,12 @@ module.exports = {
     });
 
     this.projectPath = tempProject;
-    this.$broadcast('open-project', tempProject);
-    this.openFile(Path.join(tempProject, 'sketch.js'));
+
+    //open the project and file
+    var self = this;
+    this.loadProject(tempProject, function(){
+      self.openFile(Path.join(tempProject, 'sketch.js'));
+    });
   },
 
   exportProject: function() {
