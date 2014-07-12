@@ -40,10 +40,9 @@ module.exports = {
 
   created: function() {
     //setup listener for open-project
-    this.$on('open-project', this.openProject);
-    this.$on('new-file', this.addToTree);
-    this.$on('remove-file', this.removeFromTree);
-    this.$on('update-file', this.updateTree);
+    //this.$on('new-file', this.addToTree);
+    //this.$on('remove-file', this.removeFromTree);
+    //this.$on('update-file', this.updateTree);
   },
 
   methods: {
