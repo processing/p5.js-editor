@@ -35,12 +35,7 @@ module.exports.setup = function(app) {
   });
 
   Mousetrap.bind(['command+alt+j', 'ctrl+alt+j'], function(e) {
-    var oldRequire = window.require;
-    window.require = window.nodeRequire;
-    //console.log(JSON.stringify(window.require));
-    //console.log(oldRequire);
     gui.Window.get().showDevTools();
-    window.require = oldRequire;
   });
 
   Mousetrap.bind(['command+=', 'ctrl+='], function(e) {
