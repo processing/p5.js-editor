@@ -46,7 +46,7 @@ module.exports = {
     this.$broadcast('save-project-as', path);
 
     this.projectPath = path;
-    this.$broadcast('open-project', path);
+    //this.$broadcast('open-project', path);
     this.temp = false;
   },
 
