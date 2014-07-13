@@ -131,9 +131,11 @@ var app = new Vue({
 
     //save all open files
     saveAll: function() {
-      _.where(this.files, {type: 'file'}).forEach(function(file) {
-        fs.writeFileSync(file.path, file.contents, "utf8");
-        file.originalContents = file.contents;
+      _.where(this.files, {type: 'file', open: true}).forEach(function(file) {
+        if (file.originalContents != file.contents) {
+          fs.writeFileSync(file.path, file.contents, "utf8");
+          file.originalContents = file.contents;
+        }
       });
     },
 
