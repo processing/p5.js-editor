@@ -56,51 +56,59 @@ module.exports = {
 
     if (this.outputWindow) {
       this.outputWindow.reloadIgnoringCache();
+      this.outputWindow.show();
       this.outputWindow.focus();
     } else {
-      var url = 'file://' + Path.join(this.projectPath, 'index.html');
-      //this.outputWindow = this.newWindow(url, {toolbar: true, 'new-instance': true, 'nodejs': false});
-      //this.outputWindow = this.newWindow(url, {toolbar: true, 'nodejs': false});
-      this.outputWindow = this.newWindow(url, {toolbar: true});
+      startServer(this.projectPath, this, function(url) {
+        self.outputWindow = self.newWindow(url, {toolbar: true, 'inject-js-start': 'js/debug-console.js'});
 
-      this.outputWindow.on('document-start', function() {
-        this.window.onerror = function (msg, url, num, column, errorObj) {
-          $('#debug').append('<pre class="error">Line ' + num + ': ' + msg + '</pre>');
-          $('#debug').scrollTop($('#debug')[0].scrollHeight);
-          return true;
-        };
+        self.outputWindow.on("close", function(){
+          //this.close(true);
+          this.hide();
+          //self.outputWindow = null;
+        });
 
-        var win = this.window;
-
-        var original = this.window.console;
-        this.window.console = {
-          log: function(msg){
-            var stack = Error().stack;
-            var line = stack.split('\n')[3];
-            line = (line.indexOf(' (') >= 0 ? line.split(' (')[1].substring(0, line.length - 1) : line.split('at ')[1]);
-            self.debugOut(msg, line, 'log');
-            original.log.apply(original, arguments)
-          },
-          warn: function(){
-            self.debugOut(msg, 'warn');
-            original.warn.apply(original, arguments)
-          },
-          error: function(){
-            self.debugOut(msg, 'error');
-            original.error.apply(original, arguments)
-          }
-        }
-      });
-
-      this.outputWindow.on("close", function(){
-        this.close(true);
-        self.outputWindow = null;
       });
     }
   },
 
+};
+
+var running = false;
+var url = '';
+
+function startServer(path, app, callback) {
+  if (running === false) {
+    var portscanner = nodeRequire('portscanner');
+    portscanner.findAPortNotInUse(3000, 4000, '127.0.0.1', function(error, port) {
+      var static = nodeRequire('node-static');
+      var server = nodeRequire('http').createServer(handler);
+      var io = nodeRequire('socket.io')(server);
+      var file = new static.Server(path);
+
+      server.listen(port, function(){
+        url = 'http://localhost:' + port;
+        callback(url);
+      });
+
+      function handler(request, response) {
+        running = true;
+        request.addListener('end', function () {
+          file.serve(request, response);
+        }).resume();
+      }
+
+      io.on('connection', function (socket) {
+        socket.on('console', function (data) {
+          app.debugOut(data.msg, data.num, data.type);
+          console.log(data);
+        });
+      });
+    });
+
+
+  } else {
+    callback(url);
+  }
+
 }
-
-
-
-
