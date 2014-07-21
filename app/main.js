@@ -156,14 +156,11 @@ var app = new Vue({
         //mode specific action
         this.modeFunction('saveAs', file);
       } else {
-        var oldPath = this.currentFile.path;
         this.currentFile.path = file;
         this.currentFile.name = Path.basename(file);
         this.currentFile.ext = Path.extname(file);
         this.writeFile();
         this.openFile(file);
-        //this.$broadcast('new-file', this.currentFile);
-        //this.$broadcast('remove-file', oldPath);
       }
 
       //reset value in case the user wants to save the same filename more than once
@@ -172,7 +169,7 @@ var app = new Vue({
 
     saveFile: function() {
       //if this is a new project then trigger a save-as
-      if (this.temp || this.currentFile.temp) {
+      if (this.temp) {
         $('#saveFile').trigger('click');
       } else {
         //otherwise just write the current file
@@ -210,15 +207,28 @@ var app = new Vue({
       }
     },
 
+    //create a new file and save it in the project path
     newFile: function() {
+      var title = prompt('File name:');
+      if (!title) return false;
+
+      var filename = Path.join(this.projectPath, title);
       var self = this;
-      var tmpfile = Path.join(os.tmpdir(), 'jside' + Date.now() + '.js');
-      fs.writeFile(tmpfile, '', 'utf8', function(err){
-        var totalTemp = _.where(self.files, {temp: true}).length + 1;
-        var fileObject = File.setup(tmpfile, {temp: true, name: 'untitled ' + totalTemp});
+      fs.writeFile(filename, '', 'utf8', function(err){
+        var fileObject = File.setup(filename);
         self.files.push(fileObject);
-        self.openFile(tmpfile);
+        self.openFile(filename);
       });
+      //var ext = Path.extname(title);
+      //if (!ext) ext = '.js';
+
+      //var self = this;
+      //var tmpfile = Path.join(os.tmpdir(), 'jside' + Date.now() + '.js');
+      //fs.writeFile(tmpfile, '', 'utf8', function(err){
+        //var fileObject = File.setup(tmpfile, {temp: true, name: title, ext: ext});
+        //self.files.push(fileObject);
+        //self.openFile(tmpfile);
+      //});
     },
 
     debugOut: function(msg, line, type) {
