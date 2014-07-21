@@ -1,5 +1,6 @@
 var Path = nodeRequire('path');
 var fs = nodeRequire('fs');
+var trash = nodeRequire('trash');
 
 var File = require('./../files');
 var _ = require('underscore');
@@ -25,6 +26,40 @@ module.exports = {
           var c = 'item';
           if (this.$root.currentFile.path == this.path) c += ' selected';
           return c;
+        }
+      },
+
+      methods: {
+        popupMenu: function(file, e) {
+          e.preventDefault();
+          var self = this;
+          var menu = new gui.Menu();
+          menu.append(new gui.MenuItem({
+            label: "Reveal",
+            click: function() {
+              gui.Shell.showItemInFolder(file.path)
+            }
+          }));
+          menu.append(new gui.MenuItem({
+            label: "New file",
+            click: function() {
+              self.$root.newFile(Path.dirname(file.path));
+            }
+          }));
+          menu.append(new gui.MenuItem({
+            label: "New folder",
+            click: function() {
+              self.$root.newFolder(Path.dirname(file.path));
+            }
+          }));
+          menu.append(new gui.MenuItem({
+            label: "Delete",
+            click: function() {
+              trash([file.path], function(err) {
+              });
+            }
+          }));
+          menu.popup(e.clientX, e.clientY);
         }
       }
     },
