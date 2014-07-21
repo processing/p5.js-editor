@@ -2,5 +2,5 @@
 *.sublime-*
 node_modules/
 dist/
-public/js
+public/js/main.js
 public/css

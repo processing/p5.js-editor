@@ -87,12 +87,12 @@ function startServer(path, app, callback) {
       var file = new static.Server(path);
 
       server.listen(port, function(){
+        running = true;
         url = 'http://localhost:' + port;
         callback(url);
       });
 
       function handler(request, response) {
-        running = true;
         request.addListener('end', function () {
           file.serve(request, response);
         }).resume();
@@ -101,7 +101,6 @@ function startServer(path, app, callback) {
       io.on('connection', function (socket) {
         socket.on('console', function (data) {
           app.debugOut(data.msg, data.num, data.type);
-          console.log(data);
         });
       });
     });
