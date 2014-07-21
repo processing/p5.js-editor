@@ -1,4 +1,4 @@
-<div class="{{className}}" v-on="click: openFile(this)">
+<div class="{{className}}" v-on="click: openFile(this), contextmenu: popupMenu(this, $event)">
   <span class="icon {{icon}}"></span>
   {{name}}
 </div>
