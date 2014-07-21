@@ -12,6 +12,7 @@
     "resizable": true
   },
   "dependencies": {
-    "wrench": "~1.5.8"
+    "wrench": "~1.5.8",
+    "trash": "~0.1.2"
   }
 }
