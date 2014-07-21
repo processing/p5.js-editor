@@ -27,7 +27,7 @@ module.exports.setup = function(app) {
   });
 
   Mousetrap.bind(['command+w', 'ctrl+w'], function(e) {
-    //editor.close();
+    app.closeProject();
   });
 
   Mousetrap.bind(['command+e', 'ctrl+e'], function(e) {

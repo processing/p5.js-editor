@@ -129,6 +129,14 @@ var app = new Vue({
       });
     },
 
+    //close the window, checking for unsaved file changes
+    closeProject: function() {
+      if (this.outputWindow) {
+        this.outputWindow.close(true);
+        this.outputWindow = null;
+      }
+    },
+
     //save all open files
     saveAll: function() {
       _.where(this.files, {type: 'file', open: true}).forEach(function(file) {

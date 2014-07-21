@@ -17,7 +17,7 @@ module.exports.setup = function(app) {
   }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Close \t\t\t\u2318W', click: function(){
-    //app.closeFile();
+    app.closeProject();
   }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Save \t\t\t\u2318S', click: function(){
