@@ -208,11 +208,16 @@ var app = new Vue({
     },
 
     //create a new file and save it in the project path
-    newFile: function() {
+    newFile: function(basepath) {
       var title = prompt('File name:');
       if (!title) return false;
 
-      var filename = Path.join(this.projectPath, title);
+      if (typeof basepath === 'undefined') {
+        basepath = this.projectPath;
+      }
+
+      var filename = Path.join(basepath, title);
+
       var self = this;
       fs.writeFile(filename, '', 'utf8', function(err){
         var fileObject = File.setup(filename);
@@ -229,6 +234,23 @@ var app = new Vue({
         //self.files.push(fileObject);
         //self.openFile(tmpfile);
       //});
+    },
+
+    newFolder: function(basepath) {
+      var title = prompt('Folder name:');
+      if (!title) return false;
+
+      if (typeof basepath === 'undefined') {
+        basepath = this.projectPath;
+      }
+
+      var filename = Path.join(basepath, title);
+
+      var self = this;
+      fs.mkdir(filename, function(err){
+        var fileObject = File.setup(filename, {type: 'folder', children: []});
+        self.files.push(fileObject);
+      });
     },
 
     debugOut: function(msg, line, type) {
