@@ -215,7 +215,7 @@ var app = new Vue({
 
     debugOut: function(msg, line, type) {
       if (typeof msg === 'object') msg = JSON.stringify(msg);
-      $('#debug').append('<pre class="'+type+'">' + line + ': ' + msg + '</pre>');
+      $('#debug').append('<pre class="'+type+'">' + (line ? line + ': ' : '') + msg + '</pre>');
       $('#debug').scrollTop($('#debug')[0].scrollHeight);
     },
 
