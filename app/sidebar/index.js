@@ -20,6 +20,11 @@ module.exports = {
           if (this.ext.match(/(png|jpg|gif|svg|jpeg)$/i)) return 'image';
           else if (this.ext.match(/db$/i)) return 'db';
           else return 'file'
+        },
+        className: function() {
+          var c = 'item';
+          if (this.$root.currentFile.path == this.path) c += ' selected';
+          return c;
         }
       }
     },
@@ -38,24 +43,7 @@ module.exports = {
     },
   },
 
-  created: function() {
-    //setup listener for open-project
-    //this.$on('new-file', this.addToTree);
-    //this.$on('remove-file', this.removeFromTree);
-    //this.$on('update-file', this.updateTree);
-  },
-
   methods: {
-    openProject: function(path) {
-      //this.projectPath = path;
-      //this.projectName = Path.basename(path);
-
-      //var self = this;
-      //listFiles(path, function(files) {
-        //self.files = files;
-      //});
-    },
-
     openFile: function(file) {
       this.$root.openFile(file.path);
     },
