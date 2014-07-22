@@ -274,6 +274,13 @@ var app = new Vue({
       fs.mkdir(filename);
     },
 
+    renameFile: function(path) {
+      var newName = prompt('Rename ' + Path.basename(path) + ' to:');
+      if (!newName) return false;
+
+      fs.rename(path, Path.join(Path.dirname(path), newName));
+    },
+
     debugOut: function(msg, line, type) {
       if (typeof msg === 'object') msg = JSON.stringify(msg);
       $('#debug').append('<pre class="'+type+'">' + (line ? line + ': ' : '') + msg + '</pre>');

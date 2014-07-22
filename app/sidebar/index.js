@@ -139,7 +139,7 @@ var popupMenu = function(file, e) {
   menu.append(new gui.MenuItem({
     label: "Rename",
     click: function() {
-      self.$root.renameFile(file);
+      self.$root.renameFile(file.path);
     }
   }));
   menu.append(new gui.MenuItem({
