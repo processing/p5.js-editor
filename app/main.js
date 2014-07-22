@@ -2,6 +2,7 @@
 var Path = nodeRequire('path');
 var fs = nodeRequire('fs');
 var os = nodeRequire('os');
+var chokidar = nodeRequire('chokidar');
 
 //front-end modules
 var Vue = require('vue');
@@ -125,8 +126,33 @@ var app = new Vue({
       var self = this;
       File.list(path, function(files){
         self.files = files;
+        self.watch(path);
         if (typeof callback === 'function') callback();
       });
+    },
+
+    watch: function(path) {
+      var self = this;
+      var watcher = chokidar.watch(path, {ignoreInitial: true});
+      watcher.on('add', function(path) {
+        var f = File.setup(path);
+        if (Path.dirname(path) == self.projectPath) {
+          self.files.push(f);
+        } else {
+          addToFiles(f, self.files);
+        }
+      }).on('addDir', function(path) {
+        var f = File.setup(path, {type: 'folder', children: []});
+        if (Path.dirname(path) == self.projectPath) {
+          self.files.push(f);
+        } else {
+          addToFiles(f, self.files);
+        }
+      }).on('unlink', function(path) {
+        removeFromFiles(path, self.files);
+      }).on('unlinkDir', function(path) {
+        removeFromFiles(path, self.files);
+      })
     },
 
     //close the window, checking for unsaved file changes
@@ -220,8 +246,6 @@ var app = new Vue({
 
       var self = this;
       fs.writeFile(filename, '', 'utf8', function(err){
-        var fileObject = File.setup(filename);
-        self.files.push(fileObject);
         self.openFile(filename);
       });
       //var ext = Path.extname(title);
@@ -247,10 +271,7 @@ var app = new Vue({
       var filename = Path.join(basepath, title);
 
       var self = this;
-      fs.mkdir(filename, function(err){
-        var fileObject = File.setup(filename, {type: 'folder', children: []});
-        self.files.push(fileObject);
-      });
+      fs.mkdir(filename);
     },
 
     debugOut: function(msg, line, type) {
@@ -267,3 +288,29 @@ var app = new Vue({
 
 });
 
+
+
+var addToFiles = function(fileObject, fileArray){
+  fileArray.forEach(function(f){
+    if (f.type === 'folder') {
+      if (f.path === Path.dirname(fileObject.path)) {
+        f.children.push(fileObject);
+        return true;
+      }
+      addToFiles(fileObject, f.children);
+    }
+  });
+};
+
+var removeFromFiles = function(path, fileArray) {
+  var f = _.findWhere(fileArray, {path: path});
+  if (f) {
+    fileArray.splice(_.indexOf(fileArray, f), 1);
+    return true;
+  }
+  fileArray.forEach(function(fileObject){
+    if (fileObject.type === 'folder' && fileObject.children.length > 0) {
+      removeFromFiles(path, fileObject.children);
+    }
+  });
+};

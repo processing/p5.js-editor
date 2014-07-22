@@ -1,4 +1,4 @@
-<div class="item folder" v-on="click: toggleFolder(this)">
+<div class="item folder" v-on="click: toggleFolder(this), contextmenu: popupMenu(this, $event)">
   <span class="toggle">{{open ? '-' : '+'}}</span>
   <span class="icon {{icon}}"></span>
   {{name}}
