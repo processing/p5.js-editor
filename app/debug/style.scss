@@ -1,8 +1,5 @@
 #debug {
   border-radius: 7px;
-  margin-top: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
   background-color: #F1F1F2;
   flex: 1;
   padding: 10px;
@@ -26,6 +23,20 @@
 #debug-drag {
   background-color: #C8Cw4C4;
   width: 10px;
-  flex: none;
   cursor: col-resize;
+}
+
+body.horizontal {
+  #debug-container {
+    height: 200px;
+    width: auto;
+    flex-direction: column;
+    margin-right: 0;
+  }
+
+  #debug-drag {
+    height: 10px;
+    width: auto;
+    cursor: row-resize;
+  }
 }

@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" id="app">
   <head>
+    <title>{{title}} {{currentFile.contents !== currentFile.originalContents ? '*' : ''}}</title>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body class="horizontal">
+    <div v-component="sidebar" v-with="files : files" id="sidebar-container"></div>
+    <div id="main-container">
+      <div v-component="editor" id="main"></div>
+      <div v-component="debug" id="debug-container"></div>
+    </div>
+
+    <input class="file-handler" id="openFile" type="file" />
+    <input class="file-handler" id="saveFile" type="file" nwsaveas />
+
     <script>
       //save the gui as a global
       var gui = window.require('nw.gui');
@@ -8,18 +21,6 @@
       //preserve node's require function
       var nodeRequire = require;
     </script>
-    <title>{{title}} {{currentFile.contents !== currentFile.originalContents ? '*' : ''}}</title>
-    <link rel="stylesheet" href="css/main.css">
-  </head>
-  <body>
-    <div v-component="sidebar" v-with="files : files" id="sidebar-container"></div>
-    <div v-component="editor" id="main"></div>
-    <div v-component="debug" id="debug-container"></div>
-
-    <input class="file-handler" id="openFile" type="file" />
-    <input class="file-handler" id="saveFile" type="file" nwsaveas />
-
-
     <script src="js/main.js"></script>
   </body>
 </html>

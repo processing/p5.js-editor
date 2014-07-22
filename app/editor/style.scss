@@ -1,18 +1,21 @@
-#main {
+#main-container {
   margin-top: 10px;
   margin-bottom: 10px;
-  -webkit-flex: 1;
-  display: -webkit-flex;
-  -webkit-flex-direction: column;
-  -webkit-justify-content: flex-start;
-  align-items: stretch;
+  margin-right: 10px;
+  flex: 1;
+  display: flex;
   min-width: 100px;
+}
+
+#main {
+  display: flex;
+  flex: 1;
 }
 
 #editor {
   font: 14px source-code;
   border-radius: 7px;
-  -webkit-flex: 1;
+  flex: 1;
 }
 
 .ace_gutter-cell {
@@ -33,5 +36,12 @@
 .ace_error {
   background-color: #FF6347 !important;
   color: #ffffff !important;
+}
+
+
+body.horizontal {
+  #main-container {
+    flex-direction: column;
+  }
 }
 

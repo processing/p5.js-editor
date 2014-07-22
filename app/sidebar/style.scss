@@ -1,15 +1,13 @@
 #sidebar-container {
   -webkit-user-select: none;
   width: 200px;
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-justify-content: flex-start;
+  display: flex;
   position: relative;
   min-width: 10px;
 }
 
 #sidebar {
-  -webkit-flex: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
@@ -38,7 +36,7 @@
 }
 
 #sidebar-drag {
-  -webkit-flex: none;
+  flex: none;
   cursor: col-resize;
   background-color: none;
   position: absolute;
