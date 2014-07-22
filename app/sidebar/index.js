@@ -31,35 +31,7 @@ module.exports = {
 
       methods: {
         popupMenu: function(file, e) {
-          e.preventDefault();
-          var self = this;
-          var menu = new gui.Menu();
-          menu.append(new gui.MenuItem({
-            label: "Reveal",
-            click: function() {
-              gui.Shell.showItemInFolder(file.path)
-            }
-          }));
-          menu.append(new gui.MenuItem({
-            label: "New file",
-            click: function() {
-              self.$root.newFile(Path.dirname(file.path));
-            }
-          }));
-          menu.append(new gui.MenuItem({
-            label: "New folder",
-            click: function() {
-              self.$root.newFolder(Path.dirname(file.path));
-            }
-          }));
-          menu.append(new gui.MenuItem({
-            label: "Delete",
-            click: function() {
-              trash([file.path], function(err) {
-              });
-            }
-          }));
-          menu.popup(e.clientX, e.clientY);
+          popupMenu.apply(this, arguments);
         }
       }
     },
@@ -73,6 +45,11 @@ module.exports = {
       computed: {
         hidden: function() {
           return this.name[0] === '.' || this.name === 'node_modules' || this.name === 'libraries';
+        }
+      },
+      methods: {
+        popupMenu: function(file, e) {
+          popupMenu.apply(this, arguments);
         }
       }
     },
@@ -134,4 +111,42 @@ module.exports = {
       });
     }
   }
+}
+
+
+var popupMenu = function(file, e) {
+  e.preventDefault();
+  var self = this;
+  var menu = new gui.Menu();
+  menu.append(new gui.MenuItem({
+    label: "Reveal",
+    click: function() {
+      gui.Shell.showItemInFolder(file.path)
+    }
+  }));
+  menu.append(new gui.MenuItem({
+    label: "New file",
+    click: function() {
+      self.$root.newFile(file.type=='folder' ? file.path : Path.dirname(file.path));
+    }
+  }));
+  menu.append(new gui.MenuItem({
+    label: "New folder",
+    click: function() {
+      self.$root.newFolder(file.type=='folder' ? file.path : Path.dirname(file.path));
+    }
+  }));
+  menu.append(new gui.MenuItem({
+    label: "Rename",
+    click: function() {
+      self.$root.renameFile(file);
+    }
+  }));
+  menu.append(new gui.MenuItem({
+    label: "Delete",
+    click: function() {
+      trash([file.path], function(err) {});
+    }
+  }));
+  menu.popup(e.clientX, e.clientY);
 }
