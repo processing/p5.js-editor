@@ -46,6 +46,7 @@ var app = new Vue({
     menu.setup(this);
 
     this.setupFileListener();
+    this.setupCloseHandler();
 
     if (this.projectPath) {
       this.temp = false;
@@ -88,6 +89,25 @@ var app = new Vue({
     setupFileListener: function() {
       $('#openFile').change(this.open.bind(this));
       $('#saveFile').change(this.saveAs.bind(this));
+    },
+
+    setupCloseHandler: function() {
+      var self = this;
+      var win = gui.Window.get();
+      win.on('close', function(){
+        var shouldClose = true;
+        if (_.any(self.files, function(f) {return f.contents != f.originalContents})) {
+          shouldClose = confirm('You have unsaved files. Quit and lose changes?');
+        }
+        if (shouldClose) {
+          if (self.outputWindow) {
+            self.outputWindow.close(true);
+            self.outputWindow = null;
+          }
+          this.close(true);
+          win = null;
+        }
+      });
     },
 
     //create a new window 50px below current window
