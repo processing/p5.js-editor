@@ -46,8 +46,8 @@ gulp.task('default', ['css', 'browserify', 'watch']);
 gulp.task('build', function () {
   var nw = new NwBuilder({
     version: '0.9.2',
+    buildType: 'versioned',
     files: [ './public/**'],
-    platforms: ['osx'],
     buildDir: 'dist'
   });
 
