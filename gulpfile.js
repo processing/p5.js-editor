@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var NwBuilder = require('node-webkit-builder');
 var plumber = require('gulp-plumber');
 var sass = require('gulp-sass');
 var rename = require('gulp-rename');
@@ -41,3 +42,21 @@ gulp.task('watch', function() {
 });
 
 gulp.task('default', ['css', 'browserify', 'watch']);
+
+gulp.task('build', function () {
+  var nw = new NwBuilder({
+    version: '0.9.2',
+    files: [ './public/**'],
+    platforms: ['osx'],
+    buildDir: 'dist'
+  });
+
+  nw.on('log', console.log);
+
+  nw.build().then(function () {
+    console.log('all done!');
+  }).catch(function (error) {
+    console.error(error);
+  });
+
+});
