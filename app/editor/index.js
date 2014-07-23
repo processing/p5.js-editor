@@ -32,6 +32,7 @@ module.exports = {
 
     this.ace = window.ace = ace.edit('editor');
     this.ace.setTheme('ace/theme/tomorrow');
+    this.ace.setReadOnly(true);
   },
 
   methods: {
@@ -55,6 +56,7 @@ module.exports = {
         this.sessions.push(session);
       }
 
+      this.ace.setReadOnly(false);
       this.ace.setSession(session.doc);
       this.ace.focus();
     },
