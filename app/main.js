@@ -139,19 +139,19 @@ var app = new Vue({
         if (Path.dirname(path) == self.projectPath) {
           self.files.push(f);
         } else {
-          addToFiles(f, self.files);
+          File.addToTree(f, self.files);
         }
       }).on('addDir', function(path) {
         var f = File.setup(path, {type: 'folder', children: []});
         if (Path.dirname(path) == self.projectPath) {
           self.files.push(f);
         } else {
-          addToFiles(f, self.files);
+          File.addToTree(f, self.files);
         }
       }).on('unlink', function(path) {
-        removeFromFiles(path, self.files);
+        File.removeFromTree(path, self.files);
       }).on('unlinkDir', function(path) {
-        removeFromFiles(path, self.files);
+        File.removeFromTree(path, self.files);
       })
     },
 
@@ -248,16 +248,6 @@ var app = new Vue({
       fs.writeFile(filename, '', 'utf8', function(err){
         self.openFile(filename);
       });
-      //var ext = Path.extname(title);
-      //if (!ext) ext = '.js';
-
-      //var self = this;
-      //var tmpfile = Path.join(os.tmpdir(), 'jside' + Date.now() + '.js');
-      //fs.writeFile(tmpfile, '', 'utf8', function(err){
-        //var fileObject = File.setup(tmpfile, {temp: true, name: title, ext: ext});
-        //self.files.push(fileObject);
-        //self.openFile(tmpfile);
-      //});
     },
 
     newFolder: function(basepath) {
@@ -297,27 +287,3 @@ var app = new Vue({
 
 
 
-var addToFiles = function(fileObject, fileArray){
-  fileArray.forEach(function(f){
-    if (f.type === 'folder') {
-      if (f.path === Path.dirname(fileObject.path)) {
-        f.children.push(fileObject);
-        return true;
-      }
-      addToFiles(fileObject, f.children);
-    }
-  });
-};
-
-var removeFromFiles = function(path, fileArray) {
-  var f = _.findWhere(fileArray, {path: path});
-  if (f) {
-    fileArray.splice(_.indexOf(fileArray, f), 1);
-    return true;
-  }
-  fileArray.forEach(function(fileObject){
-    if (fileObject.type === 'folder' && fileObject.children.length > 0) {
-      removeFromFiles(path, fileObject.children);
-    }
-  });
-};

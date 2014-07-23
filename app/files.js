@@ -20,6 +20,31 @@ var File = {
     return _.extend(fileObject, options);
   },
 
+  addToTree: function(fileObject, fileArray){
+    fileArray.forEach(function(f){
+      if (f.type === 'folder') {
+        if (f.path === Path.dirname(fileObject.path)) {
+          f.children.push(fileObject);
+          return true;
+        }
+        File.addToTree(fileObject, f.children);
+      }
+    });
+  },
+
+  removeFromTree: function(path, fileArray) {
+    var f = _.findWhere(fileArray, {path: path});
+    if (f) {
+      fileArray.splice(_.indexOf(fileArray, f), 1);
+      return true;
+    }
+    fileArray.forEach(function(fileObject){
+      if (fileObject.type === 'folder' && fileObject.children.length > 0) {
+        File.removeFromTree(path, fileObject.children);
+      }
+    });
+  },
+
   create: function(path) {
 
   },
