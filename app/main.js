@@ -32,6 +32,7 @@ var app = new Vue({
     projectPath: window.PATH,
     windowURL: window.location.href,
     temp: true,
+    fontSize: 14,
     files: []
   },
 
@@ -95,15 +96,18 @@ var app = new Vue({
       var self = this;
       var win = gui.Window.get();
       win.on('close', function(){
+        //check to see if there are unsaved files
         var shouldClose = true;
         if (_.any(self.files, function(f) {return f.contents != f.originalContents})) {
           shouldClose = confirm('You have unsaved files. Quit and lose changes?');
         }
         if (shouldClose) {
+          //clean up output window
           if (self.outputWindow) {
             self.outputWindow.close(true);
             self.outputWindow = null;
           }
+          //close this window
           this.close(true);
           win = null;
         }
@@ -152,6 +156,7 @@ var app = new Vue({
       });
     },
 
+    //watch the project file tree for changes
     watch: function(path) {
       var self = this;
       var watcher = chokidar.watch(path, {ignoreInitial: true});
@@ -300,7 +305,13 @@ var app = new Vue({
 
     run: function() {
       this.modeFunction('run');
+    },
+
+    changeFontSize: function(sz) {
+      this.fontSize += sz;
+      $('#editor').css({fontSize: this.fontSize});
     }
+
 
   }
 

@@ -39,11 +39,11 @@ module.exports.setup = function(app) {
   });
 
   Mousetrap.bind(['command+=', 'ctrl+='], function(e) {
-    editor.changeFontSize(1);
+    app.changeFontSize(1);
   });
 
   Mousetrap.bind(['command+-', 'ctrl+-'], function(e) {
-    editor.changeFontSize(-1);
+    app.changeFontSize(-1);
   });
 
   Mousetrap.stopCallback = function(e, element, combo) {
