@@ -61,11 +61,8 @@ module.exports = {
     } else {
       startServer(this.projectPath, this, function(url) {
         self.outputWindow = self.newWindow(url, {toolbar: true, 'inject-js-start': 'js/debug-console.js'});
-
         self.outputWindow.on("close", function(){
-          //this.close(true);
           this.hide();
-          //self.outputWindow = null;
         });
 
       });
