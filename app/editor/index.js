@@ -9,6 +9,7 @@ require('brace/mode/css');
 require('brace/mode/json');
 require('brace/mode/text');
 require('brace/theme/tomorrow');
+require('brace/ext/searchbox');
 
 var modes = {
   ".html": "ejs",
