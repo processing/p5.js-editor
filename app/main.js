@@ -60,6 +60,7 @@ var app = new Vue({
       var self = this;
       this.loadProject(this.projectPath, function(){
         self.openFile(filename);
+        gui.Window.get().show();
       });
 
     } else {
@@ -99,7 +100,7 @@ var app = new Vue({
         height: 768,
         toolbar: false,
         focus: true,
-        show: true
+        show: false
       }, options));
       return win;
     },
@@ -110,7 +111,7 @@ var app = new Vue({
       var path = event.target.files[0].path;
 
       //create the new window
-      var win = this.newWindow(this.windowURL)
+      var win = this.newWindow(this.windowURL);
 
       //set the project path of the new window
       win.on('document-start', function(){

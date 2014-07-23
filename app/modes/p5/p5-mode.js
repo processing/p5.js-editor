@@ -24,6 +24,7 @@ module.exports = {
     var self = this;
     this.loadProject(tempProject, function(){
       self.openFile(Path.join(tempProject, 'sketch.js'));
+      gui.Window.get().show();
     });
   },
 
@@ -59,8 +60,9 @@ module.exports = {
       this.outputWindow.show();
       this.outputWindow.focus();
     } else {
+      gui.App.clearCache();
       startServer(this.projectPath, this, function(url) {
-        self.outputWindow = self.newWindow(url, {toolbar: true, 'inject-js-start': 'js/debug-console.js'});
+        self.outputWindow = self.newWindow(url, {show: true, toolbar: true, 'inject-js-start': 'js/debug-console.js'});
         self.outputWindow.on("close", function(){
           this.hide();
         });

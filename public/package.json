@@ -9,7 +9,7 @@
     "position": "center",
     "width": 1024,
     "height": 768,
-    "show": true,
+    "show": false,
     "resizable": true
   },
   "dependencies": {
