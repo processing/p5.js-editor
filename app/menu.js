@@ -1,3 +1,4 @@
+var $ = require('jquery');
 var menubar = new gui.Menu({ type: 'menubar' });
 var fileMenu = new gui.Menu();
 var help = new gui.Menu();
