@@ -33,6 +33,7 @@ var app = new Vue({
     windowURL: window.location.href,
     temp: true,
     fontSize: 14,
+    running: false,
     files: []
   },
 
@@ -48,20 +49,24 @@ var app = new Vue({
 
     this.setupFileListener();
     this.setupCloseHandler();
+    this.setupDragListener();
 
     if (this.projectPath) {
       this.temp = false;
+      var filename = null;
 
-      //keep the name of the file to be opened
-      var filename = this.projectPath;
+      if (fs.lstatSync(this.projectPath).isFile()) {
+        //keep the name of the file to be opened
+        filename = this.projectPath;
 
-      //set the projectPath to the enclosing folder
-      this.projectPath = Path.dirname(this.projectPath);
+        //set the projectPath to the enclosing folder
+        this.projectPath = Path.dirname(this.projectPath);
+      }
 
       //load the project and open the selected file
       var self = this;
       this.loadProject(this.projectPath, function(){
-        self.openFile(filename);
+        if (filename) self.openFile(filename);
         gui.Window.get().show();
       });
 
@@ -112,6 +117,21 @@ var app = new Vue({
           win = null;
         }
       });
+    },
+
+    //todo: setup drag and drop
+    setupDragListener: function() {
+      var self = this;
+      window.ondragover = function(e) { e.preventDefault(); return false };
+      window.ondrop = function(e) {
+        e.preventDefault();
+        var path = e.dataTransfer.files[0].path;
+        var win = self.newWindow(self.windowURL);
+        win.on('document-start', function(){
+          win.window.PATH = path;
+        });
+        return false
+      };
     },
 
     //create a new window 50px below current window
@@ -307,12 +327,18 @@ var app = new Vue({
       this.modeFunction('run');
     },
 
+    toggleRun: function() {
+      if (this.running) {
+        this.modeFunction('stop');
+      } else {
+        this.modeFunction('run');
+      }
+    },
+
     changeFontSize: function(sz) {
       this.fontSize += sz;
       $('#editor').css({fontSize: this.fontSize});
     }
-
-
   }
 
 });

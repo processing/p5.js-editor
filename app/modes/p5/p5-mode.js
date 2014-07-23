@@ -60,18 +60,25 @@ module.exports = {
       this.outputWindow.show();
       this.outputWindow.focus();
     } else {
+      this.running = true;
       gui.App.clearCache();
       startServer(this.projectPath, this, function(url) {
         self.outputWindow = self.newWindow(url, {show: true, toolbar: true, 'inject-js-start': 'js/debug-console.js'});
         self.outputWindow.on("close", function(){
           self.outputWindow = null;
           this.close(true);
-          //this.hide();
+          self.running = false;
         });
 
       });
     }
   },
+
+  stop: function() {
+    if (this.outputWindow) {
+      this.outputWindow.close();
+    }
+  }
 
 };
 

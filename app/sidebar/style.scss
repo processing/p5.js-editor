@@ -44,6 +44,21 @@
   text-shadow: 0px 1px #E1DEDC;
   cursor: pointer;
   outline: 0;
+
+}
+
+#play:before {
+  content: "\25B6";
+}
+
+#play.running {
+  color: black;
+  font-size: 30px;
+  padding:2px;
+}
+
+#play.running:before {
+  content: "\25FC";
 }
 
 #sidebar-drag {
