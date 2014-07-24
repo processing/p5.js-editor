@@ -60,38 +60,6 @@ module.exports = {
       this.$root.openFile(file.path);
     },
 
-    addToTree: function(file) {
-      var f = _.findWhere(this.files, {path: file.path});
-      if (f) return false;
-      else {
-        var f = {
-          path: file.path,
-          label: file.name,
-          type: 'file',
-          id: file.path,
-          icon: 'file'
-        }
-        this.files.push(f);
-      }
-    },
-
-    removeFromTree: function(path) {
-      var f = _.findWhere(this.files, {path: path});
-      if (f) {
-        this.files.splice(_.indexOf(this.files, f), 1);
-      }
-    },
-
-    updateTree: function(path, file) {
-      var f = _.findWhere(this.files, {path: path});
-      if (f) {
-        var index = _.indexOf(this.files, f);
-        this.files[index].path = this.file[index].id = file.path;
-        this.file[index].label = file.name;
-        this.files[index].icon = f.type = 'file';
-      }
-    },
-
     toggleFolder: function(folder) {
       folder.open = !folder.open;
       if (folder.open) {
