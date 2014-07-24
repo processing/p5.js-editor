@@ -1,6 +1,7 @@
 var Path = nodeRequire('path');
 
 var _ = require('underscore');
+var Files = require('../files');
 var beautify = require('js-beautify').js_beautify;
 var beautify_css = require('js-beautify').css;
 var beautify_html = require('js-beautify').html;
@@ -48,8 +49,8 @@ module.exports = {
 
         var self = this;
         doc.on('change', function() {
-          var file = _.findWhere(self.$root.files, {path: fileObject.path});
-          file.contents = doc.getValue();
+          var file = Files.find(self.$root.files, fileObject.path);
+          if (file) file.contents = doc.getValue();
         });
 
         var session = {

@@ -3,7 +3,7 @@ var fs = nodeRequire('fs');
 
 var _ = require('underscore');
 
-var File = {
+var Files = {
   setup: function(path, options) {
     var name = Path.basename(path);
     var ext = Path.extname(path);
@@ -20,14 +20,18 @@ var File = {
     return _.extend(fileObject, options);
   },
 
-  addToTree: function(fileObject, fileArray){
+  addToTree: function(fileObject, fileArray, projectRoot){
+    if (Path.dirname(fileObject.path) === projectRoot && !Files.contains(fileArray, fileObject)) {
+      fileArray.push(fileObject);
+      return true;
+    }
     fileArray.forEach(function(f){
       if (f.type === 'folder') {
-        if (f.path === Path.dirname(fileObject.path)) {
+        if (f.path === Path.dirname(fileObject.path) && !Files.contains(f.children, fileObject)) {
           f.children.push(fileObject);
           return true;
         }
-        File.addToTree(fileObject, f.children);
+        Files.addToTree(fileObject, f.children);
       }
     });
   },
@@ -40,21 +44,37 @@ var File = {
     }
     fileArray.forEach(function(fileObject){
       if (fileObject.type === 'folder' && fileObject.children.length > 0) {
-        File.removeFromTree(path, fileObject.children);
+        Files.removeFromTree(path, fileObject.children);
       }
     });
   },
 
-  create: function(path) {
-
+  contains: function(files, fileObject) {
+    if (_.findWhere(files, {path: fileObject.path})) {
+      return true;
+    } else {
+      return false;
+    }
   },
 
-  update: function(){
+  find: function(files, path) {
+    var result = undefined;
+    _find(files, path);
+    return result;
 
-  },
-
-  remove: function(){
-
+    function _find(files, path) {
+      if (result) return false;
+      var f = _.findWhere(files, {path: path});
+      if (f) {
+        result = f;
+        return true;
+      }
+      files.forEach(function(f){
+        if (f.type === 'folder') {
+          _find(f.children, path);
+        }
+      });
+    }
   },
 
   list: function(dir, callback) {
@@ -63,7 +83,7 @@ var File = {
       var pending = files.length;
       files.forEach(function(filepath) {
         var path = Path.join(dir, filepath);
-        var fileObject = File.setup(path);
+        var fileObject = Files.setup(path);
 
         fs.lstat(path, function(err, stats){
           if (stats.isDirectory()) {
@@ -79,14 +99,6 @@ var File = {
       });
     });
   },
-
-  find: function() {
-
-  },
-
-  findOne: function() {
-
-  }
 };
 
-module.exports = File;
+module.exports = Files;

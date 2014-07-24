@@ -9,7 +9,7 @@ var Vue = require('vue');
 var $ = require('jquery');
 var _ = require('underscore');
 var keybindings = require('./keybindings');
-var File = require('./files');
+var Files = require('./files');
 var menu = require('./menu');
 var modes = {
   p5: require('./modes/p5/p5-mode')
@@ -171,7 +171,7 @@ var app = new Vue({
     //load project files
     loadProject: function(path, callback) {
       var self = this;
-      File.list(path, function(files){
+      Files.list(path, function(files){
         self.files = files;
         self.watch(path);
         if (typeof callback === 'function') callback();
@@ -183,23 +183,15 @@ var app = new Vue({
       var self = this;
       var watcher = chokidar.watch(path, {ignoreInitial: true});
       watcher.on('add', function(path) {
-        var f = File.setup(path);
-        if (Path.dirname(path) == self.projectPath) {
-          self.files.push(f);
-        } else {
-          File.addToTree(f, self.files);
-        }
+        var f = Files.setup(path);
+        Files.addToTree(f, self.files, self.projectPath);
       }).on('addDir', function(path) {
-        var f = File.setup(path, {type: 'folder', children: []});
-        if (Path.dirname(path) == self.projectPath) {
-          self.files.push(f);
-        } else {
-          File.addToTree(f, self.files);
-        }
+        var f = Files.setup(path, {type: 'folder', children: []});
+        Files.addToTree(f, self.files, self.projectPath);
       }).on('unlink', function(path) {
-        File.removeFromTree(path, self.files);
+        Files.removeFromTree(path, self.files);
       }).on('unlinkDir', function(path) {
-        File.removeFromTree(path, self.files);
+        Files.removeFromTree(path, self.files);
       })
     },
 
@@ -260,10 +252,9 @@ var app = new Vue({
     openFile: function(path, callback) {
       var self = this;
 
-      var file = _.findWhere(this.files, {path: path});
-      if (!file) {
-        file = {path: path}
-      }
+      var file = Files.find(this.files, path);
+      if (!file) return false;
+
       if (file.open) {
         this.title = file.name;
         this.currentFile = file;
@@ -294,6 +285,8 @@ var app = new Vue({
 
       var self = this;
       fs.writeFile(filename, '', 'utf8', function(err){
+        var f = Files.setup(filename);
+        Files.addToTree(f, self.files, self.projectPath);
         self.openFile(filename);
       });
     },
