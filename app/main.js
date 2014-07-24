@@ -125,11 +125,13 @@ var app = new Vue({
       window.ondragover = function(e) { e.preventDefault(); return false };
       window.ondrop = function(e) {
         e.preventDefault();
-        var path = e.dataTransfer.files[0].path;
-        var win = self.newWindow(self.windowURL);
-        win.on('document-start', function(){
-          win.window.PATH = path;
-        });
+        if (e.dataTransfer.files[0]) {
+          var path = e.dataTransfer.files[0].path;
+          var win = self.newWindow(self.windowURL);
+          win.on('document-start', function(){
+            win.window.PATH = path;
+          });
+        }
         return false
       };
     },
