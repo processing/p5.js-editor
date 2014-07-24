@@ -222,11 +222,17 @@ var app = new Vue({
         //mode specific action
         this.modeFunction('saveAs', file);
       } else {
-        this.currentFile.path = file;
-        this.currentFile.name = Path.basename(file);
-        this.currentFile.ext = Path.extname(file);
-        this.writeFile();
-        this.openFile(file);
+        fs.writeFileSync(file, this.currentFile.contents, "utf8");
+        if ((Path.dirname(file) + '/').indexOf(this.projectPath + '/') > -1) {
+          var f = Files.setup(file);
+          Files.addToTree(f, this.files, this.projectPath);
+          this.openFile(file);
+        } else {
+          var win = this.newWindow(this.windowURL);
+          win.on('document-start', function(){
+            win.window.PATH = file;
+          });
+        }
       }
 
       //reset value in case the user wants to save the same filename more than once
