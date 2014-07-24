@@ -1,6 +1,9 @@
 var Path = nodeRequire('path');
 
 var _ = require('underscore');
+var beautify = require('js-beautify').js_beautify;
+var beautify_css = require('js-beautify').css;
+var beautify_html = require('js-beautify').html;
 var ace = require('brace');
 require('brace/mode/javascript');
 require('brace/mode/html');
@@ -29,6 +32,7 @@ module.exports = {
 
     this.$on('open-file', this.openFile);
     this.$on('save-project-as', this.saveProjectAs);
+    this.$on('reformat', this.reformat);
 
     this.ace = window.ace = ace.edit('editor');
     this.ace.setTheme('ace/theme/tomorrow');
@@ -65,6 +69,18 @@ module.exports = {
       this.sessions.forEach(function(session) {
         session.path = Path.join(path, Path.basename(session.path));
       });
+    },
+
+    reformat: function() {
+      var ext = this.$root.currentFile.ext;
+      var content = this.ace.getValue();
+      if (ext == '.js') {
+        this.ace.setValue(beautify(content));
+      } else if (ext == '.css') {
+        this.ace.setValue(beautify_css(content));
+      } else if (ext == '.html') {
+        this.ace.setValue(beautify_html(content));
+      }
     }
   }
 };

@@ -46,6 +46,10 @@ module.exports.setup = function(app) {
     app.changeFontSize(-1);
   });
 
+  Mousetrap.bind(['command+t', 'ctrl+t'], function(e) {
+    app.$broadcast('reformat');
+  });
+
   Mousetrap.stopCallback = function(e, element, combo) {
     return false;
   }
