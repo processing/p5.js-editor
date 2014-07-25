@@ -1,10 +1,10 @@
-//node modules
+// node modules
 var Path = nodeRequire('path');
 var fs = nodeRequire('fs');
 var os = nodeRequire('os');
 var chokidar = nodeRequire('chokidar');
 
-//front-end modules
+// front-end modules
 var Vue = require('vue');
 var $ = require('jquery');
 var _ = require('underscore');
@@ -56,14 +56,14 @@ var app = new Vue({
       var filename = null;
 
       if (fs.lstatSync(this.projectPath).isFile()) {
-        //keep the name of the file to be opened
+        // keep the name of the file to be opened
         filename = this.projectPath;
 
-        //set the projectPath to the enclosing folder
+        // set the projectPath to the enclosing folder
         this.projectPath = Path.dirname(this.projectPath);
       }
 
-      //load the project and open the selected file
+      // load the project and open the selected file
       var self = this;
       this.loadProject(this.projectPath, function(){
         if (filename) self.openFile(filename);
@@ -72,7 +72,7 @@ var app = new Vue({
 
       menu.updateRecentFiles(this, this.projectPath);
     } else {
-      //if we don't have a project path global, create a new project
+      // if we don't have a project path global, create a new project
       this.modeFunction('newProject');
       menu.updateRecentFiles(this);
     }
@@ -82,8 +82,8 @@ var app = new Vue({
     modeFunction: function(func, args) {
       var mode = this.$options.mode;
       if (typeof mode[func] === 'function') {
-        //make args an array if it isn't already
-        //typeof args won't work because it returns 'object'
+        // make args an array if it isn't already
+        // typeof args won't work because it returns 'object'
         if (Object.prototype.toString.call(args) !== '[object Array]') {
           args = [args];
         }
@@ -91,9 +91,9 @@ var app = new Vue({
       }
     },
 
-    //use jquery to handle file changes
-    //(I should move this over to vuejs but it wasn't dealing
-    //with the html file element properly)
+    // use jquery to handle file changes
+    // (I should move this over to vuejs but it wasn't dealing
+    // with the html file element properly)
     setupFileListener: function() {
       $('#openFile').change(this.open.bind(this));
       $('#saveFile').change(this.saveAs.bind(this));
@@ -104,25 +104,25 @@ var app = new Vue({
       var self = this;
       var win = gui.Window.get();
       win.on('close', function(){
-        //check to see if there are unsaved files
+        // check to see if there are unsaved files
         var shouldClose = true;
         if (_.any(self.files, function(f) {return f.contents != f.originalContents})) {
           shouldClose = confirm('You have unsaved files. Quit and lose changes?');
         }
         if (shouldClose) {
-          //clean up output window
+          // clean up output window
           if (self.outputWindow) {
             self.outputWindow.close(true);
             self.outputWindow = null;
           }
-          //close this window
+          // close this window
           this.close(true);
           win = null;
         }
       });
     },
 
-    //todo: setup drag and drop
+    // todo: setup drag and drop
     setupDragListener: function() {
       var self = this;
       window.ondragover = function(e) { e.preventDefault(); return false };
@@ -136,7 +136,7 @@ var app = new Vue({
       };
     },
 
-    //create a new window 50px below current window
+    // create a new window 50px below current window
     newWindow: function(url, options) {
       var currentWindow = gui.Window.get();
       var win = gui.Window.open(url, _.extend({
@@ -151,11 +151,11 @@ var app = new Vue({
       return win;
     },
 
-    //open an existing project with a new window
+    // open an existing project with a new window
     open: function(event) {
       var path = event.target.files[0].path;
       this.openProject(path);
-      //reset value in case the user wants to open the same file more than once
+      // reset value in case the user wants to open the same file more than once
       $('#openFile').val('');
     },
 
@@ -169,7 +169,7 @@ var app = new Vue({
       });
     },
 
-    //load project files
+    // load project files
     loadProject: function(path, callback) {
       var self = this;
       Files.list(path, function(files){
@@ -179,7 +179,7 @@ var app = new Vue({
       });
     },
 
-    //watch the project file tree for changes
+    // watch the project file tree for changes
     watch: function(path) {
       var self = this;
       var watcher = chokidar.watch(path, {ignoreInitial: true});
@@ -196,7 +196,7 @@ var app = new Vue({
       })
     },
 
-    //close the window, checking for unsaved file changes
+    // close the window, checking for unsaved file changes
     closeProject: function() {
       if (this.outputWindow) {
         this.outputWindow.close(true);
@@ -204,7 +204,7 @@ var app = new Vue({
       }
     },
 
-    //save all open files
+    // save all open files
     saveAll: function() {
       _.where(this.files, {type: 'file', open: true}).forEach(function(file) {
         if (file.originalContents != file.contents) {
@@ -235,7 +235,7 @@ var app = new Vue({
         }
       }
 
-      //reset value in case the user wants to save the same filename more than once
+      // reset value in case the user wants to save the same filename more than once
       $('#saveFile').val('');
     },
 
@@ -245,11 +245,11 @@ var app = new Vue({
     },
 
     saveFile: function() {
-      //if this is a new project then trigger a save-as
+      // if this is a new project then trigger a save-as
       if (this.temp) {
         $('#saveFile').trigger('click');
       } else {
-        //otherwise just write the current file
+        // otherwise just write the current file
         this.writeFile();
       }
     },
@@ -259,7 +259,7 @@ var app = new Vue({
       this.currentFile.originalContents = this.currentFile.contents;
     },
 
-    //open up a file - read its contents if it's not already opened
+    // open up a file - read its contents if it's not already opened
     openFile: function(path, callback) {
       var self = this;
 
@@ -283,7 +283,7 @@ var app = new Vue({
       }
     },
 
-    //create a new file and save it in the project path
+    // create a new file and save it in the project path
     newFile: function(basepath) {
       var title = prompt('File name:');
       if (!title) return false;
