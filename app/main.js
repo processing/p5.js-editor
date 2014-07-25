@@ -95,6 +95,7 @@ var app = new Vue({
     setupFileListener: function() {
       $('#openFile').change(this.open.bind(this));
       $('#saveFile').change(this.saveAs.bind(this));
+      $('#saveProject').change(this.saveProjectAs.bind(this));
     },
 
     setupCloseHandler: function() {
@@ -127,10 +128,7 @@ var app = new Vue({
         e.preventDefault();
         if (e.dataTransfer.files[0]) {
           var path = e.dataTransfer.files[0].path;
-          var win = self.newWindow(self.windowURL);
-          win.on('document-start', function(){
-            win.window.PATH = path;
-          });
+          self.openProject(path);
         }
         return false
       };
@@ -153,19 +151,20 @@ var app = new Vue({
 
     //open an existing project with a new window
     open: function(event) {
-      var currentWindow = gui.Window.get();
       var path = event.target.files[0].path;
+      this.openProject(path);
+      //reset value in case the user wants to open the same file more than once
+      $('#openFile').val('');
+    },
 
-      //create the new window
+    openProject: function(path) {
+      // create the new window
       var win = this.newWindow(this.windowURL);
 
-      //set the project path of the new window
+      // set the project path of the new window
       win.on('document-start', function(){
         win.window.PATH = path;
       });
-
-      //reset value in case the user wants to open the same file more than once
-      $('#openFile').val('');
     },
 
     //load project files
@@ -213,30 +212,34 @@ var app = new Vue({
       });
     },
 
-    //save the current file
     saveAs: function(event) {
-      //capture the filename selected by the user
+      // capture the filename selected by the user
       var file = event.target.files[0].path;
 
       if (this.temp) {
-        //mode specific action
+        // mode specific action
         this.modeFunction('saveAs', file);
       } else {
+        // save a file
+        // if the we are saving inside the project path just open the new file
+        // otherwise open a new window
         fs.writeFileSync(file, this.currentFile.contents, "utf8");
         if ((Path.dirname(file) + '/').indexOf(this.projectPath + '/') > -1) {
           var f = Files.setup(file);
           Files.addToTree(f, this.files, this.projectPath);
           this.openFile(file);
         } else {
-          var win = this.newWindow(this.windowURL);
-          win.on('document-start', function(){
-            win.window.PATH = file;
-          });
+          this.openProject(file);
         }
       }
 
       //reset value in case the user wants to save the same filename more than once
       $('#saveFile').val('');
+    },
+
+    saveProjectAs: function(event) {
+      var path = event.target.files[0].path;
+      this.modeFunction('saveAs', path);
     },
 
     saveFile: function() {
