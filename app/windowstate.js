@@ -1,43 +1,26 @@
-//thinking about how to preserve window state bewteen sessions
+module.exports.load = function(app) {
+  var currentWindow = gui.Window.get();
+  var windows = localStorage.windows ? JSON.parse(localStorage.windows) : [];
+  localStorage.windows = JSON.stringify([]);
+  windows.forEach(function(w){
+    if (w.path) {
+      var newWin = app.newWindow(app.windowURL, w);
+      newWin.on('document-start', function(){
+        newWin.window.PATH = w.path;
+      });
+    }
+  });
+};
 
-//var windows = [
-  //{
-    //projectPath: '/some/path',
-    //currentFilePath: '/some/path/file.js',
-    //width: 100,
-    //height: 100,
-    //x: 10,
-    //y: 10,
-    //sidebarWidth: 10,
-    //debugWidth: 10,
-    //fullscreen: false,
-    //focused: false
-  //}
-//];
-
-//var winState = {};
-
-//var win = gui.Window.get();
-
-//win.on('focus', function() {
-  //winState.focused = true;
-//});
-
-
-//win.on('blur', function() {
-  //winState.focused = false;
-//});
-
-//win.on('move', function(x, y) {
-  //winState.x = x;
-  //winState.y = y;
-//});
-
-//win.on('resize', function(width, height) {
-  //winState.width = width;
-  //winState.height = height;
-//});
-
-//win.on('close', function() {
-  //this.close(true);
-//});
+module.exports.save = function(app, win) {
+  var state = {
+    x: win.x,
+    y: win.y,
+    width: win.width,
+    height: win.height,
+    path: app.currentFile && app.currentFile.path ? app.currentFile.path : app.projectPath
+  };
+  var windows = JSON.parse(localStorage.windows);
+  windows.push(state);
+  localStorage.windows = JSON.stringify(windows);
+};

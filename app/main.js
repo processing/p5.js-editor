@@ -11,6 +11,7 @@ var _ = require('underscore');
 var keybindings = require('./keybindings');
 var Files = require('./files');
 var menu = require('./menu');
+var windowstate = require('./windowstate');
 var modes = {
   p5: require('./modes/p5/p5-mode')
 };
@@ -44,16 +45,7 @@ var app = new Vue({
   },
 
   ready: function() {
-    var windows = localStorage.windows ? JSON.parse(localStorage.windows) : [];
-    localStorage.windows = JSON.stringify([]);
-    windows.forEach(function(w){
-      if (w.path) {
-        var newWin = this.newWindow(this.windowURL, w);
-        newWin.on('document-start', function(){
-          newWin.window.PATH = w.path;
-        });
-      }
-    }, this);
+    windowstate.load(this);
 
     keybindings.setup(this);
     menu.setup(this);
@@ -131,16 +123,7 @@ var app = new Vue({
 
           // save window state if the user quit the program
           if (closeEvent === 'quit' && self.temp === false) {
-            var state = {
-              x: win.x,
-              y: win.y,
-              width: win.width,
-              height: win.height,
-              path: self.currentFile && self.currentFile.path ? self.currentFile.path : self.projectPath
-            };
-            var windows = JSON.parse(localStorage.windows);
-            windows.push(state);
-            localStorage.windows = JSON.stringify(windows);
+            windowstate.save(self, win);
           }
 
           // close this window
