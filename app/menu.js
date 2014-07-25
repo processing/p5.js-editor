@@ -29,6 +29,10 @@ module.exports.setup = function(app) {
     $('#saveFile').trigger('click');
   }}));
 
+  fileMenu.append(new gui.MenuItem({ label: 'Save Project As', click: function(){
+    $('#saveProject').trigger('click');
+  }}));
+
   fileMenu.append(new gui.MenuItem({ type: 'separator' }));
 
   fileMenu.append(new gui.MenuItem({ label: 'Export \t\t\t\u2318E', click: function(){
