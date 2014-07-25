@@ -1,7 +1,7 @@
 {
   "author": "Sam Lavigne",
-  "name": "node-webkit-boilerplate",
-  "description": "Node webkit boilerplate for new projects.",
+  "name": "JSIDE",
+  "description": "Javascript IDE for beginners",
   "version": "0.0.1",
   "devDependencies": {
     "gulp-rename": "^1.2.0",
