@@ -44,6 +44,17 @@ var app = new Vue({
   },
 
   ready: function() {
+    var windows = localStorage.windows ? JSON.parse(localStorage.windows) : [];
+    localStorage.windows = JSON.stringify([]);
+    windows.forEach(function(w){
+      if (w.path) {
+        var newWin = this.newWindow(this.windowURL, w);
+        newWin.on('document-start', function(){
+          newWin.window.PATH = w.path;
+        });
+      }
+    }, this);
+
     keybindings.setup(this);
     menu.setup(this);
 
@@ -76,6 +87,8 @@ var app = new Vue({
       this.modeFunction('newProject');
       menu.updateRecentFiles(this);
     }
+
+
   },
 
   methods: {
@@ -103,7 +116,7 @@ var app = new Vue({
     setupCloseHandler: function() {
       var self = this;
       var win = gui.Window.get();
-      win.on('close', function(){
+      win.on('close', function(closeEvent){
         // check to see if there are unsaved files
         var shouldClose = true;
         if (_.any(self.files, function(f) {return f.contents != f.originalContents})) {
@@ -115,6 +128,21 @@ var app = new Vue({
             self.outputWindow.close(true);
             self.outputWindow = null;
           }
+
+          // save window state if the user quit the program
+          if (closeEvent === 'quit' && self.temp === false) {
+            var state = {
+              x: win.x,
+              y: win.y,
+              width: win.width,
+              height: win.height,
+              path: self.currentFile && self.currentFile.path ? self.currentFile.path : self.projectPath
+            };
+            var windows = JSON.parse(localStorage.windows);
+            windows.push(state);
+            localStorage.windows = JSON.stringify(windows);
+          }
+
           // close this window
           this.close(true);
           win = null;
@@ -167,6 +195,8 @@ var app = new Vue({
       win.on('document-start', function(){
         win.window.PATH = path;
       });
+
+      return win;
     },
 
     // load project files
