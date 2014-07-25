@@ -63,6 +63,7 @@ module.exports = {
 
       this.ace.setReadOnly(false);
       this.ace.setSession(session.doc);
+      this.ace.getSession().setTabSize(2);
       this.ace.focus();
     },
 
@@ -75,12 +76,13 @@ module.exports = {
     reformat: function() {
       var ext = this.$root.currentFile.ext;
       var content = this.ace.getValue();
+      var opts = {indent_size: 2};
       if (ext == '.js') {
-        this.ace.setValue(beautify(content));
+        this.ace.setValue(beautify(content, opts));
       } else if (ext == '.css') {
-        this.ace.setValue(beautify_css(content));
+        this.ace.setValue(beautify_css(content, opts));
       } else if (ext == '.html') {
-        this.ace.setValue(beautify_html(content));
+        this.ace.setValue(beautify_html(content, opts));
       }
     }
   }
