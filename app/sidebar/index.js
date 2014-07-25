@@ -81,7 +81,7 @@ module.exports = {
   }
 }
 
-
+// to do - onely make this once! don't generate each time
 var popupMenu = function(file, e) {
   e.preventDefault();
   var self = this;
