@@ -41,14 +41,13 @@ gulp.task('watch', function() {
   gulp.watch(cssPath, ['css']);
 });
 
-gulp.task('default', ['css', 'browserify', 'watch']);
-
 gulp.task('build', function () {
   var nw = new NwBuilder({
     version: '0.9.2',
     buildType: 'versioned',
     files: [ './public/**'],
-    buildDir: 'dist'
+    buildDir: 'dist',
+    platforms: ['osx']
   });
 
   nw.on('log', console.log);
@@ -60,3 +59,5 @@ gulp.task('build', function () {
   });
 
 });
+
+gulp.task('default', ['css', 'browserify', 'watch']);
