@@ -70,9 +70,11 @@ var app = new Vue({
         gui.Window.get().show();
       });
 
+      menu.updateRecentFiles(this, this.projectPath);
     } else {
       //if we don't have a project path global, create a new project
       this.modeFunction('newProject');
+      menu.updateRecentFiles(this);
     }
   },
 
