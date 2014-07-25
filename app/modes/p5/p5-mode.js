@@ -49,6 +49,8 @@ module.exports = {
     this.projectPath = path;
     //this.$broadcast('open-project', path);
     this.temp = false;
+
+    this.watch(path);
   },
 
   run: function() {
