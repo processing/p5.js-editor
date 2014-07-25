@@ -28,6 +28,10 @@ var modes = {
 module.exports = {
   template: require('./template.html'),
 
+  data: {
+    newProject: true
+  },
+
   ready: function() {
     this.sessions = [];
 
@@ -65,6 +69,11 @@ module.exports = {
       this.ace.setSession(session.doc);
       this.ace.getSession().setTabSize(2);
       this.ace.focus();
+
+      if (this.newProject) {
+        this.ace.gotoLine(2, 2);
+        this.newProject = false;
+      }
     },
 
     saveProjectAs: function(path) {
