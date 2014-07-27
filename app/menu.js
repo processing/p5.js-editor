@@ -12,7 +12,7 @@ module.exports.setup = function(app) {
     app.newFile();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'New Window \t\u21E7\u2318N', click: function(){
+  fileMenu.append(new gui.MenuItem({ label: 'New Project \t\u21E7\u2318N', click: function(){
     app.newWindow(app.windowURL);
   }}));
 
