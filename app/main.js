@@ -16,7 +16,8 @@ var modes = {
   p5: require('./modes/p5/p5-mode')
 };
 
-var app = new Vue({
+
+var appConfig = {
 
   el: '#app',
 
@@ -46,6 +47,7 @@ var app = new Vue({
   },
 
   ready: function() {
+
     keybindings.setup(this);
     menu.setup(this);
 
@@ -359,7 +361,14 @@ var app = new Vue({
     }
   }
 
+};
+
+
+windowstate.load(function(createNewProject){
+  if (createNewProject) {
+    var app = new Vue(appConfig);
+  } else {
+    gui.Window.get().close(true);
+  }
 });
-
-
 
