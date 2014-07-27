@@ -1,10 +1,12 @@
 <script type="text/javascript" charset="utf-8">
   var gui = require('nw.gui');
+  var fs = require('fs');
+
   var windows = localStorage.windows ? JSON.parse(localStorage.windows) : [];
   localStorage.windows = JSON.stringify([]);
   if (windows.length > 0) {
     windows.forEach(function(w){
-      if (w.path) {
+      if (w.path && fs.existsSync(w.path)) {
         var win = gui.Window.open('editor.html',{
           x: w.x,
           y: w.y,
