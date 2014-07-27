@@ -59,7 +59,7 @@ module.exports.setup = function(app) {
 module.exports.updateRecentFiles = function(app, path) {
   var recentFiles = JSON.parse(localStorage.recentFiles || '[]');
 
-  if (typeof path !== 'undefined') {
+  if (typeof path !== 'undefined' && !app.temp) {
     recentFiles.unshift(path);
   }
 
