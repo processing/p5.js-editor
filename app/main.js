@@ -31,6 +31,7 @@ var app = new Vue({
   data: {
     title: 'Untitled',
     projectPath: window.PATH,
+    unsaved: window.UNSAVED ? true : false,
     windowURL: window.location.href,
     temp: true,
     fontSize: 14,
@@ -45,8 +46,6 @@ var app = new Vue({
   },
 
   ready: function() {
-    windowstate.load(this);
-
     keybindings.setup(this);
     menu.setup(this);
 
@@ -55,7 +54,7 @@ var app = new Vue({
     this.setupDragListener();
 
     if (this.projectPath) {
-      this.temp = false;
+      if (!this.unsaved) this.temp = false;
       var filename = null;
 
       if (fs.lstatSync(this.projectPath).isFile()) {
@@ -122,7 +121,7 @@ var app = new Vue({
           }
 
           // save window state if the user quit the program
-          if (closeEvent === 'quit' && self.temp === false) {
+          if (closeEvent === 'quit') {
             windowstate.save(self, win);
           }
 

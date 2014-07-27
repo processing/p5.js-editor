@@ -1,27 +1,33 @@
-<!DOCTYPE html>
-<html lang="en" id="app">
-  <head>
-    <title>{{title}} {{currentFile.contents !== currentFile.originalContents ? '*' : ''}}</title>
-    <link rel="stylesheet" href="css/main.css">
-  </head>
-  <body class="horizontal">
-    <div v-component="sidebar" v-with="files : files" id="sidebar-container"></div>
-    <div id="main-container">
-      <div v-component="editor" id="main"></div>
-      <div v-component="debug" id="debug-container"></div>
-    </div>
-
-    <input class="file-handler" id="openFile" type="file" />
-    <input class="file-handler" id="saveFile" type="file" nwsaveas />
-    <input class="file-handler" id="saveProject" type="file" nwsaveas />
-
-    <script>
-      //save the gui as a global
-      var gui = window.require('nw.gui');
-
-      //preserve node's require function
-      var nodeRequire = require;
-    </script>
-    <script src="js/main.js"></script>
-  </body>
-</html>
+<script type="text/javascript" charset="utf-8">
+  var gui = require('nw.gui');
+  var windows = localStorage.windows ? JSON.parse(localStorage.windows) : [];
+  localStorage.windows = JSON.stringify([]);
+  if (windows.length > 0) {
+    windows.forEach(function(w){
+      if (w.path) {
+        var win = gui.Window.open('editor.html',{
+          x: w.x,
+          y: w.y,
+          width: w.width,
+          height: w.height,
+          toolbar: false,
+          focus: true,
+          show: false
+        });
+        win.on('document-start', function(){
+          win.window.PATH = w.path;
+          win.window.UNSAVED = w.temp
+        });
+      }
+    });
+  } else {
+    var win = gui.Window.open('editor.html',{
+      position: 'center',
+      width: 1024,
+      height: 768,
+      toolbar: false,
+      focus: true,
+      show: false
+    });
+  }
+</script>

@@ -9,7 +9,7 @@ var notify = require("gulp-notify");
 var browserify = require('gulp-browserify');
 var partialify = require('partialify');
 
-var jsPath = ['./app/*.js', './app/**/*.js', './app/**/*.html', './public/index.html'];
+var jsPath = ['./app/*.js', './app/**/*.js', './app/**/*.html', './public/editor.html'];
 var cssPath = './app/**/*.scss';
 
 gulp.task('browserify', function() {
