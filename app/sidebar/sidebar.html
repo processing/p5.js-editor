@@ -3,7 +3,7 @@
   <h1 id="project-name" v-text="projectName"></h1>
   <div id="filetree">
     <ul>
-      <li v-repeat="files | orderBy 'label'" v-show="!hidden" v-component="{{type}}"></li>
+      <li v-repeat="files | orderBy 'name'" v-show="!hidden" v-component="{{type}}"></li>
     </ul>
   </div>
   <div id="toolbar">
