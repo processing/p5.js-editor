@@ -12,6 +12,7 @@ var keybindings = require('./keybindings');
 var Files = require('./files');
 var menu = require('./menu');
 var windowstate = require('./windowstate');
+var updater = require('./updater');
 var modes = {
   p5: require('./modes/p5/p5-mode')
 };
@@ -47,7 +48,7 @@ var appConfig = {
   },
 
   ready: function() {
-
+    updater.check();
     keybindings.setup(this);
     menu.setup(this);
 
@@ -196,7 +197,16 @@ var appConfig = {
     // watch the project file tree for changes
     watch: function(path) {
       var self = this;
-      var watcher = chokidar.watch(path, {ignoreInitial: true});
+
+      // don't watch recursively
+      var watcher = chokidar.watch(path, {
+        ignoreInitial: true,
+        ignored: function(filepath) {
+          var regex = new RegExp(path + '\/.*\/.+');
+          return regex.test(filepath);
+        }
+      });
+
       watcher.on('add', function(path) {
         var f = Files.setup(path);
         Files.addToTree(f, self.files, self.projectPath);
@@ -371,4 +381,3 @@ windowstate.load(function(createNewProject){
     gui.Window.get().close(true);
   }
 });
-
