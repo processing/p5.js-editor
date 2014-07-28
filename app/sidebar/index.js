@@ -61,10 +61,12 @@ module.exports = {
     },
 
     toggleFolder: function(folder) {
+      var self = this;
       folder.open = !folder.open;
       if (folder.open) {
         File.list(folder.path, function(files){
           folder.children = files;
+          self.$root.watch(folder.path);
         });
       }
     },

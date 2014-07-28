@@ -197,7 +197,16 @@ var appConfig = {
     // watch the project file tree for changes
     watch: function(path) {
       var self = this;
-      var watcher = chokidar.watch(path, {ignoreInitial: true});
+
+      // don't watch recursively
+      var watcher = chokidar.watch(path, {
+        ignoreInitial: true,
+        ignored: function(filepath) {
+          var regex = new RegExp(path + '\/.*\/.+');
+          return regex.test(filepath);
+        }
+      });
+
       watcher.on('add', function(path) {
         var f = Files.setup(path);
         Files.addToTree(f, self.files, self.projectPath);
