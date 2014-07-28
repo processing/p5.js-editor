@@ -21,11 +21,11 @@ $dark-gray: #58585b;
 .runfile {
   position: absolute;
   margin-left: -30px;
-	width: 0;
-	height: 0;
-	border-top: 6px solid transparent;
-	border-bottom: 6px solid transparent;
-	border-left: 10px solid #38B449;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 10px solid #38B449;
   top: 4px;
   display: none;
   cursor: pointer;
@@ -121,15 +121,15 @@ $dark-gray: #58585b;
 }
 
 #project-name {
-    padding-left: 20px;
-    font-size: 24px;
-    color: $dark-gray;
-    font-weight: bold;
-    // text-shadow: 0px 1px #E1DEDC;
-    margin-left: 36px;
-    margin-top: 20px;
-    margin-bottom: 22px;
-    cursor: url(“image.cur”), default;
+  padding-left: 20px;
+  font-size: 24px;
+  color: $dark-gray;
+  font-weight: bold;
+  // text-shadow: 0px 1px #E1DEDC;
+  margin-left: 36px;
+  margin-top: 20px;
+  margin-bottom: 22px;
+  cursor: url(“image.cur”), default;
 }
 
 
@@ -158,19 +158,16 @@ $dark-gray: #58585b;
 
       div.selected {
         background-color: #f6f6f6;
-        border-radius: 5px;
-        margin-right: -5px;
+        border-radius: 5px 0px 0px 5px;
       }
 
-        ul li {
-            div {
-                padding-left: 84px;
-            }
+      ul  {
+        padding-left: 14px;
 
-            .icon {
-                left: 62px;
-            }
-        }
+        /*.icon {*/
+          /*left: 62px;*/
+        /*}*/
+      }
 
     }
 
@@ -186,11 +183,11 @@ $dark-gray: #58585b;
 
 
     &.open {
-        background-image: url('../images/expanded.svg');
+      background-image: url('../images/expanded.svg');
     }
 
     &.closed {
-        background-image: url('../images/collapsed.svg');
+      background-image: url('../images/collapsed.svg');
     }
   }
 
