@@ -1,8 +1,6 @@
 var fs = nodeRequire('fs');
 
 module.exports.load = function(callback) {
-  var currentWindow = gui.Window.get();
-
   var windows = localStorage.windows ? JSON.parse(localStorage.windows) : [];
   localStorage.windows = JSON.stringify([]);
 
