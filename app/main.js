@@ -12,6 +12,7 @@ var keybindings = require('./keybindings');
 var Files = require('./files');
 var menu = require('./menu');
 var windowstate = require('./windowstate');
+var updater = require('./updater');
 var modes = {
   p5: require('./modes/p5/p5-mode')
 };
@@ -47,7 +48,7 @@ var appConfig = {
   },
 
   ready: function() {
-
+    updater.check();
     keybindings.setup(this);
     menu.setup(this);
 
@@ -371,4 +372,3 @@ windowstate.load(function(createNewProject){
     gui.Window.get().close(true);
   }
 });
-
