@@ -341,7 +341,8 @@ var appConfig = {
     },
 
     renameFile: function(path) {
-      var newName = prompt('Rename ' + Path.basename(path) + ' to:');
+      var originalName = Path.basename(path);
+      var newName = prompt('Rename ' + originalName + ' to:', originalName);
       if (!newName) return false;
 
       fs.rename(path, Path.join(Path.dirname(path), newName));
