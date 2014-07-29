@@ -43,6 +43,16 @@ module.exports = {
     this.ace = window.ace = ace.edit('editor');
     this.ace.setTheme('ace/theme/tomorrow');
     this.ace.setReadOnly(true);
+
+    //override default preference pane
+    var self = this;
+    this.ace.commands.addCommand({
+      name: 'Preferences',
+      bindKey: {win: 'Ctrl-,',  mac: 'Command-,'},
+      exec: function(editor) {
+        self.$root.toggleSettingsPane();
+      }
+    });
   },
 
   methods: {
