@@ -16,7 +16,11 @@ module.exports.load = function() {
   if (!settings) {
     settings = defaults;
   } else {
-    settings = JSON.parse(settings);
+    try {
+      settings = JSON.parse(settings);
+    } catch(err) {
+      settings = defaults;
+    }
   }
 
   nodeGlobal.userSettings = settings;
