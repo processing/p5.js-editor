@@ -44,7 +44,11 @@ module.exports = {
       },
       computed: {
         hidden: function() {
-          return this.name[0] === '.' || this.name === 'node_modules' || this.name === 'libraries';
+          if (!this.$root.settings.showLibs) {
+            return this.name[0] === '.' || this.name === 'node_modules' || this.name === 'libraries';
+          } else {
+            return this.name[0] === '.';
+          }
         }
       },
       methods: {

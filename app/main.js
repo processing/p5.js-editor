@@ -13,6 +13,7 @@ var Files = require('./files');
 var menu = require('./menu');
 var windowstate = require('./windowstate');
 var updater = require('./updater');
+var settings = require('./settings');
 var modes = {
   p5: require('./modes/p5/p5-mode')
 };
@@ -27,6 +28,7 @@ var appConfig = {
   components: {
     editor: require('./editor/index'),
     sidebar: require('./sidebar/index'),
+    settings: require('./settings/index'),
     debug: require('./debug/index')
   },
 
@@ -36,8 +38,9 @@ var appConfig = {
     unsaved: window.UNSAVED ? true : false,
     windowURL: window.location.href,
     temp: true,
-    fontSize: 14,
     running: false,
+    settings: {},
+    showSettings: false,
     files: []
   },
 
@@ -48,6 +51,7 @@ var appConfig = {
   },
 
   ready: function() {
+    this.settings = settings.load();
     updater.check();
     keybindings.setup(this);
     menu.setup(this);
@@ -55,6 +59,11 @@ var appConfig = {
     this.setupFileListener();
     this.setupCloseHandler();
     this.setupDragListener();
+
+    this.$watch('settings', function(value){
+      this.$broadcast('settings-changed', value);
+      settings.save(value);
+    });
 
     if (this.projectPath) {
       if (!this.unsaved) this.temp = false;
@@ -367,9 +376,16 @@ var appConfig = {
     },
 
     changeFontSize: function(sz) {
-      this.fontSize += sz;
-      $('#editor').css({fontSize: this.fontSize});
+      this.settings.fontSize = parseInt(this.settings.fontSize) + sz;
+    },
+
+    toggleSettingsPane: function() {
+      this.showSettings = !this.showSettings;
+      //if (this.showSettings) {
+        //this.settings = settings.load();
+      //}
     }
+
   }
 
 };

@@ -47,7 +47,11 @@ module.exports.setup = function(app) {
   });
 
   Mousetrap.bind(['command+t', 'ctrl+t'], function(e) {
-    app.$broadcast('reformat');
+    app.$.editor.reformat();
+  });
+
+  Mousetrap.bind(['command+,', 'ctrl+,'], function(e) {
+    app.toggleSettingsPane();
   });
 
   Mousetrap.stopCallback = function(e, element, combo) {

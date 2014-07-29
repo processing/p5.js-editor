@@ -1,0 +1,37 @@
+<div id="settingsPane">
+  <h2>Settings</h2>
+  <p>
+    <label for="consoleOrientation">Console</label>
+    <select id="consoleOrientation" v-model="consoleOrientation">
+      <option value="horizontal">Horizontal</option>
+      <option value="vertical">Vertical</option>
+    </select>
+  </p>
+
+  <p>
+    <input id="showLibs" type="checkbox" v-model="showLibs">
+    <label for="showLibs">Show library files</label>
+  </p>
+
+  <p>
+    <label for="fontSize">Editor Font Size</label>
+    <input type="text" id="fontSize" v-model="fontSize" size=3>
+  </p>
+
+  <p>
+    <label for="tabSize">Indentation Size</label>
+    <input type="text" id="tabSize" v-model="tabSize" size=3>
+  </p>
+
+  <p>
+    <label for="tabType">Indent With</label>
+    <select id="tabType" v-model="tabType">
+      <option value="spaces">Spaces</option>
+      <option value="tabs">Tabs</option>
+    </select>
+  </p>
+
+  <p style="margin-bottom:0">
+    <button v-on="click: $root.toggleSettingsPane()">Close</button>
+  </p>
+</div>

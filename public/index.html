@@ -4,12 +4,14 @@
     <title>{{title}} {{currentFile.contents !== currentFile.originalContents ? '*' : ''}}</title>
     <link rel="stylesheet" href="css/main.css">
   </head>
-  <body class="horizontal">
+  <body class="{{settings.consoleOrientation}}">
     <div v-component="sidebar" v-with="files : files" id="sidebar-container"></div>
     <div id="main-container">
-      <div v-component="editor" id="main"></div>
+      <div v-component="editor" v-ref="editor" id="main"></div>
       <div v-component="debug" id="debug-container"></div>
     </div>
+
+    <div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
 
     <input class="file-handler" id="openFile" type="file" />
     <input class="file-handler" id="saveFile" type="file" nwsaveas />

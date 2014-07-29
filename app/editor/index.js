@@ -38,6 +38,7 @@ module.exports = {
     this.$on('open-file', this.openFile);
     this.$on('save-project-as', this.saveProjectAs);
     this.$on('reformat', this.reformat);
+    this.$on('settings-changed', this.updateSettings);
 
     this.ace = window.ace = ace.edit('editor');
     this.ace.setTheme('ace/theme/tomorrow');
@@ -67,7 +68,7 @@ module.exports = {
 
       this.ace.setReadOnly(false);
       this.ace.setSession(session.doc);
-      this.ace.getSession().setTabSize(2);
+      this.updateSettings(this.$root.settings);
       this.ace.focus();
 
       if (this.newProject) {
@@ -85,7 +86,10 @@ module.exports = {
     reformat: function() {
       var ext = this.$root.currentFile.ext;
       var content = this.ace.getValue();
-      var opts = {indent_size: 2};
+      var opts = {
+        "indent_size": this.$root.settings.tabSize,
+        "indent_with_tabs": this.$root.settings.tabType === 'tabs',
+      };
       if (ext == '.js') {
         this.ace.setValue(beautify(content, opts));
       } else if (ext == '.css') {
@@ -93,6 +97,11 @@ module.exports = {
       } else if (ext == '.html') {
         this.ace.setValue(beautify_html(content, opts));
       }
+    },
+
+    updateSettings: function(settings) {
+      this.ace.getSession().setTabSize(settings.tabSize);
+      this.ace.getSession().setUseSoftTabs(settings.tabType === 'spaces');
     }
   }
 };
