@@ -20,9 +20,15 @@
     "gulp-notify": "~1.4.0",
     "underscore": "~1.6.0",
     "node-webkit-builder": "0.0.3",
-    "js-beautify": "~1.5.1"
+    "js-beautify": "~1.5.1",
+    "gulp-zip": "~0.4.0",
+    "github-release": "~0.1.0"
   },
   "scripts": {
     "app": "nodewebkit public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/antiboredom/jside.git"
   }
 }
