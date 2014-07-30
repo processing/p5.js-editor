@@ -65,7 +65,11 @@ module.exports = {
       this.running = true;
       gui.App.clearCache();
       startServer(this.projectPath, this, function(url) {
-        self.outputWindow = self.newWindow(url, {show: true, toolbar: true, 'inject-js-start': 'js/debug-console.js'});
+        self.outputWindow = self.newWindow(url, {toolbar: true, 'inject-js-start': 'js/debug-console.js'});
+        self.outputWindow.on('document-start', function(){
+          self.outputWindow.show();
+        });
+        //self.outputWindow.focus();
         self.outputWindow.on("close", function(){
           self.outputWindow = null;
           this.close(true);
