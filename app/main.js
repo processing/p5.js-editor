@@ -364,6 +364,7 @@ var appConfig = {
     },
 
     run: function() {
+      $('#debug').html('');
       this.modeFunction('run');
     },
 
