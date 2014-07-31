@@ -18,7 +18,8 @@ var builderOptions = {
   buildType: 'versioned',
   files: [ './public/**'],
   buildDir: './dist',
-  platforms: ['osx']
+  platforms: ['osx'],
+  macIcns: './icons/p5js.icns'
 };
 
 var binaryDir = Path.join(builderOptions.buildDir, info.name + " - v" + info.version, 'osx');
