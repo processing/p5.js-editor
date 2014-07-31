@@ -1,6 +1,6 @@
 var $ = require('jquery');
-var manifest = require('../package.json');
-var packageURL = 'https://raw.githubusercontent.com/antiboredom/jside/master/package.json';
+var manifest = nodeRequire('./package.json');
+var packageURL = 'https://raw.githubusercontent.com/antiboredom/jside/master/package.json?v='  + new Date().getTime();
 var downloadURL = 'https://github.com/antiboredom/jside/releases/download/';
 
 module.exports.check = function() {
