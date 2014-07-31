@@ -1,18 +1,242 @@
 #settingsContainer {
   position: absolute;
-  background: rgba(70, 70, 70, 0.8);
+  background-color: #959595;
   left: 10px;
   bottom: 10px;
   z-index: 999;
   box-shadow: 0px 0px 6px #999;
-  border-radius: 6px;
   color: #fff;
 }
 
 #settingsPane {
-  padding: 50px;
+  width: 178px;
+  font-family: Karla;
+  // -webkit-box-shadow: 0px 8px 17px -2px #58585b;
+
+  #titleBar {
+    background-color: #58585b;
+    padding: 4px 12px 2px;
+  }
+
+  #optionsZone {
+    padding: 0px 12px;
+
+    div {
+      clear: both;
+      padding-bottom: 14px;
+    }
+  }
+
+  .hiddenRadio {
+    overflow: auto;
+
+    input[type="radio"] {
+      display:none;
+    }
+
+    input[type="radio"]:checked + label svg {
+      fill: #e1dedc;
+    }
+
+    label {
+      display: block;
+    }
+
+    label.left {
+      float: left;
+    }
+
+    label.right {
+      float: right;
+    }
+  }
+
+  #consoleText {
+    position: relative;
+    top: 5px;
+  }
+
+  .console {
+    height: 40px;
+    width: 70px;
+    fill: #828384;
+    transition: all 0.3s ease;
+
+
+    &:hover {
+      fill: #e1dedc;
+    }
+  }
+
+  #close {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 2px;
+    right: 4px;
+  }
+
+  #x {
+    fill: #2F2F30;
+    transition: all 0.1s ease;
+
+    &:hover {
+      fill: #e1dedc;
+    }
+  }
+
+  #consoleHorizontal {
+    float: right;
+  }
+
+  #libraryIcon {
+    width: 30px;
+    float: left;
+    position: relative;
+    /*top: 10px;*/
+  }
+
+  #textAdjust {
+    width: 30px;
+    float: left;
+    position: relative;
+    top: 5px;
+    left: 3px;
+  }
+
+  #textAdjustInput {
+    width: 105px;
+  }
+
+  #indentation {
+    padding-top: 14px;
+  }
+
+  #libraries {
+    transition: all 0.3s ease;
+
+    /*&:hover {*/
+      /*background-color: #adacac;*/
+      /*color: #828384;*/
+    /*}*/
+  }
+
+  .hiddenCheckbox {
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    input[type="checkbox"] + label {
+      background-color: #adacac;
+      color: #828384;
+    }
+
+    input[type="checkbox"]:checked + label {
+      background-color: #e1dedc;
+      color: #58585b;
+    }
+  }
+
+  #tab {
+    height: 10px;
+    width: 15px;
+    position: relative;
+    top: 1px;
+    left: -4px;
+    fill: #828384;
+    transition: all 0.3s ease;
+  }
+
+  #space {
+    height: 10px;
+    width: 15px;
+    float: left;
+    position: relative;
+    top: 5px;
+    left: 3px;
+    fill: #828384;
+    transition: all 0.3s ease;
+  }
+
+  #tabBox {
+    float: right;
+    /*&:hover{*/
+      /*color: #828384;*/
+      /*background-color: #adacac;*/
+    /*}*/
+  }
+
+  #spaceBox {
+    float: left;
+
+    /*&:hover {*/
+      /*color: #828384;*/
+      /*background-color: #adacac;*/
+    /*}*/
+  }
+
+  #indentOptions {
+    position: relative;
+    /*top: -11px;*/
+
+    input[type="radio"]:checked + label {
+      background-color: #e1dedc;
+    }
+  }
+
+  .indentSelection {
+    color: #828384;
+    background-color: #adacac;
+    display: inline-block;
+    border-radius: 4px;
+    padding: 4px;
+    // float: right;
+    text-align: center;
+    width: 67px;
+    transition: all 0.3s ease;
+  }
+
+
+
+  .highlight{
+    background-color: #e1dedc;
+    display: inline-block;
+    border-radius: 4px;
+    padding: 4px;
+    float: right;
+    width: 105px;
+    text-align: center;
+  }
 
   h2 {
+    font-size: 16px;
     margin-top: 0;
+    font-weight: normal;
+    -webkit-margin-after: 2px;
+  }
+
+  p {
+    font-size: 13px;
+    color: #58585b;
+  }
+
+  label {
+    color: #58585b;
+    font-size: 13px;
+    position: relative;
+    top: 5px;
+  }
+
+  input[type="text"] {
+    width: 25px;
+    float: right;
+    border-radius: 5px;
+    border: none;
+    background-color: #e1dedc;
+    padding: 4px;
+    outline: none;
+    color: #58585b;
+    font-family: Karla;
+    font-size: 13px;
   }
 }
