@@ -1,4 +1,4 @@
-/*! p5.min.js v0.2.22 July 22, 2014 */
+/*! p5.js v0.2.23 July 31, 2014 */
 var shim = function (require) {
     window.requestDraw = function () {
       return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback, element) {
@@ -225,13 +225,14 @@ var core = function (require, shim, constants) {
           for (var ev in this._events) {
             window.removeEventListener(ev, this._events[ev]);
           }
-          for (var cev in this._curElement._events) {
-            var f = this._curElement._events[cev];
-            this._curElement.elt.removeEventListener(cev, f);
-          }
           for (var i = 0; i < this._elements.length; i++) {
             var e = this._elements[i];
-            e.parentNode.removeChild(e);
+            if (e.elt.parentNode) {
+              e.elt.parentNode.removeChild(e.elt);
+            }
+            for (var elt_ev in e._events) {
+              e.elt.removeEventListener(elt_ev, e._events[elt_ev]);
+            }
           }
           var self = this;
           this._removeFuncs.forEach(function (f) {
@@ -309,6 +310,177 @@ var core = function (require, shim, constants) {
     }.bind(this);
     return p5;
   }({}, shim, constants);
+var p5Color = function (require, core, constants) {
+    var p5 = core;
+    var constants = constants;
+    p5.Color = function (pInst, vals) {
+      if (vals instanceof Array) {
+        this.rgba = vals;
+      } else {
+        var norm = p5.Color.getNormalizedColor.apply(pInst, vals);
+        if (pInst._colorMode === constants.HSB) {
+          this.hsba = norm;
+          this.rgba = p5.Color.getRGB(this.hsba);
+        } else {
+          this.rgba = norm;
+        }
+      }
+      this.colorString = p5.Color.getColorString(this.rgba);
+    };
+    p5.Color.getNormalizedColor = function () {
+      var isRGB = this._colorMode === constants.RGB;
+      var maxArr = isRGB ? this._maxRGB : this._maxHSB;
+      if (arguments[0] instanceof Array) {
+        return p5.Color.getNormalizedColor.apply(this, arguments[0]);
+      }
+      var r, g, b, a;
+      if (arguments.length >= 3) {
+        r = arguments[0];
+        g = arguments[1];
+        b = arguments[2];
+        a = typeof arguments[3] === 'number' ? arguments[3] : maxArr[3];
+      } else {
+        if (isRGB) {
+          r = g = b = arguments[0];
+        } else {
+          r = b = arguments[0];
+          g = 0;
+        }
+        a = typeof arguments[1] === 'number' ? arguments[1] : maxArr[3];
+      }
+      r *= 255 / maxArr[0];
+      g *= 255 / maxArr[1];
+      b *= 255 / maxArr[2];
+      a *= 255 / maxArr[3];
+      return [
+        r,
+        g,
+        b,
+        a
+      ];
+    };
+    p5.Color.getRGB = function (hsba) {
+      var h = hsba[0];
+      var s = hsba[1];
+      var v = hsba[2];
+      h /= 255;
+      s /= 255;
+      v /= 255;
+      var RGBA = [];
+      if (s === 0) {
+        RGBA = [
+          Math.round(v * 255),
+          Math.round(v * 255),
+          Math.round(v * 255),
+          hsba[3]
+        ];
+      } else {
+        var var_h = h * 6;
+        if (var_h === 6) {
+          var_h = 0;
+        }
+        var var_i = Math.floor(var_h);
+        var var_1 = v * (1 - s);
+        var var_2 = v * (1 - s * (var_h - var_i));
+        var var_3 = v * (1 - s * (1 - (var_h - var_i)));
+        var var_r;
+        var var_g;
+        var var_b;
+        if (var_i === 0) {
+          var_r = v;
+          var_g = var_3;
+          var_b = var_1;
+        } else if (var_i === 1) {
+          var_r = var_2;
+          var_g = v;
+          var_b = var_1;
+        } else if (var_i === 2) {
+          var_r = var_1;
+          var_g = v;
+          var_b = var_3;
+        } else if (var_i === 3) {
+          var_r = var_1;
+          var_g = var_2;
+          var_b = v;
+        } else if (var_i === 4) {
+          var_r = var_3;
+          var_g = var_1;
+          var_b = v;
+        } else {
+          var_r = v;
+          var_g = var_1;
+          var_b = var_2;
+        }
+        RGBA = [
+          Math.round(var_r * 255),
+          Math.round(var_g * 255),
+          Math.round(var_b * 255),
+          hsba[3]
+        ];
+      }
+      return RGBA;
+    };
+    p5.Color.getHSB = function (rgba) {
+      var var_R = rgba[0] / 255;
+      var var_G = rgba[1] / 255;
+      var var_B = rgba[2] / 255;
+      var var_Min = Math.min(var_R, var_G, var_B);
+      var var_Max = Math.max(var_R, var_G, var_B);
+      var del_Max = var_Max - var_Min;
+      var H;
+      var S;
+      var V = var_Max;
+      if (del_Max === 0) {
+        H = 0;
+        S = 0;
+      } else {
+        S = del_Max / var_Max;
+        var del_R = ((var_Max - var_R) / 6 + del_Max / 2) / del_Max;
+        var del_G = ((var_Max - var_G) / 6 + del_Max / 2) / del_Max;
+        var del_B = ((var_Max - var_B) / 6 + del_Max / 2) / del_Max;
+        if (var_R === var_Max) {
+          H = del_B - del_G;
+        } else if (var_G === var_Max) {
+          H = 1 / 3 + del_R - del_B;
+        } else if (var_B === var_Max) {
+          H = 2 / 3 + del_G - del_R;
+        }
+        if (H < 0) {
+          H += 1;
+        }
+        if (H > 1) {
+          H -= 1;
+        }
+      }
+      return [
+        Math.round(H * 255),
+        Math.round(S * 255),
+        Math.round(V * 255),
+        rgba[3]
+      ];
+    };
+    p5.Color.getColorString = function (a) {
+      for (var i = 0; i < 3; i++) {
+        a[i] = Math.floor(a[i]);
+      }
+      var alpha = a[3] ? a[3] / 255 : 1;
+      return 'rgba(' + a[0] + ',' + a[1] + ',' + a[2] + ',' + alpha + ')';
+    };
+    p5.Color.getColor = function () {
+      if (arguments[0] instanceof p5.Color) {
+        return arguments[0].colorString;
+      } else if (arguments[0] instanceof Array) {
+        return p5.Color.getColorString(arguments[0]);
+      } else {
+        var c = p5.Color.getNormalizedColor.apply(this, arguments);
+        if (this._colorMode === constants.HSB) {
+          c = p5.Color.getRGB(c);
+        }
+        return p5.Color.getColorString(c);
+      }
+    };
+    return p5.Color;
+  }({}, core, constants);
 var p5Element = function (require, core) {
     var p5 = core;
     p5.Element = function (elt, pInst) {
@@ -331,16 +503,22 @@ var p5Element = function (require, core) {
       this.elt.className += ' ' + c;
     };
     p5.Element.prototype.mousePressed = function (fxn) {
+      attachListener('mousedown', fxn, this);
+    };
+    p5.Element.prototype.mouseReleased = function (fxn) {
+      attachListener('mouseup', fxn, this);
+    };
+    p5.Element.prototype.mouseClicked = function (fxn) {
       attachListener('click', fxn, this);
+    };
+    p5.Element.prototype.mouseMoved = function (fxn) {
+      attachListener('mousemove', fxn, this);
     };
     p5.Element.prototype.mouseOver = function (fxn) {
       attachListener('mouseover', fxn, this);
     };
     p5.Element.prototype.mouseOut = function (fxn) {
       attachListener('mouseout', fxn, this);
-    };
-    p5.Element.prototype.mouseMoved = function (fxn) {
-      attachListener('mousemove', fxn, this);
     };
     function attachListener(ev, fxn, ctx) {
       var _this = ctx;
@@ -848,10 +1026,16 @@ var p5Vector = function (require, core, polargeometry, constants) {
     };
     p5.Vector.prototype.set = function (x, y, z) {
       if (x instanceof p5.Vector) {
-        return this.set(x.x, x.y, x.z);
+        this.x = x.x || 0;
+        this.y = x.y || 0;
+        this.z = x.z || 0;
+        return this;
       }
       if (x instanceof Array) {
-        return this.set(x[0], x[1], x[2]);
+        this.x = x[0] || 0;
+        this.y = x[1] || 0;
+        this.z = x[2] || 0;
+        return this;
       }
       this.x = x || 0;
       this.y = y || 0;
@@ -871,10 +1055,16 @@ var p5Vector = function (require, core, polargeometry, constants) {
     };
     p5.Vector.prototype.add = function (x, y, z) {
       if (x instanceof p5.Vector) {
-        return this.add(x.x, x.y, x.z);
+        this.x += x.x || 0;
+        this.y += x.y || 0;
+        this.z += x.z || 0;
+        return this;
       }
       if (x instanceof Array) {
-        return this.add(x[0], x[1], x[2]);
+        this.x += x[0] || 0;
+        this.y += x[1] || 0;
+        this.z += x[2] || 0;
+        return this;
       }
       this.x += x || 0;
       this.y += y || 0;
@@ -883,10 +1073,16 @@ var p5Vector = function (require, core, polargeometry, constants) {
     };
     p5.Vector.prototype.sub = function (x, y, z) {
       if (x instanceof p5.Vector) {
-        return this.sub(x.x, x.y, x.z);
+        this.x -= x.x || 0;
+        this.y -= x.y || 0;
+        this.z -= x.z || 0;
+        return this;
       }
       if (x instanceof Array) {
-        return this.sub(x[0], x[1], x[2]);
+        this.x -= x[0] || 0;
+        this.y -= x[1] || 0;
+        this.z -= x[2] || 0;
+        return this;
       }
       this.x -= x || 0;
       this.y -= y || 0;
@@ -1075,73 +1271,64 @@ var p5Vector = function (require, core, polargeometry, constants) {
     };
     return p5.Vector;
   }({}, core, polargeometry, constants);
-var colorcreating_reading = function (require, core, constants) {
+var colorcreating_reading = function (require, core, p5Color) {
     'use strict';
     var p5 = core;
-    var constants = constants;
-    p5.prototype.alpha = function (rgb) {
-      if (rgb.length > 3) {
-        return rgb[3];
+    p5.prototype.alpha = function (c) {
+      if (c instanceof p5.Color) {
+        return c.rgba[3];
+      } else if (c instanceof Array) {
+        return c[3];
       } else {
-        return 255;
+        throw new Error('Needs p5.Color or pixel array as argument.');
       }
     };
-    p5.prototype.blue = function (rgb) {
-      if (rgb.length > 2) {
-        return rgb[2];
+    p5.prototype.blue = function (c) {
+      if (c instanceof Array) {
+        return c[2];
+      } else if (c instanceof p5.Color) {
+        return c.rgba[2];
       } else {
-        return 0;
+        throw new Error('Needs p5.Color or pixel array as argument.');
       }
     };
-    p5.prototype.brightness = function (hsv) {
-      if (hsv.length > 2) {
-        return hsv[2];
-      } else {
-        return 0;
+    p5.prototype.brightness = function (c) {
+      if (!c instanceof p5.Color) {
+        throw new Error('Needs p5.Color as argument.');
       }
+      if (!c.hsba) {
+        c.hsba = p5.Color.getRGB(c.rgba);
+        c.hsba = c.hsba.concat(c.rgba[3]);
+      }
+      return c.hsba[2];
     };
     p5.prototype.color = function () {
-      var args = arguments;
-      var isRGB = this._colorMode === constants.RGB;
-      var maxArr = isRGB ? this._maxRGB : this._maxHSB;
-      var r, g, b, a;
-      if (args.length >= 3) {
-        r = args[0];
-        g = args[1];
-        b = args[2];
-        a = typeof args[3] === 'number' ? args[3] : maxArr[3];
+      if (arguments[0] instanceof Array) {
+        return new p5.Color(this, arguments[0], true);
       } else {
-        if (isRGB) {
-          r = g = b = args[0];
-        } else {
-          r = b = args[0];
-          g = 0;
-        }
-        a = typeof args[1] === 'number' ? args[1] : maxArr[3];
-      }
-      return [
-        r,
-        g,
-        b,
-        a
-      ];
-    };
-    p5.prototype.green = function (rgb) {
-      if (rgb.length > 2) {
-        return rgb[1];
-      } else {
-        return 0;
+        return new p5.Color(this, arguments);
       }
     };
-    p5.prototype.hue = function (hsv) {
-      if (hsv.length > 2) {
-        return hsv[0];
+    p5.prototype.green = function (c) {
+      if (c instanceof Array) {
+        return c[1];
+      } else if (c instanceof p5.Color) {
+        return c.rgba[1];
       } else {
-        return 0;
+        throw new Error('Needs p5.Color or pixel array as argument.');
       }
+    };
+    p5.prototype.hue = function (c) {
+      if (!c instanceof p5.Color) {
+        throw new Error('Needs p5.Color as argument.');
+      }
+      if (!c.hsba) {
+        c.hsba = p5.Color.getRGB(c.rgba);
+      }
+      return c.hsba[0];
     };
     p5.prototype.lerpColor = function (c1, c2, amt) {
-      if (typeof c1 === 'object') {
+      if (c1 instanceof Array) {
         var c = [];
         for (var i = 0; i < c1.length; i++) {
           c.push(p5.prototype.lerp(c1[i], c2[i], amt));
@@ -1151,23 +1338,28 @@ var colorcreating_reading = function (require, core, constants) {
         return p5.prototype.lerp(c1, c2, amt);
       }
     };
-    p5.prototype.red = function (rgb) {
-      if (rgb.length > 2) {
-        return rgb[0];
+    p5.prototype.red = function (c) {
+      if (c instanceof Array) {
+        return c[0];
+      } else if (c instanceof p5.Color) {
+        return c.rgba[0];
       } else {
-        return 0;
+        throw new Error('Needs p5.Color or pixel array as argument.');
       }
     };
-    p5.prototype.saturation = function (hsv) {
-      if (hsv.length > 2) {
-        return hsv[1];
-      } else {
-        return 0;
+    p5.prototype.saturation = function (c) {
+      if (!c instanceof p5.Color) {
+        throw new Error('Needs p5.Color as argument.');
       }
+      if (!c.hsba) {
+        c.hsba = p5.Color.getRGB(c.rgba);
+        c.hsba = c.hsba.concat(c.rgba[3]);
+      }
+      return c.hsba[1];
     };
     return p5;
-  }({}, core, constants);
-var colorsetting = function (require, core, constants) {
+  }({}, core, p5Color);
+var colorsetting = function (require, core, constants, p5Color) {
     'use strict';
     var p5 = core;
     var constants = constants;
@@ -1187,14 +1379,18 @@ var colorsetting = function (require, core, constants) {
       255
     ];
     p5.prototype.background = function () {
-      var c = this.getNormalizedColor(arguments);
-      var curFill = this.canvas.getContext('2d').fillStyle;
-      this.canvas.getContext('2d').fillStyle = this.getCSSRGBAColor(c);
-      this.canvas.getContext('2d').fillRect(0, 0, this.width, this.height);
-      this.canvas.getContext('2d').fillStyle = curFill;
+      if (arguments[0] instanceof p5.Image) {
+        this.image(arguments[0], 0, 0, this.width, this.height);
+      } else {
+        var curFill = this.canvas.getContext('2d').fillStyle;
+        var ctx = this.canvas.getContext('2d');
+        ctx.fillStyle = p5.Color.getColor.apply(this, arguments);
+        ctx.fillRect(0, 0, this.width, this.height);
+        ctx.fillStyle = curFill;
+      }
     };
     p5.prototype.clear = function () {
-      this.canvas.getContext('2d').clearRect(0, 0, this.width, this.height);
+      this.canvas.width = this.canvas.width;
     };
     p5.prototype.colorMode = function () {
       if (arguments[0] === constants.RGB || arguments[0] === constants.HSB) {
@@ -1217,8 +1413,8 @@ var colorsetting = function (require, core, constants) {
     };
     p5.prototype.fill = function () {
       this._setProperty('_doFill', true);
-      var c = this.getNormalizedColor(arguments);
-      this.canvas.getContext('2d').fillStyle = this.getCSSRGBAColor(c);
+      var ctx = this.canvas.getContext('2d');
+      ctx.fillStyle = p5.Color.getColor.apply(this, arguments);
     };
     p5.prototype.noFill = function () {
       this._setProperty('_doFill', false);
@@ -1228,111 +1424,11 @@ var colorsetting = function (require, core, constants) {
     };
     p5.prototype.stroke = function () {
       this._setProperty('_doStroke', true);
-      var c = this.getNormalizedColor(arguments);
-      this.canvas.getContext('2d').strokeStyle = this.getCSSRGBAColor(c);
-    };
-    p5.prototype.getNormalizedColor = function (args) {
-      var isRGB = this._colorMode === constants.RGB;
-      if (args[0] instanceof Array) {
-        args = args[0];
-      }
-      var r, g, b, a, rgba;
-      if (args.length >= 3) {
-        r = args[0];
-        g = args[1];
-        b = args[2];
-        a = typeof args[3] === 'number' ? args[3] : this._maxA;
-      } else {
-        if (isRGB) {
-          r = g = b = args[0];
-        } else {
-          r = b = args[0];
-          g = 0;
-        }
-        a = typeof args[1] === 'number' ? args[1] : this._maxA;
-      }
-      var maxArr = isRGB ? this._maxRGB : this._maxHSB;
-      r *= 255 / maxArr[0];
-      g *= 255 / maxArr[1];
-      b *= 255 / maxArr[2];
-      a *= 255 / maxArr[3];
-      if (this._colorMode === constants.HSB) {
-        rgba = hsv2rgb(r, g, b).concat(a);
-      } else {
-        rgba = [
-          r,
-          g,
-          b,
-          a
-        ];
-      }
-      return rgba;
-    };
-    function hsv2rgb(h, s, v) {
-      h /= 255;
-      s /= 255;
-      v /= 255;
-      var RGB = [];
-      if (s === 0) {
-        RGB = [
-          Math.round(v * 255),
-          Math.round(v * 255),
-          Math.round(v * 255)
-        ];
-      } else {
-        var var_h = h * 6;
-        if (var_h === 6) {
-          var_h = 0;
-        }
-        var var_i = Math.floor(var_h);
-        var var_1 = v * (1 - s);
-        var var_2 = v * (1 - s * (var_h - var_i));
-        var var_3 = v * (1 - s * (1 - (var_h - var_i)));
-        var var_r;
-        var var_g;
-        var var_b;
-        if (var_i === 0) {
-          var_r = v;
-          var_g = var_3;
-          var_b = var_1;
-        } else if (var_i === 1) {
-          var_r = var_2;
-          var_g = v;
-          var_b = var_1;
-        } else if (var_i === 2) {
-          var_r = var_1;
-          var_g = v;
-          var_b = var_3;
-        } else if (var_i === 3) {
-          var_r = var_1;
-          var_g = var_2;
-          var_b = v;
-        } else if (var_i === 4) {
-          var_r = var_3;
-          var_g = var_1;
-          var_b = v;
-        } else {
-          var_r = v;
-          var_g = var_1;
-          var_b = var_2;
-        }
-        RGB = [
-          Math.round(var_r * 255),
-          Math.round(var_g * 255),
-          Math.round(var_b * 255)
-        ];
-      }
-      return RGB;
-    }
-    p5.prototype.getCSSRGBAColor = function (arr) {
-      var a = arr.map(function (val) {
-          return Math.floor(val);
-        });
-      var alpha = a[3] ? a[3] / 255 : 1;
-      return 'rgba(' + a[0] + ',' + a[1] + ',' + a[2] + ',' + alpha + ')';
+      var ctx = this.canvas.getContext('2d');
+      ctx.strokeStyle = p5.Color.getColor.apply(this, arguments);
     };
     return p5;
-  }({}, core, constants);
+  }({}, core, constants, p5Color);
 var dataarray_functions = function (require, core) {
     'use strict';
     var p5 = core;
@@ -1731,13 +1827,13 @@ var imageloading_displaying = function (require, core, filters, canvas, constant
       }
       var vals = canvas.modeAdjust(x, y, width, height, this._imageMode);
       if (this._tint) {
-        this.canvas.getContext('2d').drawImage(this._getTintedImageCanvas(frame), vals.x, vals.y, vals.w, vals.h);
+        this.canvas.getContext('2d').drawImage(this._getTintedImageCanvas(img), vals.x, vals.y, vals.w, vals.h);
       } else {
         this.canvas.getContext('2d').drawImage(frame, vals.x, vals.y, vals.w, vals.h);
       }
     };
     p5.prototype.tint = function () {
-      var c = this.getNormalizedColor(arguments);
+      var c = p5.Color.getNormalizedColor.apply(this, arguments);
       this._tint = c;
     };
     p5.prototype.noTint = function () {
@@ -1774,7 +1870,7 @@ var imageloading_displaying = function (require, core, filters, canvas, constant
     };
     return p5;
   }({}, core, filters, canvas, constants);
-var imagepixels = function (require, core, filters) {
+var imagepixels = function (require, core, filters, p5Color) {
     'use strict';
     var p5 = core;
     var Filters = filters;
@@ -1854,47 +1950,44 @@ var imagepixels = function (require, core, filters) {
     p5.prototype.loadPixels = function () {
       var width = this.width;
       var height = this.height;
-      var data = this.canvas.getContext('2d').getImageData(0, 0, width, height).data;
-      var pixels = [];
-      for (var i = 0; i < data.length; i += 4) {
-        pixels.push([
-          data[i],
-          data[i + 1],
-          data[i + 2],
-          data[i + 3]
-        ]);
-      }
-      this._setProperty('pixels', pixels);
+      var imageData = this.canvas.getContext('2d').getImageData(0, 0, width, height);
+      this._setProperty('imageData', imageData);
+      this._setProperty('pixels', imageData.data);
     };
     p5.prototype.set = function (x, y, imgOrCol) {
-      var idx = y * this.width + x;
-      if (typeof imgOrCol === 'number') {
-        if (!this.pixels) {
-          this.loadPixels.call(this);
-        }
-        if (idx < this.pixels.length) {
-          this.pixels[idx] = [
-            imgOrCol,
-            imgOrCol,
-            imgOrCol,
-            255
-          ];
-          this.updatePixels.call(this);
-        }
-      } else if (imgOrCol instanceof Array) {
-        if (imgOrCol.length < 4) {
-          imgOrCol[3] = 255;
-        }
-        if (!this.pixels) {
-          this.loadPixels.call(this);
-        }
-        if (idx < this.pixels.length) {
-          this.pixels[idx] = imgOrCol;
-          this.updatePixels.call(this);
-        }
-      } else {
+      if (imgOrCol instanceof p5.Image) {
         this.canvas.getContext('2d').drawImage(imgOrCol.canvas, x, y);
         this.loadPixels.call(this);
+      } else {
+        var idx = 4 * (y * this.width + x);
+        if (!this.imageData) {
+          this.loadPixels.call(this);
+        }
+        if (typeof imgOrCol === 'number') {
+          if (idx < this.pixels.length) {
+            this.pixels[idx] = imgOrCol;
+            this.pixels[idx + 1] = imgOrCol;
+            this.pixels[idx + 2] = imgOrCol;
+            this.pixels[idx + 3] = 255;
+          }
+        } else if (imgOrCol instanceof Array) {
+          if (imgOrCol.length < 4) {
+            throw new Error('pixel array must be of the form [R, G, B, A]');
+          }
+          if (idx < this.pixels.length) {
+            this.pixels[idx] = imgOrCol[0];
+            this.pixels[idx + 1] = imgOrCol[1];
+            this.pixels[idx + 2] = imgOrCol[2];
+            this.pixels[idx + 3] = imgOrCol[3];
+          }
+        } else if (imgOrCol instanceof p5.Color) {
+          if (idx < this.pixels.length) {
+            this.pixels[idx] = imgOrCol.rgba[0];
+            this.pixels[idx + 1] = imgOrCol.rgba[1];
+            this.pixels[idx + 2] = imgOrCol.rgba[2];
+            this.pixels[idx + 3] = imgOrCol.rgba[3];
+          }
+        }
       }
     };
     p5.prototype.updatePixels = function (x, y, w, h) {
@@ -1904,19 +1997,10 @@ var imagepixels = function (require, core, filters) {
         w = this.width;
         h = this.height;
       }
-      var imageData = this.canvas.getContext('2d').getImageData(x, y, w, h);
-      var data = imageData.data;
-      for (var i = 0; i < this.pixels.length; i += 1) {
-        var j = i * 4;
-        data[j] = this.pixels[i][0];
-        data[j + 1] = this.pixels[i][1];
-        data[j + 2] = this.pixels[i][2];
-        data[j + 3] = this.pixels[i][3];
-      }
-      this.canvas.getContext('2d').putImageData(imageData, x, y, 0, 0, w, h);
+      this.canvas.getContext('2d').putImageData(this.imageData, x, y, 0, 0, w, h);
     };
     return p5;
-  }({}, core, filters);
+  }({}, core, filters, p5Color);
 !function (name, context, definition) {
   if (typeof module != 'undefined' && module.exports)
     module.exports = definition();
@@ -2519,7 +2603,6 @@ var inputmouse = function (require, core, constants) {
       this.updateMouseCoords(e);
       if (!this.isMousePressed) {
         if (typeof context.mouseMoved === 'function') {
-          e.preventDefault();
           context.mouseMoved(e);
         } else if (typeof context.touchMoved === 'function') {
           e.preventDefault();
@@ -2527,7 +2610,6 @@ var inputmouse = function (require, core, constants) {
         }
       } else {
         if (typeof context.mouseDragged === 'function') {
-          e.preventDefault();
           context.mouseDragged(e);
         } else if (typeof context.touchMoved === 'function') {
           e.preventDefault();
@@ -2541,7 +2623,6 @@ var inputmouse = function (require, core, constants) {
       this._setProperty('mouseIsPressed', true);
       this.setMouseButton(e);
       if (typeof context.mousePressed === 'function') {
-        e.preventDefault();
         context.mousePressed(e);
       } else if (typeof context.touchStarted === 'function') {
         e.preventDefault();
@@ -2553,7 +2634,6 @@ var inputmouse = function (require, core, constants) {
       this._setProperty('isMousePressed', false);
       this._setProperty('mouseIsPressed', false);
       if (typeof context.mouseReleased === 'function') {
-        e.preventDefault();
         context.mouseReleased(e);
       } else if (typeof context.touchEnded === 'function') {
         e.preventDefault();
@@ -2563,7 +2643,6 @@ var inputmouse = function (require, core, constants) {
     p5.prototype.onclick = function (e) {
       var context = this._isGlobal ? window : this;
       if (typeof context.mouseClicked === 'function') {
-        e.preventDefault();
         context.mouseClicked(e);
       }
     };
@@ -2669,13 +2748,11 @@ var mathcalculation = function (require, core) {
     var p5 = core;
     p5.prototype.abs = Math.abs;
     p5.prototype.ceil = Math.ceil;
-    p5.prototype.constrain = function (amt, low, high) {
-      return this.max(this.min(amt, high), low);
+    p5.prototype.constrain = function (n, low, high) {
+      return Math.max(Math.min(n, high), low);
     };
     p5.prototype.dist = function (x1, y1, x2, y2) {
-      var xs = x2 - x1;
-      var ys = y2 - y1;
-      return Math.sqrt(xs * xs + ys * ys);
+      return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     };
     p5.prototype.exp = Math.exp;
     p5.prototype.floor = Math.floor;
@@ -3068,7 +3145,6 @@ var renderingrendering = function (require, core, constants) {
       if (isDefault) {
         c = document.createElement('canvas');
         c.id = 'defaultCanvas';
-        this._elements.push(c);
       } else {
         c = document.getElementById('defaultCanvas');
         if (c) {
@@ -3091,27 +3167,30 @@ var renderingrendering = function (require, core, constants) {
       } else {
         document.body.appendChild(c);
       }
-      var elt = new p5.Graphics(c, this);
+      var pg = new p5.Graphics(c, this);
+      if (isDefault) {
+        this._elements.push(pg);
+      }
       this.scale(this._pixelDensity, this._pixelDensity);
-      return elt;
+      return pg;
     };
     p5.prototype.createGraphics = function (w, h) {
       var c = document.createElement('canvas');
       c.setAttribute('width', w);
       c.setAttribute('height', h);
       document.body.appendChild(c);
-      this._elements.push(c);
-      var elt = new p5.Graphics(c);
+      var pg = new p5.Graphics(c);
+      this._elements.push(pg);
       for (var p in p5.prototype) {
-        if (!elt.hasOwnProperty(p)) {
+        if (!pg.hasOwnProperty(p)) {
           if (typeof p5.prototype[p] === 'function') {
-            elt[p] = p5.prototype[p].bind(elt);
+            pg[p] = p5.prototype[p].bind(pg);
           } else {
-            elt[p] = p5.prototype[p];
+            pg[p] = p5.prototype[p];
           }
         }
       }
-      return elt;
+      return pg;
     };
     p5.prototype.blendMode = function (mode) {
       if (mode === constants.BLEND || mode === constants.DARKEST || mode === constants.LIGHTEST || mode === constants.DIFFERENCE || mode === constants.MULTIPLY || mode === constants.EXCLUSION || mode === constants.SCREEN || mode === constants.REPLACE || mode === constants.OVERLAY || mode === constants.HARD_LIGHT || mode === constants.SOFT_LIGHT || mode === constants.DODGE || mode === constants.BURN) {
@@ -3802,7 +3881,7 @@ var typographyloading_displaying = function (require, core, canvas) {
     };
     return p5;
   }({}, core, canvas);
-var src_app = function (require, core, p5Element, p5Graphics, p5Image, p5Vector, colorcreating_reading, colorsetting, constants, dataarray_functions, datastring_functions, environment, imageimage, imageloading_displaying, imagepixels, inputfiles, inputkeyboard, inputmouse, inputtime_date, inputtouch, mathmath, mathcalculation, mathrandom, mathnoise, mathtrigonometry, outputfiles, outputimage, outputtext_area, renderingrendering, shape2d_primitives, shapeattributes, shapecurves, shapevertex, structure, transform, typographyattributes, typographyloading_displaying) {
+var src_app = function (require, core, p5Color, p5Element, p5Graphics, p5Image, p5Vector, colorcreating_reading, colorsetting, constants, dataarray_functions, datastring_functions, environment, imageimage, imageloading_displaying, imagepixels, inputfiles, inputkeyboard, inputmouse, inputtime_date, inputtouch, mathmath, mathcalculation, mathrandom, mathnoise, mathtrigonometry, outputfiles, outputimage, outputtext_area, renderingrendering, shape2d_primitives, shapeattributes, shapecurves, shapevertex, structure, transform, typographyattributes, typographyloading_displaying) {
     'use strict';
     var p5 = core;
     var _globalInit = function () {
@@ -3819,4 +3898,4 @@ var src_app = function (require, core, p5Element, p5Graphics, p5Image, p5Vector,
     }
     window.p5 = p5;
     return p5;
-  }({}, core, p5Element, p5Graphics, p5Image, p5Vector, colorcreating_reading, colorsetting, constants, dataarray_functions, datastring_functions, environment, imageimage, imageloading_displaying, imagepixels, inputfiles, inputkeyboard, inputmouse, inputtime_date, inputtouch, mathmath, mathcalculation, mathrandom, mathnoise, mathtrigonometry, outputfiles, outputimage, outputtext_area, renderingrendering, shape2d_primitives, shapeattributes, shapecurves, shapevertex, structure, transform, typographyattributes, typographyloading_displaying);
+  }({}, core, p5Color, p5Element, p5Graphics, p5Image, p5Vector, colorcreating_reading, colorsetting, constants, dataarray_functions, datastring_functions, environment, imageimage, imageloading_displaying, imagepixels, inputfiles, inputkeyboard, inputmouse, inputtime_date, inputtouch, mathmath, mathcalculation, mathrandom, mathnoise, mathtrigonometry, outputfiles, outputimage, outputtext_area, renderingrendering, shape2d_primitives, shapeattributes, shapecurves, shapevertex, structure, transform, typographyattributes, typographyloading_displaying);

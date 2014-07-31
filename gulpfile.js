@@ -9,6 +9,7 @@ var zip = require('gulp-zip');
 var browserify = require('gulp-browserify');
 var partialify = require('partialify');
 var release = require('github-release');
+var download = require("gulp-download");
 var Path = require('path');
 var fs = require('fs');
 var info = require('./package.json');
@@ -72,7 +73,7 @@ function build (cb) {
     console.error(error);
   });
 
-};
+}
 
 
 function latest () {
@@ -84,7 +85,14 @@ function latest () {
     on('end', function(){
       console.log('Build compressed');
     });
-};
+}
+
+gulp.task('p5', function () {
+  var url = 'https://raw.githubusercontent.com/lmccart/p5.js/master/lib/p5.js';
+
+  download(url)
+    .pipe(gulp.dest("./public/mode_assets/p5/empty_project/libraries/"));
+});
 
 gulp.task('release', function(){
   build(function(){
