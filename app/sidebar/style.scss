@@ -142,7 +142,6 @@ $dark-gray: #58585b;
     list-style: none;
     margin: 0;
     padding: 0;
-    // margin-left: 28px;
 
     li {
       margin: 0;
@@ -161,16 +160,24 @@ $dark-gray: #58585b;
         border-radius: 5px 0px 0px 5px;
       }
 
-      ul  {
-        padding-left: 14px;
+      ul li {
+        div {
+          padding-left: 85px;
+        }
 
-        /*.icon {*/
-          /*left: 62px;*/
-        /*}*/
+        ul li {
+          div {
+            padding-left: 106px;
+          }
+
+          ul li {
+            div {
+              padding-left: 127px;
+            }
+          }
+        }
       }
-
     }
-
   }
 
   .toggle {
@@ -195,8 +202,8 @@ $dark-gray: #58585b;
     width: 13px;
     height: 15px;
     position: absolute;
-    left: 42px;
     top: 4px;
+    margin-left: -20px;
     background-size: 13px auto;
     background-repeat: no-repeat;
   }
@@ -213,7 +220,7 @@ $dark-gray: #58585b;
     background-image: url('../images/folder.svg');
     background-size: 17px auto;
     top: 5px;
-    margin-left: -2px;
+    margin-left: -22px;
     width: 17px;
     height: 16px;
   }
