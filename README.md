@@ -1,28 +1,34 @@
-# Node Webkit Boilerplate
+## A Javascript editor for p5.js
 
-Get a node webkit application up and running in no time! I have included a small example with Vue.js and Browserify to get you going quickly on a highly modular and testable application.
+To get started, [download the editor here](https://github.com/antiboredom/jside/releases/latest), and visit [p5js.org](http://p5js.org) for more info on p5.js.
 
-## Application Structure
+## Development
 
-All development takes place in the `app` folder. With gulp your files with be bundles up with Browserify and then sent to the `public` folder. The public folder contains the `package.json` for the application window, as well as the base `index.html` file for the application.
+If you're interested in contributing, follow the direction below:
 
-## Prerequisites
+### Prerequisites
 
 1. Node.js
 2. Git
-3. Gulp.js (`npm install gulp -g`)
 
-## Workflow
+### Setup
 
-1. Git clone `https://github.com/brandonjpierce/node-webkit-boilerplate.git`
-2. Run `npm install`
-3. Run `gulp`
-4. Start the application with `npm run app` (I usually do this in a separate terminal)
+1. Clone this repo: `git clone https://github.com/antiboredom/jside.git`
+2. Enter the repo directory and install the development module: `npm
+   install`
+3. Install secondary modules: `cd public` and then `npm install`
+4. Install gulp.js globally: `npm install gulp -g`
+5. From the root directory of the repo run gulp: `gulp`
+6. Start up the app: `npm run app`
 
-## Linux Users
+### Workflow
 
-You may have an issue where your system will not be able to find `libudev.so.0`. If that is the case you can do the following:
+Most development takes place in the `app` folder. Gulp will watch the files in the app folder, then bundle them up with Browserfiy, and send the results to the `public` folder.
 
-1. Go into `node_modules/nodewebkit/nodewebkit/`
-2. Run `sed -i 's/\x75\x64\x65\x76\x2E\x73\x6F\x2E\x30/\x75\x64\x65\x76\x2E\x73\x6F\x2E\x31/g' nw`
-3. Profit
+The public folder contains the `package.json` for the application window, as well as the base `index.html` file for the application.
+
+Below you'll find documentation for the different libraries we're using
+* [vue.js](http://vuejs.org/)
+* [node-webkit](https://github.com/rogerwang/node-webkit/wiki)
+* [browserify](http://browserify.org/)
+* [gulp.js](http://gulpjs.com/)
