@@ -88,10 +88,16 @@ function latest () {
 }
 
 gulp.task('p5', function () {
-  var url = 'https://raw.githubusercontent.com/lmccart/p5.js/master/lib/p5.js';
+  var urls = [
+    'https://raw.githubusercontent.com/lmccart/p5.js/master/lib/p5.js',
+    'https://raw.githubusercontent.com/lmccart/p5.js/master/lib/addons/p5.sound.js',
+    'https://raw.githubusercontent.com/lmccart/p5.js/master/lib/addons/p5.dom.js',
+  ];
 
-  download(url)
-    .pipe(gulp.dest("./public/mode_assets/p5/empty_project/libraries/"));
+  urls.forEach(function(url) {
+    download(url)
+      .pipe(gulp.dest("./public/mode_assets/p5/empty_project/libraries/"));
+  });
 });
 
 gulp.task('release', function(){
