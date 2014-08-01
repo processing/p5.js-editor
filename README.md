@@ -14,7 +14,7 @@ If you're interested in contributing, follow the direction below:
 ### Setup
 
 1. Clone this repo: `git clone https://github.com/antiboredom/jside.git`
-2. Enter the repo directory and install the development module: `npm
+2. Enter the repo directory and install the development modules: `npm
    install`
 3. Install secondary modules: `cd public` and then `npm install`
 4. Install gulp.js globally: `npm install gulp -g`
