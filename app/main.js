@@ -51,7 +51,6 @@ var appConfig = {
   },
 
   ready: function() {
-    this.settings = settings.load();
     updater.check();
     keybindings.setup(this);
     menu.setup(this);
@@ -59,11 +58,7 @@ var appConfig = {
     this.setupFileListener();
     this.setupCloseHandler();
     this.setupDragListener();
-
-    this.$watch('settings', function(value){
-      this.$broadcast('settings-changed', value);
-      settings.save(value);
-    });
+    this.setupSettings();
 
     if (this.projectPath) {
       if (!this.unsaved) this.temp = false;
@@ -105,6 +100,14 @@ var appConfig = {
         }
         mode[func].apply(this, args);
       }
+    },
+
+    setupSettings: function() {
+      this.settings = settings.load();
+      this.$watch('settings', function(value){
+        this.$broadcast('settings-changed', value);
+        settings.save(value);
+      });
     },
 
     // use jquery to handle file changes
