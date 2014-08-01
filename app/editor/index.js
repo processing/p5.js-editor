@@ -112,6 +112,7 @@ module.exports = {
     updateSettings: function(settings) {
       this.ace.getSession().setTabSize(settings.tabSize);
       this.ace.getSession().setUseSoftTabs(settings.tabType === 'spaces');
+      this.ace.getSession().setUseWrapMode(settings.wordWrap === true);
     }
   }
 };

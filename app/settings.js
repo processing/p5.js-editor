@@ -4,7 +4,8 @@ var defaults = {
   tabType: "spaces",
   theme: 'tomorrow',
   consoleOrientation: 'horizontal',
-  showLibs: false
+  showLibs: false,
+  wordWrap: false
 };
 
 module.exports.load = function() {
@@ -25,7 +26,7 @@ module.exports.load = function() {
 
   nodeGlobal.userSettings = settings;
 
-  return settings;//nodeGlobal.userSettings;
+  return settings;
 };
 
 module.exports.save = function(settings) {
