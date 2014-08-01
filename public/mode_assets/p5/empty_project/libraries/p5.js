@@ -1,4 +1,4 @@
-/*! p5.js v0.2.23 July 31, 2014 */
+/*! p5.js v0.2.23 August 01, 2014 */
 var shim = function (require) {
     window.requestDraw = function () {
       return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback, element) {
@@ -3176,9 +3176,10 @@ var renderingrendering = function (require, core, constants) {
     };
     p5.prototype.createGraphics = function (w, h) {
       var c = document.createElement('canvas');
-      c.setAttribute('width', w);
-      c.setAttribute('height', h);
-      document.body.appendChild(c);
+      c.setAttribute('width', w * this._pixelDensity);
+      c.setAttribute('height', h * this._pixelDensity);
+      var node = this._userNode || document.body;
+      node.appendChild(c);
       var pg = new p5.Graphics(c);
       this._elements.push(pg);
       for (var p in p5.prototype) {
@@ -3190,6 +3191,7 @@ var renderingrendering = function (require, core, constants) {
           }
         }
       }
+      pg.scale(this._pixelDensity, this._pixelDensity);
       return pg;
     };
     p5.prototype.blendMode = function (mode) {
