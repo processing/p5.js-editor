@@ -382,9 +382,6 @@ var appConfig = {
 
     toggleSettingsPane: function() {
       this.showSettings = !this.showSettings;
-      //if (this.showSettings) {
-        //this.settings = settings.load();
-      //}
     }
 
   }
