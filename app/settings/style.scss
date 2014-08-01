@@ -15,7 +15,7 @@
 
   #titleBar {
     background-color: #58585b;
-    padding: 4px 12px 2px;
+    padding: 5px 12px 1px;
   }
 
   #optionsZone {
@@ -36,6 +36,10 @@
 
     input[type="radio"]:checked + label svg {
       fill: #e1dedc;
+
+      &:hover {
+        fill: #fff;
+      }
     }
 
     label {
@@ -54,6 +58,7 @@
   #consoleText {
     position: relative;
     top: 5px;
+    margin: 4px 0 6px;
   }
 
   .console {
@@ -64,15 +69,15 @@
 
 
     &:hover {
-      fill: #e1dedc;
+      fill: #fff;
     }
   }
 
   #close {
-    width: 24px;
-    height: 24px;
+    width: 19px;
+    height: 19px;
     position: absolute;
-    top: 2px;
+    top: 4px;
     right: 4px;
   }
 
@@ -81,7 +86,8 @@
     transition: all 0.1s ease;
 
     &:hover {
-      fill: #e1dedc;
+      fill: #fff;
+      fill-opacity: 1;
     }
   }
 
@@ -114,11 +120,11 @@
 
   #libraries {
     transition: all 0.3s ease;
+  }
 
-    /*&:hover {*/
-      /*background-color: #adacac;*/
-      /*color: #828384;*/
-    /*}*/
+  #libs {
+    margin-bottom: 28px;
+    margin-top: 4px;
   }
 
   .hiddenCheckbox {
@@ -160,27 +166,22 @@
 
   #tabBox {
     float: right;
-    /*&:hover{*/
-      /*color: #828384;*/
-      /*background-color: #adacac;*/
-    /*}*/
   }
 
   #spaceBox {
     float: left;
-
-    /*&:hover {*/
-      /*color: #828384;*/
-      /*background-color: #adacac;*/
-    /*}*/
   }
 
   #indentOptions {
     position: relative;
-    /*top: -11px;*/
+    margin-bottom: 12px;
 
     input[type="radio"]:checked + label {
       background-color: #e1dedc;
+    }
+
+    input[type="radio"] + label:hover {
+      background-color: #fff;
     }
   }
 
