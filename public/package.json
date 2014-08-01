@@ -4,7 +4,7 @@
   "main": "index.html",
   "window": {
     "title": "Untitled",
-    "toolbar": true,
+    "toolbar": false,
     "frame": true,
     "position": "center",
     "width": 1024,
