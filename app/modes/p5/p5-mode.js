@@ -2,9 +2,6 @@ var wrench = nodeRequire('wrench');
 var Path = nodeRequire('path');
 var os = nodeRequire('os');
 var fs = nodeRequire('fs');
-var $ = require('jquery');
-var util = require('util');
-
 
 module.exports = {
   newProject: function() {
