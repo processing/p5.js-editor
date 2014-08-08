@@ -50,6 +50,10 @@ module.exports.setup = function(app) {
     app.run();
   }}));
 
+  help.append(new gui.MenuItem({ label: 'Reference', click: function(){
+    app.showHelp();
+  }}));
+
   win.menu = menubar;
   win.menu.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}), 1);
   win.menu.append(new gui.MenuItem({ label: 'Help', submenu: help}));

@@ -84,7 +84,9 @@ module.exports = {
     if (this.outputWindow) {
       this.outputWindow.close();
     }
-  }
+  },
+
+  referenceURL: 'http://p5js.org/reference/'
 
 };
 
