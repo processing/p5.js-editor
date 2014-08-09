@@ -15,7 +15,8 @@ var windowstate = require('./windowstate');
 var updater = require('./updater');
 var settings = require('./settings');
 var modes = {
-  p5: require('./modes/p5/p5-mode')
+  p5: require('./modes/p5/p5-mode'),
+  servi: require('./modes/servi/servi-mode')
 };
 
 
@@ -23,7 +24,8 @@ var appConfig = {
 
   el: '#app',
 
-  mode: modes.p5,
+  //mode: modes.p5,
+  mode: modes.servi,
 
   components: {
     editor: require('./editor/index'),
