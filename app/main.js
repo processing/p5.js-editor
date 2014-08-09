@@ -24,7 +24,6 @@ var appConfig = {
 
   el: '#app',
 
-  //mode: modes.p5,
   mode: modes.servi,
 
   components: {

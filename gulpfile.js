@@ -14,16 +14,20 @@ var Path = require('path');
 var fs = require('fs');
 var info = require('./package.json');
 
+var IDEMode = process.env['JS_IDE_MODE'] || 'p5';
+
 var builderOptions = {
   version: '0.9.2',
   buildType: 'versioned',
-  files: [ './public/**'],
+  files: ['./public/**'],
   buildDir: './dist',
   platforms: ['osx'],
-  macIcns: './icons/p5js.icns'
+  appVersion: info.version,
+  appName: IDEMode,
+  macIcns: './icons/' + IDEMode + '.icns'
 };
 
-var binaryDir = Path.join(builderOptions.buildDir, info.name + " - v" + info.version, 'osx');
+var binaryDir = Path.join(builderOptions.buildDir, IDEMode + " - v" + info.version, 'osx');
 var latestDir = Path.join(Path.join(builderOptions.buildDir, 'latest'));
 
 var jsPath = ['./app/*.js', './app/**/*.js', './app/**/*.html', './public/index.html'];
@@ -66,7 +70,8 @@ function build (cb) {
   nw.on('log', console.log);
 
   nw.build().then(function () {
-    fs.renameSync(binaryDir + '/node-webkit.app', binaryDir + '/p5.app');
+    var appName = IDEMode + '.app';
+    fs.renameSync(binaryDir + '/node-webkit.app', binaryDir + '/' + appName);
     console.log('Build created');
     cb();
   }).catch(function (error) {
