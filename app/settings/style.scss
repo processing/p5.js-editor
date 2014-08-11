@@ -123,8 +123,11 @@
   }
 
   #ww {
-    margin-bottom: 40px;
-    margin-top: 4px;
+    overflow:auto;
+  }
+
+  #runInBrowserContainer {
+    margin-bottom: 30px;
   }
 
   #wordWrapIcon {

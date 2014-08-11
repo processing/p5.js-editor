@@ -55,23 +55,31 @@ module.exports = {
     this.saveAll();
 
     if (this.outputWindow) {
-      this.outputWindow.reloadIgnoringCache();
-      this.outputWindow.show();
-      this.outputWindow.focus();
+      if (this.settings.runInBrowser) {
+        gui.Shell.openExternal(url);
+      } else {
+        this.outputWindow.reloadIgnoringCache();
+        this.outputWindow.show();
+        this.outputWindow.focus();
+      }
     } else {
       this.running = true;
       gui.App.clearCache();
       startServer(this.projectPath, this, function(url) {
-        self.outputWindow = self.newWindow(url, {toolbar: true, 'inject-js-start': 'js/debug-console.js'});
-        self.outputWindow.on('document-start', function(){
-          self.outputWindow.show();
-        });
-        //self.outputWindow.focus();
-        self.outputWindow.on("close", function(){
-          self.outputWindow = null;
-          this.close(true);
-          self.running = false;
-        });
+        if (self.settings.runInBrowser) {
+          gui.Shell.openExternal(url);
+        } else {
+          self.outputWindow = self.newWindow(url, {toolbar: true, 'inject-js-start': 'js/debug-console.js'});
+          self.outputWindow.on('document-start', function(){
+            self.outputWindow.show();
+          });
+          //self.outputWindow.focus();
+          self.outputWindow.on("close", function(){
+            self.outputWindow = null;
+            this.close(true);
+            self.running = false;
+          });
+        }
 
       });
     }
