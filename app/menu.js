@@ -32,7 +32,7 @@ module.exports.setup = function(app) {
     app.saveFile();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Save File As \t\t\t\u21E7\u2318S', click: function(){
+  fileMenu.append(new gui.MenuItem({ label: 'Save File As \t\t\u21E7\u2318S', click: function(){
     $('#saveFile').trigger('click');
   }}));
 
