@@ -51,6 +51,7 @@ var appConfig = {
   },
 
   ready: function() {
+    this.modeFunction('update');
     updater.check();
     keybindings.setup(this);
     menu.setup(this);
