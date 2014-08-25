@@ -4,10 +4,9 @@ var Path = nodeRequire('path');
 var os = nodeRequire('os');
 var fs = nodeRequire('fs');
 
-var devHeader = "var servi = require('" + __dirname + "/node_modules/servi/lib/servi.js');";
 var prodHeader = "var servi = require('servi');" + "\n\n";
 var commonHeader = "var app = new servi(true);" + "\n\n\n";
-var footer = "\n\n\n" + "if (typeof run === 'function') app.defaultRoute(run);" + "start();";
+var footer = "\n\n\n" + "if (typeof run === 'function') {\n  app.defaultRoute(run);\n}\n" + "start();";
 
 
 module.exports = {
@@ -30,10 +29,6 @@ module.exports = {
       self.openFile(Path.join(tempProject, 'server.js'));
       gui.Window.get().show();
     });
-  },
-
-  exportProject: function() {
-    console.log('hello');
   },
 
   saveAs: function(path) {
@@ -83,9 +78,7 @@ module.exports = {
     });
   },
 
-  export: function() {
-    alert("hi");
-
+  exportProject: function() {
     var tmpFile = Path.join(this.projectPath, "server-exported.js");
     var code = fs.readFileSync(Path.join(this.projectPath, 'server.js'));
     code = prodHeader + commonHeader + code + footer;

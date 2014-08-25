@@ -390,6 +390,10 @@ var appConfig = {
 
     showHelp: function() {
       gui.Shell.openExternal(this.$options.mode.referenceURL);
+    },
+
+    exportProject: function () {
+      this.modeFunction('exportProject');
     }
 
   }

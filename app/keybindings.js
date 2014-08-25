@@ -31,7 +31,7 @@ module.exports.setup = function(app) {
   });
 
   Mousetrap.bind(['command+e', 'ctrl+e'], function(e) {
-    app.export();
+    app.exportProject();
   });
 
   Mousetrap.bind(['command+alt+j', 'ctrl+alt+j'], function(e) {

@@ -42,9 +42,9 @@ module.exports.setup = function(app) {
 
   fileMenu.append(new gui.MenuItem({ type: 'separator' }));
 
-  //fileMenu.append(new gui.MenuItem({ label: 'Export \t\t\t\u2318E', click: function(){
-    //app.export();
-  //}}));
+  fileMenu.append(new gui.MenuItem({ label: 'Export \t\t\t\u2318E', click: function(){
+    app.exportProject();
+  }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Run \t\t\t\u2318R', click: function(){
     app.run();
