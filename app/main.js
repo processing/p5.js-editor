@@ -52,7 +52,7 @@ var appConfig = {
   },
 
   ready: function() {
-    updater.check();
+    //updater.check();
     keybindings.setup(this);
     menu.setup(this);
 

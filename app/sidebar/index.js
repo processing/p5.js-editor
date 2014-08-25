@@ -15,7 +15,7 @@ module.exports = {
       template: require('./file.html'),
       computed: {
         hidden: function() {
-          return this.name[0] === '.'
+          return this.name[0] === '.' || this.name === 'package.json'
         },
         icon: function() {
           if (this.ext.match(/(png|jpg|gif|svg|jpeg)$/i)) return 'image';

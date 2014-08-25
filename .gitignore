@@ -1,6 +1,7 @@
 .org.chromium.*
 *.sublime-*
 node_modules/
+!public/mode_assets/servi/empty_project/node_modules/
 dist/
 cache/
 public/js/main.js

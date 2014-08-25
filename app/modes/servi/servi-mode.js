@@ -83,13 +83,23 @@ module.exports = {
     });
   },
 
+  export: function() {
+    alert("hi");
+
+    var tmpFile = Path.join(this.projectPath, "server-exported.js");
+    var code = fs.readFileSync(Path.join(this.projectPath, 'server.js'));
+    code = prodHeader + commonHeader + code + footer;
+
+    fs.writeFileSync(tmpFile, code);
+  },
+
   stop: function() {
     if (this.outputWindow) {
       this.outputWindow.close();
     }
   },
 
-  referenceURL: 'http://github.com/antiboredom/servi'
+  referenceURL: 'https://github.com/antiboredom/servi.js/wiki'
 
 };
 
