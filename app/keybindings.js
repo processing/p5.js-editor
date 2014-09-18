@@ -30,9 +30,9 @@ module.exports.setup = function(app) {
     app.closeProject();
   });
 
-  Mousetrap.bind(['command+e', 'ctrl+e'], function(e) {
-    app.export();
-  });
+  //Mousetrap.bind(['command+e', 'ctrl+e'], function(e) {
+    //app.export();
+  //});
 
   Mousetrap.bind(['command+alt+j', 'ctrl+alt+j'], function(e) {
     gui.Window.get().showDevTools();
