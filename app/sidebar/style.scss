@@ -135,7 +135,7 @@ $dark-gray: #58585b;
 
 #filetree {
   margin-left: 12px;
-  overflow: scroll;
+  overflow: auto;
   flex: 1;
 
   ul {
