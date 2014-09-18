@@ -14,7 +14,7 @@ var Path = require('path');
 var fs = require('fs');
 var info = require('./package.json');
 
-var IDEMode = process.env['JS_IDE_MODE'] || 'p5';
+var IDEMode = process.env['JS_IDE_MODE'] || 'servi';
 
 var builderOptions = {
   version: '0.9.2',
