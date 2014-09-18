@@ -1,18 +1,23 @@
-/*! p5.dom.js v0.1.1 August 6, 2014 */
+/*! p5.dom.js v0.1.4 September 11, 2014 */
 /**
  * <p>The web is much more than just canvas and p5.dom makes it easy to interact 
  * with other HTML5 objects, including text, hyperlink, image, input, video, 
  * audio, and webcam.</p>
- * <p>There are a set of creation methods, and some other stuff... @TODO.</p>
+ * <p>There is a set of creation methods, DOM manipulation methods, and
+ * an extended p5.Element that supports a range of HTML elements. See the 
+ * <a href="https://github.com/lmccart/p5.js/wiki/Beyond-the-canvas">
+ * beyond the canvas tutorial</a> for a full overview of how this addon works.
  *
  * <p>Methods and properties shown in black are part of the p5.js core, items in
- * blue are part of the p5.dom library. See the
+ * blue are part of the p5.dom library. You will need to include an extra file
+ * in order to access the blue functions. See the
  * <a href="http://p5js.org/libraries/#using-a-library">using a library</a>
  * section for information on how to include this library. p5.dom comes with
  * <a href="http://p5js.org/download">p5 complete</a> or you can download the single file
  * <a href="https://raw.githubusercontent.com/lmccart/p5.js/master/lib/addons/p5.dom.js">
  * here</a>.</p>
- * 
+ * <p>See <a href="https://github.com/lmccart/p5.js/wiki/Beyond-the-canvas">tutorial: beyond the canvas]</a>
+ * for more info on how to use this libary.</a>
  *
  * @module p5.dom
  * @submodule p5.dom
@@ -69,8 +74,19 @@ var p5DOM = (function(){
    * Removes all elements created by p5, except any canvas / graphics
    * elements created by createCanvas or createGraphics.
    * Event handlers are removed, and element is removed from the DOM.
-   *
    * @method removeElements
+   * @example
+   * <div class='norender'><code>
+   * function setup() {
+   *   createCanvas(100, 100);
+   *   createDiv('this is some text');
+   *   createP('this is a paragraph'); 
+   * }
+   * function mousePressed() {
+   *   removeElements(); // this will remove the div and p, not canvas
+   * }
+   * </code></div>
+   *
    */
   p5.prototype.removeElements = function (e) {
     for (var i=0; i<this._elements.length; i++) {
@@ -275,7 +291,12 @@ var p5DOM = (function(){
    * Creates an HTML5 &lt;video&gt; element in the DOM for simple playback
    * of audio/video. Shown by default, can be hidden with .hide()
    * and drawn into canvas using video(). Appends to the container
-   * node if one is specified, otherwise appends to body.
+   * node if one is specified, otherwise appends to body. The first parameter
+   * can be either a single string path to a video file, or an array of string
+   * paths to different formats of the same video. This is useful for ensuring
+   * that your video can play across different browsers, as each supports 
+   * different formats. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats">this
+   * page for further information about supported formats.
    * 
    * @method createVideo
    * @param  {String|Array} src  path to a video file, or array of paths for
@@ -297,7 +318,12 @@ var p5DOM = (function(){
   /**
    * Creates a hidden HTML5 &lt;audio&gt; element in the DOM for simple audio 
    * playback. Appends to the container node if one is specified, 
-   * otherwise appends to body.
+   * otherwise appends to body. The first parameter
+   * can be either a single string path to a audio file, or an array of string
+   * paths to different formats of the same audio. This is useful for ensuring
+   * that your audio can play across different browsers, as each supports 
+   * different formats. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats">this
+   * page for further information about supported formats.
    * 
    * @method createAudio
    * @param  {String|Array} src  path to an audio file, or array of paths for
@@ -419,17 +445,36 @@ var p5DOM = (function(){
 
   /**
    *
-   * Attaches the element to the parent specified. A way of setting
-   * the container for the element. Accepts either a string ID or
-   * DOM node.
+   * Attaches the element  as a child to the parent specified. 
+   * Accepts either a string ID, DOM node, or p5.Element
    *
    * @method child
-   * @param  {String|Object} child the ID or node to add to the current element
+   * @param  {String|Object} child the ID, DOM node, or p5.Element 
+   *                         to add to the current element
    * @return {p5.Element}
+   * @example
+   * <div class='norender'><code>
+   * var div0 = createDiv('this is the parent');
+   * var div1 = createDiv('this is the child');
+   * div0.child(div1); // use p5.Element
+   * </code></div>
+   * <div class='norender'><code>
+   * var div0 = createDiv('this is the parent');
+   * var div1 = createDiv('this is the child');
+   * div1.id('apples');
+   * div0.child('apples'); // use id
+   * </code></div>
+   * <div class='norender'><code>
+   * var div0 = createDiv('this is the parent');
+   * var elt = document.getElementById('myChildDiv');
+   * div0.child(elt); // use element from page
+   * </code></div>
    */ 
   p5.Element.prototype.child = function(c) {
     if (typeof c === 'string') {
       c = document.getElementById(c);
+    } else if (c instanceof p5.Element) {
+      c = c.elt;
     }
     this.elt.appendChild(c);
     return this;
@@ -485,14 +530,27 @@ var p5DOM = (function(){
    * @param  {String} [value]    value to assign to property
    * @return {String|p5.Element} value of property, if no value is specified
    *                             or p5.Element
+   * @example
+   * <div><code class="norender">
+   * var myDiv = createDiv("I like pandas.");
+   * myDiv.style("color", "#ff0000");
+   * myDiv.style("font-size", "18px");
+   * </code></div>
    */
   p5.Element.prototype.style = function(prop, val) {
     if (typeof val === 'undefined') {
-      return this.elt.style[prop];
+      var attrs = prop.split(';');
+      for (var i=0; i<attrs.length; i++) {
+        var parts = attrs[i].split(':');
+        if (parts[0] && parts[1]) {
+          this.elt.style[parts[0].trim()] = parts[1].trim();
+        }
+      }
+      console.log(this.elt.style)
     } else {
       this.elt.style[prop] = val;
-      return this;
     }
+    return this;
   };
 
 
@@ -507,6 +565,11 @@ var p5DOM = (function(){
    * @param  {String} [value]    value to assign to attribute
    * @return {String|p5.Element} value of attribute, if no value is 
    *                             specified or p5.Element
+   * @example
+   * <div class="norender"><code>
+   * var myDiv = createDiv("I like pandas.");
+   *myDiv.attribute("align", "center");
+   * </code></div>
    */
   p5.Element.prototype.attribute = function(attr, value) {
     if (typeof value === 'undefined') {
@@ -585,9 +648,18 @@ var p5DOM = (function(){
       }
       // set diff for cnv vs normal div
       if (this.elt instanceof HTMLCanvasElement) {
+        var j = {};
+        var k  = this.elt.getContext('2d');        
+        for (var prop in k) {
+          j[prop] = k[prop];
+        }
         this.elt.setAttribute('width', aW * this._pInst._pixelDensity);
         this.elt.setAttribute('height', aH * this._pInst._pixelDensity);
         this.elt.setAttribute('style', 'width:' + aW + 'px !important; height:' + aH + 'px !important;');
+        this._pInst.scale(this._pInst._pixelDensity, this._pInst._pixelDensity);
+        for (var prop in j) {
+          this.elt.getContext('2d')[prop] = j[prop];
+        }
       } else {
         this.elt.style.width = aW+'px';
         this.elt.style.height = aH+'px';
@@ -606,8 +678,12 @@ var p5DOM = (function(){
 
   /**
    * Removes the element and deregisters all listeners.
-   * 
    * @method remove
+   * @example
+   * <div class='norender'><code>
+   * var myDiv = createDiv('this is some text');
+   * myDiv.remove();
+   * </code></div>
    */
   p5.Element.prototype.remove = function() {
     // deregister events
@@ -768,12 +844,10 @@ var p5DOM = (function(){
         this.canvas = document.createElement('canvas');
         this.canvas.width = this.width;
         this.canvas.height = this.height;
-        this.canvas.getContext('2d').drawImage(this.elt, 0, 0);
-        p5.prototype.loadPixels.call(this);
-      } else {
-        this.canvas.getContext('2d').drawImage(this.elt, 0, 0);
-        p5.prototype.loadPixels.call(this);
+        this.drawingContext = this.canvas.getContext('2d');
       }
+      this.drawingContext.drawImage(this.elt, 0, 0);
+      p5.prototype.loadPixels.call(this);
     }
     return this;
   }
