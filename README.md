@@ -50,6 +50,6 @@ The public folder contains the `package.json` for the application window, as wel
 
 Below you'll find documentation for the different libraries we're using
 * [vue.js](http://vuejs.org/)
-* [node-webkit](https://github.com/rogerwang/node-webkit/wiki)
+* [nw.js](https://github.com/nwjs/nw.js/wiki)
 * [browserify](http://browserify.org/)
 * [gulp.js](http://gulpjs.com/)
