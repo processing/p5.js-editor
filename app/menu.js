@@ -2,6 +2,7 @@ var Path = nodeRequire('path');
 var $ = require('jquery');
 var _ = require('underscore');
 var menubar = new gui.Menu({ type: 'menubar' });
+menubar.createMacBuiltin("p5");
 var fileMenu = new gui.Menu();
 var help = new gui.Menu();
 var win = gui.Window.get();
@@ -55,7 +56,7 @@ module.exports.setup = function(app) {
   }}));
 
   win.menu = menubar;
-  win.menu.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}), 1);
+  win.menu.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}),1);
   win.menu.append(new gui.MenuItem({ label: 'Help', submenu: help}));
 
 };
