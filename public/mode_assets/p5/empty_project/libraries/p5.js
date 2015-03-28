@@ -1,4 +1,4 @@
-/*! p5.js v0.4.2 March 23, 2015 */
+/*! p5.js v0.4.2 March 28, 2015 */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd)
     define('p5', [], function () { return (root.returnExportsGlobal = factory());});
@@ -134,9 +134,15 @@ amdclean['core'] = function (require, shim, constants) {
       'touchmove': null,
       'touchend': null,
       'resize': null,
-      'blur': null,
-      'devicemotion': null
+      'blur': null
     };
+    if (window.DeviceOrientationEvent) {
+      this._events.deviceorientation = null;
+    } else if (window.DeviceMotionEvent) {
+      this._events.devicemotion = null;
+    } else {
+      this._events.MozOrientation = null;
+    }
     this._loadingScreenId = 'p5_loading';
     this._start = function () {
       if (this._userNode) {
@@ -303,7 +309,7 @@ amdclean['core'] = function (require, shim, constants) {
       sketch(this);
     }
     for (var e in this._events) {
-      var f = this['on' + e];
+      var f = this['_on' + e];
       if (f) {
         var m = f.bind(this);
         window.addEventListener(e, m);
@@ -2217,7 +2223,7 @@ amdclean['environment'] = function (require, core, constants) {
   p5.prototype.displayHeight = screen.height;
   p5.prototype.windowWidth = window.innerWidth;
   p5.prototype.windowHeight = window.innerHeight;
-  p5.prototype.onresize = function (e) {
+  p5.prototype._onresize = function (e) {
     this._setProperty('windowWidth', window.innerWidth);
     this._setProperty('windowHeight', window.innerHeight);
     var context = this._isGlobal ? window : this;
@@ -3354,7 +3360,7 @@ amdclean['inputkeyboard'] = function (require, core) {
   p5.prototype.keyIsPressed = false;
   p5.prototype.key = '';
   p5.prototype.keyCode = 0;
-  p5.prototype.onkeydown = function (e) {
+  p5.prototype._onkeydown = function (e) {
     this._setProperty('isKeyPressed', true);
     this._setProperty('keyIsPressed', true);
     this._setProperty('keyCode', e.which);
@@ -3372,7 +3378,7 @@ amdclean['inputkeyboard'] = function (require, core) {
       }
     }
   };
-  p5.prototype.onkeyup = function (e) {
+  p5.prototype._onkeyup = function (e) {
     var keyReleased = this.keyReleased || window.keyReleased;
     this._setProperty('isKeyPressed', false);
     this._setProperty('keyIsPressed', false);
@@ -3390,7 +3396,7 @@ amdclean['inputkeyboard'] = function (require, core) {
       }
     }
   };
-  p5.prototype.onkeypress = function (e) {
+  p5.prototype._onkeypress = function (e) {
     this._setProperty('keyCode', e.which);
     this._setProperty('key', String.fromCharCode(e.which));
     var keyTyped = this.keyTyped || window.keyTyped;
@@ -3401,7 +3407,7 @@ amdclean['inputkeyboard'] = function (require, core) {
       }
     }
   };
-  p5.prototype.onblur = function (e) {
+  p5.prototype._onblur = function (e) {
     downKeys = {};
   };
   p5.prototype.keyIsDown = function (code) {
@@ -3432,10 +3438,25 @@ amdclean['inputacceleration'] = function (require, core) {
   };
   var old_max_axis = '';
   var new_max_axis = '';
-  p5.prototype.ondevicemotion = function (e) {
-    this._setProperty('accelerationX', e.accelerationIncludingGravity.x);
-    this._setProperty('accelerationY', e.accelerationIncludingGravity.y);
-    this._setProperty('accelerationZ', e.accelerationIncludingGravity.z);
+  p5.prototype._ondeviceorientation = function (e) {
+    this._setProperty('accelerationX', e.beta);
+    this._setProperty('accelerationY', e.gamma);
+    this._setProperty('accelerationZ', e.alpha);
+    this._handleMotion();
+  };
+  p5.prototype._ondevicemotion = function (e) {
+    this._setProperty('accelerationX', e.acceleration.x * 2);
+    this._setProperty('accelerationY', e.acceleration.y * 2);
+    this._setProperty('accelerationZ', e.acceleration.z * 2);
+    this._handleMotion();
+  };
+  p5.prototype._onMozOrientation = function (e) {
+    this._setProperty('accelerationX', e.x);
+    this._setProperty('accelerationY', e.y);
+    this._setProperty('accelerationZ', e.z);
+    this._handleMotion();
+  };
+  p5.prototype._handleMotion = function () {
     if (window.orientation === 90 || window.orientation === -90) {
       this._setProperty('deviceOrientation', 'landscape');
     } else if (window.orientation === 0) {
@@ -3526,7 +3547,7 @@ amdclean['inputmouse'] = function (require, core, constants) {
       }
     }
   };
-  p5.prototype.onmousemove = function (e) {
+  p5.prototype._onmousemove = function (e) {
     var context = this._isGlobal ? window : this;
     var executeDefault;
     this._updateMouseCoords(e);
@@ -3552,7 +3573,7 @@ amdclean['inputmouse'] = function (require, core, constants) {
       }
     }
   };
-  p5.prototype.onmousedown = function (e) {
+  p5.prototype._onmousedown = function (e) {
     var context = this._isGlobal ? window : this;
     var executeDefault;
     this._setProperty('isMousePressed', true);
@@ -3572,7 +3593,7 @@ amdclean['inputmouse'] = function (require, core, constants) {
       this._updateTouchCoords(e);
     }
   };
-  p5.prototype.onmouseup = function (e) {
+  p5.prototype._onmouseup = function (e) {
     var context = this._isGlobal ? window : this;
     var executeDefault;
     this._setProperty('isMousePressed', false);
@@ -3590,7 +3611,7 @@ amdclean['inputmouse'] = function (require, core, constants) {
       this._updateTouchCoords(e);
     }
   };
-  p5.prototype.onclick = function (e) {
+  p5.prototype._onclick = function (e) {
     var context = this._isGlobal ? window : this;
     if (typeof context.mouseClicked === 'function') {
       var executeDefault = context.mouseClicked(e);
@@ -3599,7 +3620,7 @@ amdclean['inputmouse'] = function (require, core, constants) {
       }
     }
   };
-  p5.prototype.onmousewheel = function (e) {
+  p5.prototype._onmousewheel = function (e) {
     var context = this._isGlobal ? window : this;
     if (typeof context.mouseWheel === 'function') {
       var executeDefault = context.mouseWheel(e);
@@ -3676,7 +3697,7 @@ amdclean['inputtouch'] = function (require, core) {
       y: e.changedTouches[i].pageY - rect.top
     };
   }
-  p5.prototype.ontouchstart = function (e) {
+  p5.prototype._ontouchstart = function (e) {
     var context = this._isGlobal ? window : this;
     var executeDefault;
     this._updateTouchCoords(e);
@@ -3693,7 +3714,7 @@ amdclean['inputtouch'] = function (require, core) {
       }
     }
   };
-  p5.prototype.ontouchmove = function (e) {
+  p5.prototype._ontouchmove = function (e) {
     var context = this._isGlobal ? window : this;
     var executeDefault;
     this._updateTouchCoords(e);
@@ -3710,7 +3731,7 @@ amdclean['inputtouch'] = function (require, core) {
       this._updateMouseCoords(e);
     }
   };
-  p5.prototype.ontouchend = function (e) {
+  p5.prototype._ontouchend = function (e) {
     this._updateTouchCoords(e);
     if (this.touches.length === 0) {
       this._setProperty('touchIsDown', false);

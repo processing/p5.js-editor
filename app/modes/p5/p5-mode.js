@@ -63,7 +63,6 @@ module.exports = {
         this.outputWindow.focus();
       }
     } else {
-      this.running = true;
       gui.App.clearCache();
       startServer(this.projectPath, this, function(url) {
         if (self.settings.runInBrowser) {
@@ -75,11 +74,12 @@ module.exports = {
           });
           //self.outputWindow.focus();
           self.outputWindow.on("close", function(){
+            self.running = false;
             self.outputWindow = null;
             this.close(true);
-            self.running = false;
           });
         }
+        this.running = true;
 
       });
     }
@@ -129,15 +129,15 @@ function startServer(path, app, callback) {
   if (running === false) {
     var portscanner = nodeRequire('portscanner');
     portscanner.findAPortNotInUse(3000, 4000, '127.0.0.1', function(error, port) {
-      var static = nodeRequire('node-static');
+      var staticServer = nodeRequire('node-static');
       var server = nodeRequire('http').createServer(handler);
       var io = nodeRequire('socket.io')(server);
-      var file = new static.Server(path);
+      var file = new staticServer.Server(path);
 
       server.listen(port, function(){
-        running = true;
         url = 'http://localhost:' + port;
         callback(url);
+        running = true;
       });
 
       function handler(request, response) {
