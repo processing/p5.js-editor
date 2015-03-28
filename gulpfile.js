@@ -14,16 +14,17 @@ var Path = require('path');
 var fs = require('fs');
 var info = require('./package.json');
 
+console.log(info.devDependencies.nw)
 var builderOptions = {
-  version: '0.9.2',
+  version: info.devDependencies.nw,
   buildType: 'versioned',
   files: [ './public/**'],
   buildDir: './dist',
-  platforms: ['osx'],
+  platforms: ['osx64'],
   macIcns: './icons/p5js.icns'
 };
 
-var binaryDir = Path.join(builderOptions.buildDir, info.name + " - v" + info.version, 'osx');
+var binaryDir = Path.join(builderOptions.buildDir, info.name + " - v" + info.version, 'osx64');
 var latestDir = Path.join(Path.join(builderOptions.buildDir, 'latest'));
 
 var jsPath = ['./app/*.js', './app/**/*.js', './app/**/*.html', './public/index.html'];
@@ -66,8 +67,6 @@ function build (cb) {
   nw.on('log', console.log);
 
   nw.build().then(function () {
-    fs.renameSync(binaryDir + '/node-webkit.app', binaryDir + '/p5.app');
-    console.log('Build created');
     cb();
   }).catch(function (error) {
     console.error(error);
