@@ -158,11 +158,19 @@
     input[type="checkbox"] + label {
       background-color: #adacac;
       color: #828384;
+        
+        &:hover {
+        background-color: #cdcccc;
+      }
     }
 
     input[type="checkbox"]:checked + label {
       background-color: #e1dedc;
       color: #58585b;
+        
+        &:hover {
+        background-color: #fefefc;
+      }
     }
   }
 
@@ -219,8 +227,6 @@
     width: 67px;
     transition: all 0.3s ease;
   }
-
-
 
   .highlight{
     background-color: #e1dedc;
