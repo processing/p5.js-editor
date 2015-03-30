@@ -55,6 +55,12 @@
     }
   }
 
+  #selectable {
+    &:hover {
+      fill: #fff;
+    }
+  }
+
   #consoleText {
     position: relative;
     top: 5px;
@@ -158,11 +164,19 @@
     input[type="checkbox"] + label {
       background-color: #adacac;
       color: #828384;
+        
+        &:hover {
+        background-color: #fff;
+      }
     }
 
     input[type="checkbox"]:checked + label {
       background-color: #e1dedc;
       color: #58585b;
+        
+        &:hover {
+        background-color: #fff;
+      }
     }
   }
 
@@ -219,8 +233,6 @@
     width: 67px;
     transition: all 0.3s ease;
   }
-
-
 
   .highlight{
     background-color: #e1dedc;
