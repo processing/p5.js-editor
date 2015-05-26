@@ -1,8 +1,8 @@
 var $ = require('jquery');
 var manifest = nodeRequire('./package.json');
 var semver = nodeRequire('semver');
-var packageURL = 'https://raw.githubusercontent.com/antiboredom/jside/master/package.json?v='  + new Date().getTime();
-var downloadURL = 'https://github.com/antiboredom/jside/releases/download/';
+var packageURL = 'https://raw.githubusercontent.com/processing/p5.js-editor/master/package.json?v='  + new Date().getTime();
+var downloadURL = 'https://github.com/processing/p5.js-editor/releases/download/';
 
 module.exports.check = function() {
   if (nodeGlobal.checkedUpdate === true) return false;
