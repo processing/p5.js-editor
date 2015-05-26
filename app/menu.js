@@ -9,15 +9,15 @@ var win = gui.Window.get();
 var recentFilesMenu = new gui.Menu();
 
 module.exports.setup = function(app) {
-  fileMenu.append(new gui.MenuItem({ label: 'New File \t\t\u2318N', click: function(){
+  fileMenu.append(new gui.MenuItem({ label: 'New File', modifiers: 'cmd', key: 'n', click: function(){
     app.newFile();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'New Project \t\u21E7\u2318N', click: function(){
+  fileMenu.append(new gui.MenuItem({ label: 'New Project', modifiers: 'shift-cmd', key: 'n', click: function(){
     app.newWindow(app.windowURL);
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Open \t\t\t\u2318O', click: function(){
+  fileMenu.append(new gui.MenuItem({ label: 'Open', modifiers: 'cmd', key: 'o', click: function(){
     $('#openFile').trigger('click');
   }}));
 
@@ -25,19 +25,19 @@ module.exports.setup = function(app) {
   openRecent.submenu = recentFilesMenu;
   fileMenu.append(openRecent);
 
-  fileMenu.append(new gui.MenuItem({ label: 'Close \t\t\t\u2318W', click: function(){
+  fileMenu.append(new gui.MenuItem({ label: 'Close', modifiers: 'cmd', key: 'w', click: function(){
     app.closeProject();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Save \t\t\t\u2318S', click: function(){
+  fileMenu.append(new gui.MenuItem({ label: 'Save', modifiers: 'cmd', key: 's', click: function(){
     app.saveFile();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Save File As \t\t\u21E7\u2318S', click: function(){
+  fileMenu.append(new gui.MenuItem({ label: 'Save File As...', modifiers: 'shift-cmd', key: 's', click: function(){
     $('#saveFile').trigger('click');
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Save Project As', click: function(){
+  fileMenu.append(new gui.MenuItem({ label: 'Save Project As...', modifiers: 'alt-shift-cmd', key: 's', click: function(){
     $('#saveProject').trigger('click');
   }}));
 
@@ -47,7 +47,7 @@ module.exports.setup = function(app) {
     //app.export();
   //}}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Run \t\t\t\u2318R', click: function(){
+  fileMenu.append(new gui.MenuItem({ label: 'Run', modifiers: 'cmd', key: 'r', click: function(){
     app.run();
   }}));
 
