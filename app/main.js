@@ -376,6 +376,7 @@ var appConfig = {
       if (this.running) {
         this.modeFunction('stop');
       } else {
+        $('#debug').html('');
         this.modeFunction('run');
       }
     },
