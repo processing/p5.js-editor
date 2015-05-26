@@ -9,7 +9,8 @@
 }
 
 #settingsPane {
-  width: 178px;
+  // width: 178px;
+  width: 100%;
   font-family: Karla;
   // -webkit-box-shadow: 0px 8px 17px -2px #58585b;
 
@@ -230,7 +231,8 @@
     padding: 4px;
     // float: right;
     text-align: center;
-    width: 67px;
+    // width: 67px;
+    width: 44%;
     transition: all 0.3s ease;
   }
 
@@ -274,5 +276,9 @@
     color: #58585b;
     font-family: Karla;
     font-size: 13px;
+  }
+
+  input#tabSize {
+    margin-left: 0.3em;
   }
 }
