@@ -32,7 +32,7 @@
     </div>
 
     <div id="indentation">
-      <label for="tabSize">Indentation Amount</label><input id="tabSize" class="highlight" type="text"  v-model="tabSize" size=3>
+      <label for="tabSize">Indentation Amount</label><input id="tabSize" class="highlight" type="text"  v-model="tabSizeDisplay" size=3 v-on="change: updateTabSize">
     </div>
 
     <div id="indentOptions" class="hiddenRadio">
