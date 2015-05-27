@@ -79,8 +79,7 @@ module.exports = {
             this.close(true);
           });
         }
-        this.running = true;
-
+        self.running = true;
       });
     }
   },
