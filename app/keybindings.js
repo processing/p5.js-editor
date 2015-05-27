@@ -2,7 +2,7 @@ var $ = require('jquery');
 var Mousetrap = require('br-mousetrap');
 
 module.exports.setup = function(app) {
-  Mousetrap.bind(['command+r', 'ctrl+r'], function(e) {
+  /*Mousetrap.bind(['command+r', 'ctrl+r'], function(e) {
     app.run();
   });
 
@@ -28,7 +28,7 @@ module.exports.setup = function(app) {
 
   Mousetrap.bind(['command+w', 'ctrl+w'], function(e) {
     app.closeProject();
-  });
+  }); */
 
   //Mousetrap.bind(['command+e', 'ctrl+e'], function(e) {
     //app.export();
