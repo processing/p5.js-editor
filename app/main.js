@@ -249,6 +249,7 @@ var appConfig = {
           file.originalContents = file.contents;
         }
       });
+      menu.updateRecentFiles(this, this.projectPath);
     },
 
     saveAs: function(event) {
@@ -258,6 +259,7 @@ var appConfig = {
       if (this.temp) {
         // mode specific action
         this.modeFunction('saveAs', file);
+        menu.updateRecentFiles(this, this.projectPath);
       } else {
         // save a file
         // if the we are saving inside the project path just open the new file
