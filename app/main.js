@@ -169,7 +169,7 @@ var appConfig = {
         x: currentWindow.x + 50,
         y: currentWindow.y + 50,
         width: 1024,
-        height: 768,
+        height: 700,
         toolbar: false,
         focus: true,
         show: false
