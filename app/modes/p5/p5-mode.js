@@ -63,7 +63,7 @@ module.exports = {
         this.outputWindow.focus();
       }
     } else {
-      gui.App.clearCache();
+      // gui.App.clearCache();
       startServer(this.projectPath, this, function(url) {
         if (self.settings.runInBrowser) {
           gui.Shell.openExternal(url);
@@ -72,7 +72,6 @@ module.exports = {
           self.outputWindow.on('document-start', function(){
             self.outputWindow.show();
           });
-          //self.outputWindow.focus();
           self.outputWindow.on("close", function(){
             self.running = false;
             self.outputWindow = null;
@@ -131,7 +130,7 @@ function startServer(path, app, callback) {
       var staticServer = nodeRequire('node-static');
       var server = nodeRequire('http').createServer(handler);
       var io = nodeRequire('socket.io')(server);
-      var file = new staticServer.Server(path);
+      var file = new staticServer.Server(path, {cache: false});
 
       server.listen(port, function(){
         url = 'http://localhost:' + port;
