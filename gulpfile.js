@@ -67,7 +67,7 @@ function build (cb) {
 
   nw.build().then(function () {
 
-    copyFfmpegDefault();
+    copyFfmpegBuild();
 
     cb();
   }).catch(function (error) {
@@ -78,7 +78,7 @@ function build (cb) {
 
 // copies the ffmpegsumo.so with mp3/mp4 decoders to nwjs directory for BUILD (currently only MacOS)
 // puts the correct library in the dist folder.
-function copyFfmpegDefault() {
+function copyFfmpegBuild() {
   console.log('copying ffmpegsumo.so to ./dist');
   gulp.src('./lib/ffmpegsumo.so')
     .pipe(gulp.dest('./dist/p5 - v0.1.8/osx64/p5.app/Contents/Frameworks/nwjs Framework.framework/Libraries',
