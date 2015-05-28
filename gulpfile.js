@@ -13,7 +13,6 @@ var download = require("gulp-download");
 var Path = require('path');
 var fs = require('fs');
 var info = require('./package.json');
-var del = require('del');
 
 console.log(info.devDependencies.nw)
 var builderOptions = {
@@ -62,7 +61,7 @@ gulp.task('watch', function() {
 });
 
 
-gulp.task('do-build', function(cb) {
+gulp.task('nw-build', function(cb) {
 
    var nw = new NwBuilder(builderOptions);
 
@@ -77,6 +76,7 @@ gulp.task('do-build', function(cb) {
   //build(cb);
 });
 
+// old build function
 /*
 function build (cb) {
   var nw = new NwBuilder(builderOptions);
@@ -95,6 +95,7 @@ function build (cb) {
 */
 
 
+
 // copies the ffmpegsumo.so with mp3/mp4 decoders to nwjs directory for development, assuming npm is already run
 gulp.task('copy-ffmpeg-default', function() {
   console.log('copying ffmpegsumo.so');
@@ -108,9 +109,8 @@ gulp.task('copy-ffmpeg-default', function() {
 // puts the correct library in the dist folder.
 gulp.task('copy-ffmpeg-build', function() {
   console.log('copying ffmpegsumo.so');
-  del(['./dist/p5 - v0.1.8/osx64/p5.app/Contents/Frameworks/nwjs Framework.framework/Libraries/ffmpegsumo.so']);
   gulp.src('./lib/ffmpegsumo.so')
-    .pipe(gulp.dest('./dist/p5 - v0.1.8/osx64/p5.app/Contents/Frameworks/nwjs Framework.framework/Libraries/ffmpegsumo.so',
+    .pipe(gulp.dest('./dist/p5 - v0.1.8/osx64/p5.app/Contents/Frameworks/nwjs Framework.framework/Libraries',
        {overwrite: true}));
 });
 
@@ -146,6 +146,6 @@ gulp.task('release', function(){
 });
 
 //gulp.task('build',  build);
-gulp.task('build', ['do-build', 'copy-ffmpeg-build']);
+gulp.task('build', ['nw-build', 'copy-ffmpeg-build']);
 gulp.task('latest', latest);
 gulp.task('default', ['copy-ffmpeg-default', 'css', 'browserify', 'watch']);
