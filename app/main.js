@@ -42,8 +42,7 @@ var appConfig = {
     running: false,
     settings: {},
     showSettings: false,
-    files: [],
-    tabs: []
+    files: []
   },
 
   computed: {
@@ -224,11 +223,6 @@ var appConfig = {
 
       watcher.on('add', function(path) {
         var f = Files.setup(path);
-          //t = Files.addTab(f);
-        /*if(t){
-          console.log('adding tab');  
-          tabs.push(t);
-        }*/ 
         Files.addToTree(f, self.files, self.projectPath);
       }).on('addDir', function(path) {
         var f = Files.setup(path, {type: 'folder', children: []});
@@ -313,6 +307,7 @@ var appConfig = {
       if (file.open) {
         this.title = file.name;
         this.currentFile = file;
+        console.log('broadcasting file already open');
         this.$broadcast('open-file', this.currentFile);
       } else {
         fs.readFile(path, 'utf8', function(err, fileContents) {
@@ -321,7 +316,10 @@ var appConfig = {
           file.open = true;
           self.title = file.name;
           self.currentFile = file;
+           console.log('broadcasting file open');
           self.$broadcast('open-file', self.currentFile);
+          self.$broadcast('add-tab', self.currentFile);
+
           if (typeof callback === 'function') callback(file);
         });
       }

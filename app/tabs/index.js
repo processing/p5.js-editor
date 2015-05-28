@@ -8,7 +8,7 @@ var $ = require('jquery');
 
 module.exports = {
 	template: require('./template.html'),
-	
+
 	components: {
 		tab: {
 			template: require('./tab.html'),
@@ -30,10 +30,36 @@ module.exports = {
 
 	},
 
+	data: {
+		tabs: []
+	},
+
 	methods: {
+		
 		openFile: function(file) {
 			this.$root.openFile(file.path);
 		},
 
-	}
+
+		addTab: function(fileObject) {
+			console.log('attempting to add tab', fileObject);
+			if (fileObject.open) {
+				var tabObject = {
+					name: fileObject.name,
+					path: fileObject.path,
+					id: fileObject.path,
+					type: 'file',
+					open: true
+				};
+
+				this.tabs.push(tabObject);
+			}
+		},
+	},
+
+	ready: function() {
+		console.log('tabs are ready', this.$root);
+		this.$on('add-tab', this.addTab);
+		this.$on('close-file', this.removeTab);
+	},
 };

@@ -20,22 +20,6 @@ var Files = {
     return _.extend(fileObject, options);
   },
 
-
-  /*addTab: function(fileObject) {
-    console.log('attempting to add tab',fileObject);
-    if (fileObject.open) {
-      var tabObject = {
-        name: fileObject.name,
-        path: fileObject.path,
-        id: path,
-        type: 'file',
-        open: true
-      };
-      return tabObject;
-    }
-    return null;
-  },*/
-
   addToTree: function(fileObject, fileArray, projectRoot) {
     if (Path.dirname(fileObject.path) === projectRoot && !Files.contains(fileArray, fileObject)) {
       fileArray.push(fileObject);
