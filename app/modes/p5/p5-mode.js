@@ -23,6 +23,7 @@ module.exports = {
       self.openFile(Path.join(tempProject, 'sketch.js'));
       gui.Window.get().show();
     });
+
   },
 
   exportProject: function() {

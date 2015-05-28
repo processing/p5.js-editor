@@ -29,7 +29,8 @@ var appConfig = {
     editor: require('./editor/index'),
     sidebar: require('./sidebar/index'),
     settings: require('./settings/index'),
-    debug: require('./debug/index')
+    debug: require('./debug/index'),
+    tabs: require('./tabs/index')
   },
 
   data: {
@@ -41,7 +42,8 @@ var appConfig = {
     running: false,
     settings: {},
     showSettings: false,
-    files: []
+    files: [],
+    tabs: []
   },
 
   computed: {
@@ -222,6 +224,11 @@ var appConfig = {
 
       watcher.on('add', function(path) {
         var f = Files.setup(path);
+          //t = Files.addTab(f);
+        /*if(t){
+          console.log('adding tab');  
+          tabs.push(t);
+        }*/ 
         Files.addToTree(f, self.files, self.projectPath);
       }).on('addDir', function(path) {
         var f = Files.setup(path, {type: 'folder', children: []});

@@ -6,10 +6,13 @@ $dark-gray: #58585b;
 
 #sidebar-container {
   -webkit-user-select: none;
-  width: 210px;
+  width: 100px;
   display: flex;
   position: relative;
-  min-width: 10px;
+}
+
+#sidebar-container .expanded{
+   width: 210px;
 }
 
 #sidebar {
@@ -37,34 +40,6 @@ $dark-gray: #58585b;
   display: block;
 }
 
-#play {
-  background: none;
-  background-image: url('../images/play-gray.svg');
-  border: 0;
-  width: 33px;
-  height: 34px;
-  padding: 7px;
-  font-size: 25px;
-  display: inline;
-  position: absolute;
-  left: 12px;
-  top: 18px;
-  cursor: pointer;
-  outline: 0;
-
-  &:hover {
-    background-image: url('../images/play-green.svg');
-  }
-
-  &.running {
-    background-image: url('../images/stop-gray.svg');
-
-    &:hover {
-      background-image: url('../images/stop-red.svg');
-    }
-  }
-}
-
 #sidebar-drag {
   flex: none;
   cursor: col-resize;
@@ -76,61 +51,6 @@ $dark-gray: #58585b;
   top: 0;
 }
 
-#toolbar {
-  height: 60px;
-  width: 100%;
-}
-
-#actions {
-  margin: 10px;
-  padding-top: 10px;
-  overflow: auto;
-
-  button {
-    border: 0;
-    cursor: pointer;
-    background: none;
-    margin: 0;
-    padding: 0;
-    margin-right: 15px;
-    outline: 0;
-  }
-
-  button, button img {
-    width: 22px;
-  }
-
-  button img {
-    opacity: .6;
-  }
-
-  button img:hover {
-    opacity: 1;
-  }
-
-  #add, #export {
-    float: left;
-  }
-
-  #settings {
-    float: left;
-    bottom: 8px;
-    left: 12px;
-    position: absolute;
-  }
-}
-
-#project-name {
-  padding-left: 20px;
-  font-size: 24px;
-  color: $dark-gray;
-  font-weight: bold;
-  // text-shadow: 0px 1px #E1DEDC;
-  margin-left: 36px;
-  margin-top: 20px;
-  margin-bottom: 22px;
-  cursor: default;
-}
 
 
 #filetree {
