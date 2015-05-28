@@ -1,4 +1,5 @@
-/*! p5.js v0.4.2 March 28, 2015 */
+
+/*! p5.js v0.4.5 May 27, 2015 */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd)
     define('p5', [], function () { return (root.returnExportsGlobal = factory());});
@@ -87,6 +88,14 @@ amdclean['constants'] = function (require) {
     SOFT_LIGHT: 'soft-light',
     DODGE: 'color-dodge',
     BURN: 'color-burn',
+    THRESHOLD: 'threshold',
+    GRAY: 'gray',
+    OPAQUE: 'opaque',
+    INVERT: 'invert',
+    POSTERIZE: 'posterize',
+    DILATE: 'dilate',
+    ERODE: 'erode',
+    BLUR: 'blur',
     NORMAL: 'normal',
     ITALIC: 'italic',
     BOLD: 'bold',
@@ -124,7 +133,6 @@ amdclean['core'] = function (require, shim, constants) {
       'mousedown': null,
       'mouseup': null,
       'click': null,
-      'mousewheel': null,
       'mouseover': null,
       'mouseout': null,
       'keydown': null,
@@ -142,6 +150,11 @@ amdclean['core'] = function (require, shim, constants) {
       this._events.devicemotion = null;
     } else {
       this._events.MozOrientation = null;
+    }
+    if (/Firefox/i.test(navigator.userAgent)) {
+      this._events.DOMMouseScroll = null;
+    } else {
+      this._events.mousewheel = null;
     }
     this._loadingScreenId = 'p5_loading';
     this._start = function () {
@@ -517,13 +530,249 @@ amdclean['p5Color'] = function (require, core, utilscolor_utils, constants) {
     var alpha = typeof a[3] !== 'undefined' ? a[3] / 255 : 1;
     return 'rgba(' + a[0] + ',' + a[1] + ',' + a[2] + ',' + alpha + ')';
   };
+  var WHITESPACE = /\s*/;
+  var INTEGER = /(\d{1,3})/;
+  var DECIMAL = /((?:\d+(?:\.\d+)?)|(?:\.\d+))/;
+  var PERCENT = new RegExp(DECIMAL.source + '%');
+  var namedColors = {
+      aliceblue: '#f0f8ff',
+      antiquewhite: '#faebd7',
+      aqua: '#00ffff',
+      aquamarine: '#7fffd4',
+      azure: '#f0ffff',
+      beige: '#f5f5dc',
+      bisque: '#ffe4c4',
+      black: '#000000',
+      blanchedalmond: '#ffebcd',
+      blue: '#0000ff',
+      blueviolet: '#8a2be2',
+      brown: '#a52a2a',
+      burlywood: '#deb887',
+      cadetblue: '#5f9ea0',
+      chartreuse: '#7fff00',
+      chocolate: '#d2691e',
+      coral: '#ff7f50',
+      cornflowerblue: '#6495ed',
+      cornsilk: '#fff8dc',
+      crimson: '#dc143c',
+      cyan: '#00ffff',
+      darkblue: '#00008b',
+      darkcyan: '#008b8b',
+      darkgoldenrod: '#b8860b',
+      darkgray: '#a9a9a9',
+      darkgreen: '#006400',
+      darkgrey: '#a9a9a9',
+      darkkhaki: '#bdb76b',
+      darkmagenta: '#8b008b',
+      darkolivegreen: '#556b2f',
+      darkorange: '#ff8c00',
+      darkorchid: '#9932cc',
+      darkred: '#8b0000',
+      darksalmon: '#e9967a',
+      darkseagreen: '#8fbc8f',
+      darkslateblue: '#483d8b',
+      darkslategray: '#2f4f4f',
+      darkslategrey: '#2f4f4f',
+      darkturquoise: '#00ced1',
+      darkviolet: '#9400d3',
+      deeppink: '#ff1493',
+      deepskyblue: '#00bfff',
+      dimgray: '#696969',
+      dimgrey: '#696969',
+      dodgerblue: '#1e90ff',
+      firebrick: '#b22222',
+      floralwhite: '#fffaf0',
+      forestgreen: '#228b22',
+      fuchsia: '#ff00ff',
+      gainsboro: '#dcdcdc',
+      ghostwhite: '#f8f8ff',
+      gold: '#ffd700',
+      goldenrod: '#daa520',
+      gray: '#808080',
+      green: '#008000',
+      greenyellow: '#adff2f',
+      grey: '#808080',
+      honeydew: '#f0fff0',
+      hotpink: '#ff69b4',
+      indianred: '#cd5c5c',
+      indigo: '#4b0082',
+      ivory: '#fffff0',
+      khaki: '#f0e68c',
+      lavender: '#e6e6fa',
+      lavenderblush: '#fff0f5',
+      lawngreen: '#7cfc00',
+      lemonchiffon: '#fffacd',
+      lightblue: '#add8e6',
+      lightcoral: '#f08080',
+      lightcyan: '#e0ffff',
+      lightgoldenrodyellow: '#fafad2',
+      lightgray: '#d3d3d3',
+      lightgreen: '#90ee90',
+      lightgrey: '#d3d3d3',
+      lightpink: '#ffb6c1',
+      lightsalmon: '#ffa07a',
+      lightseagreen: '#20b2aa',
+      lightskyblue: '#87cefa',
+      lightslategray: '#778899',
+      lightslategrey: '#778899',
+      lightsteelblue: '#b0c4de',
+      lightyellow: '#ffffe0',
+      lime: '#00ff00',
+      limegreen: '#32cd32',
+      linen: '#faf0e6',
+      magenta: '#ff00ff',
+      maroon: '#800000',
+      mediumaquamarine: '#66cdaa',
+      mediumblue: '#0000cd',
+      mediumorchid: '#ba55d3',
+      mediumpurple: '#9370db',
+      mediumseagreen: '#3cb371',
+      mediumslateblue: '#7b68ee',
+      mediumspringgreen: '#00fa9a',
+      mediumturquoise: '#48d1cc',
+      mediumvioletred: '#c71585',
+      midnightblue: '#191970',
+      mintcream: '#f5fffa',
+      mistyrose: '#ffe4e1',
+      moccasin: '#ffe4b5',
+      navajowhite: '#ffdead',
+      navy: '#000080',
+      oldlace: '#fdf5e6',
+      olive: '#808000',
+      olivedrab: '#6b8e23',
+      orange: '#ffa500',
+      orangered: '#ff4500',
+      orchid: '#da70d6',
+      palegoldenrod: '#eee8aa',
+      palegreen: '#98fb98',
+      paleturquoise: '#afeeee',
+      palevioletred: '#db7093',
+      papayawhip: '#ffefd5',
+      peachpuff: '#ffdab9',
+      peru: '#cd853f',
+      pink: '#ffc0cb',
+      plum: '#dda0dd',
+      powderblue: '#b0e0e6',
+      purple: '#800080',
+      red: '#ff0000',
+      rosybrown: '#bc8f8f',
+      royalblue: '#4169e1',
+      saddlebrown: '#8b4513',
+      salmon: '#fa8072',
+      sandybrown: '#f4a460',
+      seagreen: '#2e8b57',
+      seashell: '#fff5ee',
+      sienna: '#a0522d',
+      silver: '#c0c0c0',
+      skyblue: '#87ceeb',
+      slateblue: '#6a5acd',
+      slategray: '#708090',
+      slategrey: '#708090',
+      snow: '#fffafa',
+      springgreen: '#00ff7f',
+      steelblue: '#4682b4',
+      tan: '#d2b48c',
+      teal: '#008080',
+      thistle: '#d8bfd8',
+      tomato: '#ff6347',
+      turquoise: '#40e0d0',
+      violet: '#ee82ee',
+      wheat: '#f5deb3',
+      white: '#ffffff',
+      whitesmoke: '#f5f5f5',
+      yellow: '#ffff00',
+      yellowgreen: '#9acd32'
+    };
+  var colorPatterns = {
+      HEX3: /^#([a-f0-9])([a-f0-9])([a-f0-9])$/i,
+      HEX6: /^#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i,
+      RGB: new RegExp([
+        '^rgb\\(',
+        INTEGER.source,
+        ',',
+        INTEGER.source,
+        ',',
+        INTEGER.source,
+        '\\)$'
+      ].join(WHITESPACE.source), 'i'),
+      RGB_PERCENT: new RegExp([
+        '^rgb\\(',
+        PERCENT.source,
+        ',',
+        PERCENT.source,
+        ',',
+        PERCENT.source,
+        '\\)$'
+      ].join(WHITESPACE.source), 'i'),
+      RGBA: new RegExp([
+        '^rgba\\(',
+        INTEGER.source,
+        ',',
+        INTEGER.source,
+        ',',
+        INTEGER.source,
+        ',',
+        DECIMAL.source,
+        '\\)$'
+      ].join(WHITESPACE.source), 'i'),
+      RGBA_PERCENT: new RegExp([
+        '^rgba\\(',
+        PERCENT.source,
+        ',',
+        PERCENT.source,
+        ',',
+        PERCENT.source,
+        ',',
+        DECIMAL.source,
+        '\\)$'
+      ].join(WHITESPACE.source), 'i')
+    };
   p5.Color._getFormattedColor = function () {
-    var r, g, b, a;
+    var r, g, b, a, str, vals;
     if (arguments.length >= 3) {
       r = arguments[0];
       g = arguments[1];
       b = arguments[2];
       a = typeof arguments[3] === 'number' ? arguments[3] : 255;
+    } else if (typeof arguments[0] === 'string') {
+      str = arguments[0].trim().toLowerCase();
+      if (namedColors[str]) {
+        return p5.Color._getFormattedColor.apply(this, [namedColors[str]]);
+      }
+      if (colorPatterns.HEX3.test(str)) {
+        vals = colorPatterns.HEX3.exec(str).slice(1).map(function (color) {
+          return parseInt(color + color, 16);
+        });
+      } else if (colorPatterns.HEX6.test(str)) {
+        vals = colorPatterns.HEX6.exec(str).slice(1).map(function (color) {
+          return parseInt(color, 16);
+        });
+      } else if (colorPatterns.RGB.test(str)) {
+        vals = colorPatterns.RGB.exec(str).slice(1).map(function (color) {
+          return parseInt(color, 10);
+        });
+      } else if (colorPatterns.RGB_PERCENT.test(str)) {
+        vals = colorPatterns.RGB_PERCENT.exec(str).slice(1).map(function (color) {
+          return parseInt(parseFloat(color) / 100 * 255, 10);
+        });
+      } else if (colorPatterns.RGBA.test(str)) {
+        vals = colorPatterns.RGBA.exec(str).slice(1).map(function (color, idx) {
+          if (idx === 3) {
+            return parseInt(parseFloat(color) * 255, 10);
+          }
+          return parseInt(color, 10);
+        });
+      } else if (colorPatterns.RGBA_PERCENT.test(str)) {
+        vals = colorPatterns.RGBA_PERCENT.exec(str).slice(1).map(function (color, idx) {
+          if (idx === 3) {
+            return parseInt(parseFloat(color) * 255, 10);
+          }
+          return parseInt(parseFloat(color) / 100 * 255, 10);
+        });
+      } else {
+        vals = [255];
+      }
+      return p5.Color._getFormattedColor.apply(this, vals);
     } else {
       if (this._colorMode === constants.RGB) {
         r = g = b = arguments[0];
@@ -1374,6 +1623,22 @@ amdclean['p5Vector'] = function (require, core, polargeometry, constants) {
       this.z || 0
     ];
   };
+  p5.Vector.prototype.equals = function (x, y, z) {
+    if (x instanceof p5.Vector) {
+      x = x.x || 0;
+      y = x.y || 0;
+      z = x.z || 0;
+    } else if (x instanceof Array) {
+      x = x[0] || 0;
+      y = x[1] || 0;
+      z = x[2] || 0;
+    } else {
+      x = x || 0;
+      y = y || 0;
+      z = z || 0;
+    }
+    return this.x === x && this.y === y && this.z === z;
+  };
   p5.Vector.fromAngle = function (angle) {
     if (this.p5) {
       if (this.p5._angleMode === constants.DEGREES) {
@@ -1836,20 +2101,21 @@ amdclean['colorcreating_reading'] = function (require, core, p5Color) {
     return c.getHue();
   };
   p5.prototype.lerpColor = function (c1, c2, amt) {
+    amt = Math.max(Math.min(amt, 1), 0);
     if (c1 instanceof Array) {
       var c = [];
       for (var i = 0; i < c1.length; i++) {
-        c.push(p5.prototype.lerp(c1[i], c2[i], amt));
+        c.push(Math.sqrt(p5.prototype.lerp(c1[i] * c1[i], c2[i] * c2[i], amt)));
       }
       return c;
     } else if (c1 instanceof p5.Color) {
       var pc = [];
       for (var j = 0; j < 4; j++) {
-        pc.push(p5.prototype.lerp(c1.rgba[j], c2.rgba[j], amt));
+        pc.push(Math.sqrt(p5.prototype.lerp(c1.rgba[j] * c1.rgba[j], c2.rgba[j] * c2.rgba[j], amt)));
       }
       return new p5.Color(this, pc);
     } else {
-      return p5.prototype.lerp(c1, c2, amt);
+      return Math.sqrt(p5.prototype.lerp(c1 * c1, c2 * c2, amt));
     }
   };
   p5.prototype.red = function (c) {
@@ -1960,7 +2226,78 @@ amdclean['dataconversion'] = function (require, core) {
     } else if (typeof n === 'boolean') {
       return n ? 1 : 0;
     } else if (n instanceof Array) {
-      return n.map(p5.prototype.int);
+      return n.map(function (n) {
+        return p5.prototype.int(n, radix);
+      });
+    }
+  };
+  p5.prototype.str = function (n) {
+    if (n instanceof Array) {
+      return n.map(p5.prototype.str);
+    } else {
+      return String(n);
+    }
+  };
+  p5.prototype.boolean = function (n) {
+    if (typeof n === 'number') {
+      return n !== 0;
+    } else if (typeof n === 'string') {
+      return n.toLowerCase() === 'true';
+    } else if (typeof n === 'boolean') {
+      return n;
+    } else if (n instanceof Array) {
+      return n.map(p5.prototype.boolean);
+    }
+  };
+  p5.prototype.byte = function (n) {
+    var nn = p5.prototype.int(n, 10);
+    if (typeof nn === 'number') {
+      return (nn + 128) % 256 - 128;
+    } else if (nn instanceof Array) {
+      return nn.map(p5.prototype.byte);
+    }
+  };
+  p5.prototype.char = function (n) {
+    if (typeof n === 'number' && !isNaN(n)) {
+      return String.fromCharCode(n);
+    } else if (n instanceof Array) {
+      return n.map(p5.prototype.char);
+    } else if (typeof n === 'string') {
+      return p5.prototype.char(parseInt(n, 10));
+    }
+  };
+  p5.prototype.unchar = function (n) {
+    if (typeof n === 'string' && n.length === 1) {
+      return n.charCodeAt(0);
+    } else if (n instanceof Array) {
+      return n.map(p5.prototype.unchar);
+    }
+  };
+  p5.prototype.hex = function (n, digits) {
+    digits = digits === undefined || digits === null ? digits = 8 : digits;
+    if (n instanceof Array) {
+      return n.map(function (n) {
+        return p5.prototype.hex(n, digits);
+      });
+    } else if (typeof n === 'number') {
+      if (n < 0) {
+        n = 4294967295 + n + 1;
+      }
+      var hex = Number(n).toString(16).toUpperCase();
+      while (hex.length < digits) {
+        hex = '0' + hex;
+      }
+      if (hex.length >= digits) {
+        hex = hex.substring(hex.length - digits, hex.length);
+      }
+      return hex;
+    }
+  };
+  p5.prototype.unhex = function (n) {
+    if (n instanceof Array) {
+      return n.map(p5.prototype.unhex);
+    } else {
+      return parseInt('0x' + n, 16);
     }
   };
   return p5;
@@ -3620,7 +3957,7 @@ amdclean['inputmouse'] = function (require, core, constants) {
       }
     }
   };
-  p5.prototype._onmousewheel = function (e) {
+  p5.prototype._onmousewheel = p5.prototype._onDOMMouseScroll = function (e) {
     var context = this._isGlobal ? window : this;
     if (typeof context.mouseWheel === 'function') {
       var executeDefault = context.mouseWheel(e);
@@ -3675,7 +4012,7 @@ amdclean['inputtouch'] = function (require, core) {
       this._setProperty('touchX', touchPos.x);
       this._setProperty('touchY', touchPos.y);
       var touches = [];
-      for (var i = 0; i < e.changedTouches.length; i++) {
+      for (var i = 0; i < e.touches.length; i++) {
         var pos = getTouchPos(this._curElement.elt, e, i);
         touches[i] = {
           x: pos.x,
@@ -3692,9 +4029,10 @@ amdclean['inputtouch'] = function (require, core) {
   function getTouchPos(canvas, e, i) {
     i = i || 0;
     var rect = canvas.getBoundingClientRect();
+    var touch = e.touches[i] || e.changedTouches[i];
     return {
-      x: e.changedTouches[i].pageX - rect.left,
-      y: e.changedTouches[i].pageY - rect.top
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top
     };
   }
   p5.prototype._ontouchstart = function (e) {
@@ -4551,10 +4889,11 @@ amdclean['shape2d_primitives'] = function (require, core, canvas, constants) {
     var y4 = r * Math.sin(a);
     var x1 = x4;
     var y1 = -y4;
-    var k = 0.5522847498;
-    var f = k * Math.tan(a);
-    var x2 = x1 + f * y4;
-    var y2 = y1 + f * x4;
+    var q1 = x1 * x1 + y1 * y1;
+    var q2 = q1 + x1 * x4 + y1 * y4;
+    var k2 = 4 / 3 * (Math.sqrt(2 * q1 * q2) - q2) / (x1 * y4 - y1 * x4);
+    var x2 = x1 - k2 * y1;
+    var y2 = y1 + k2 * x1;
     var x3 = x2;
     var y3 = -y2;
     var ar = a + a1;
@@ -4702,17 +5041,66 @@ amdclean['shape2d_primitives'] = function (require, core, canvas, constants) {
     }
     return this;
   };
-  p5.prototype.rect = function (a, b, c, d) {
+  p5.prototype.rect = function (x, y, w, h, tl, tr, br, bl) {
     if (!this._doStroke && !this._doFill) {
       return;
     }
-    var vals = canvas.modeAdjust(a, b, c, d, this._rectMode);
+    var vals = canvas.modeAdjust(x, y, w, h, this._rectMode);
     var ctx = this.drawingContext;
     if (this._doStroke && ctx.lineWidth % 2 === 1) {
       ctx.translate(0.5, 0.5);
     }
     ctx.beginPath();
-    ctx.rect(vals.x, vals.y, vals.w, vals.h);
+    if (typeof tl === 'undefined') {
+      ctx.rect(vals.x, vals.y, vals.w, vals.h);
+    } else {
+      if (typeof tr === 'undefined') {
+        tr = tl;
+      }
+      if (typeof br === 'undefined') {
+        br = tr;
+      }
+      if (typeof bl === 'undefined') {
+        bl = br;
+      }
+      var _x = vals.x;
+      var _y = vals.y;
+      var _w = vals.w;
+      var _h = vals.h;
+      var hw = _w / 2;
+      var hh = _h / 2;
+      if (_w < 2 * tl) {
+        tl = hw;
+      }
+      if (_h < 2 * tl) {
+        tl = hh;
+      }
+      if (_w < 2 * tr) {
+        tr = hw;
+      }
+      if (_h < 2 * tr) {
+        tr = hh;
+      }
+      if (_w < 2 * br) {
+        br = hw;
+      }
+      if (_h < 2 * br) {
+        br = hh;
+      }
+      if (_w < 2 * bl) {
+        bl = hw;
+      }
+      if (_h < 2 * bl) {
+        bl = hh;
+      }
+      ctx.beginPath();
+      ctx.moveTo(_x + tl, _y);
+      ctx.arcTo(_x + _w, _y, _x + _w, _y + _h, tr);
+      ctx.arcTo(_x + _w, _y + _h, _x, _y + _h, br);
+      ctx.arcTo(_x, _y + _h, _x, _y, bl);
+      ctx.arcTo(_x, _y, _x + _w, _y, tl);
+      ctx.closePath();
+    }
     if (this._doFill) {
       ctx.fill();
     }
@@ -4850,9 +5238,6 @@ amdclean['shapecurves'] = function (require, core) {
   p5.prototype.curveTangent = function (a, b, c, d, t) {
     var t2 = t * t, f1 = -3 * t2 / 2 + 2 * t - 0.5, f2 = 9 * t2 / 2 - 5 * t, f3 = -9 * t2 / 2 + 4 * t + 0.5, f4 = 3 * t2 / 2 - t;
     return a * f1 + b * f2 + c * f3 + d * f4;
-  };
-  p5.prototype.curveTightness = function () {
-    throw 'not yet implemented';
   };
   return p5;
 }({}, amdclean['core']);

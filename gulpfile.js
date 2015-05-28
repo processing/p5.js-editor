@@ -60,59 +60,41 @@ gulp.task('watch', function() {
   gulp.watch(cssPath, ['css']);
 });
 
-
-gulp.task('nw-build', function(cb) {
-
-   var nw = new NwBuilder(builderOptions);
-
-  nw.on('log', console.log);
-
-  nw.build().then(function () {
-    cb();
-  }).catch(function (error) {
-    console.error(error);
-  });
-
-  //build(cb);
-});
-
-// old build function
-/*
 function build (cb) {
   var nw = new NwBuilder(builderOptions);
 
-  console.log('cb', cb);
-
   nw.on('log', console.log);
 
   nw.build().then(function () {
+
+    copyFfmpegDefault();
+
     cb();
   }).catch(function (error) {
     console.error(error);
   });
 
 }
-*/
 
+// copies the ffmpegsumo.so with mp3/mp4 decoders to nwjs directory for BUILD (currently only MacOS)
+// puts the correct library in the dist folder.
+function copyFfmpegDefault() {
+  console.log('copying ffmpegsumo.so to ./dist');
+  gulp.src('./lib/ffmpegsumo.so')
+    .pipe(gulp.dest('./dist/p5 - v0.1.8/osx64/p5.app/Contents/Frameworks/nwjs Framework.framework/Libraries',
+       {overwrite: true}));
+}
 
 
 // copies the ffmpegsumo.so with mp3/mp4 decoders to nwjs directory for development, assuming npm is already run
 gulp.task('copy-ffmpeg-default', function() {
-  console.log('copying ffmpegsumo.so');
+  console.log('copying ffmpegsumo.so to ./node_modules');
   gulp.src('./lib/ffmpegsumo.so')
     .pipe(gulp.dest('./node_modules/nw/nwjs/nwjs.app/Contents/Frameworks/nwjs Framework.framework/Libraries/',
        {overwrite: true}));
 });
 
 
-// copies the ffmpegsumo.so with mp3/mp4 decoders to nwjs directory for BUILD (currently only MacOS)
-// puts the correct library in the dist folder.
-gulp.task('copy-ffmpeg-build', function() {
-  console.log('copying ffmpegsumo.so');
-  gulp.src('./lib/ffmpegsumo.so')
-    .pipe(gulp.dest('./dist/p5 - v0.1.8/osx64/p5.app/Contents/Frameworks/nwjs Framework.framework/Libraries',
-       {overwrite: true}));
-});
 
 
 function latest () {
@@ -145,7 +127,7 @@ gulp.task('release', function(){
   })
 });
 
-//gulp.task('build',  build);
-gulp.task('build', ['nw-build', 'copy-ffmpeg-build']);
+gulp.task('build',  build);
+//gulp.task('build', ['nw-build', 'copy-ffmpeg-build']);
 gulp.task('latest', latest);
 gulp.task('default', ['copy-ffmpeg-default', 'css', 'browserify', 'watch']);
