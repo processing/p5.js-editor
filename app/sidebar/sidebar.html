@@ -1,8 +1,10 @@
+ <div id="sidebar-container" class = "{{className}}">
 <div id="sidebar">
   <div id="filetree">
     <ul>
-      <li v-repeat="files | orderBy 'name'" v-show="!hidden" v-component="{{type}}"></li>
+      <li v-repeat="files | orderBy 'name'" v-component="{{type}}"></li>
     </ul>
   </div>
 </div>
 <div id="sidebar-drag" v-on="mousedown: startDrag"></div>
+</div>

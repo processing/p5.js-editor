@@ -18,7 +18,7 @@ module.exports = {
 				},
 				className: function() {
 					var c = '';
-					if (this.$root.currentFile.path == this.path) c += ' selected';
+					if (this.$root.currentFile.path == this.path) c += 'selected';
 					return c;
 				}
 			},
