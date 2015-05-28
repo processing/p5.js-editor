@@ -42,6 +42,7 @@ var appConfig = {
     settings: {},
     showSettings: false,
     files: []
+    //saveTarget: window 
   },
 
   computed: {
@@ -146,6 +147,9 @@ var appConfig = {
           win = null;
         }
       });
+      win.on('focus', function(){
+        menu.resetMenu();
+      });
     },
 
     // todo: setup drag and drop
@@ -230,7 +234,7 @@ var appConfig = {
         Files.removeFromTree(path, self.files);
       }).on('unlinkDir', function(path) {
         Files.removeFromTree(path, self.files);
-      })
+      });
     },
 
     // close the window, checking for unsaved file changes
