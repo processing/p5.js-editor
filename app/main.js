@@ -325,6 +325,19 @@ var appConfig = {
       }
     },
 
+    /* // close a file - effectively, remove it from the tab
+    closeFile: function(path, callback) {
+      var self = this;
+
+      var file = Files.find(this.files, path);
+      if (!file) return false;
+
+      if (file.open) {
+        file.open = false;
+        self.$broadcast('remove-tab', self.currentFile);   
+      }
+    },*/
+
     // create a new file and save it in the project path
     newFile: function(basepath) {
       var title = prompt('File name:');

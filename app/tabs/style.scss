@@ -98,24 +98,31 @@
     display: inline;
   }
   
-  a {
+  div {
     display: inline-block;
     height: 30px;
     background-color: #DCDCDC;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     min-width: 80px;
+    padding: 0 5px 0 5px; 
+    text-align: center;
+  }
+  div.selected{
+     background-color: #fff
+       }
+  a{
+    display: inline-block;
     text-decoration: none;
     line-height: 2.5;
     text-align: center;
     color: #000;
   }
-
-  li.selected a{
-    background-color: #fff;
+  a.delete{
+    color: #aaa;
   }
 
-  a#add {
+  div#add {
     min-width: 20px;
   }
 }
