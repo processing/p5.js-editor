@@ -41,8 +41,7 @@ var appConfig = {
     running: false,
     settings: {},
     showSettings: false,
-    files: [],
-    justSaved: false,
+    files: []
     //saveTarget: window 
   },
 
@@ -149,10 +148,6 @@ var appConfig = {
         }
       });
       win.on('focus', function(){
-        // console.log("window focus: " + self.currentFile.path);
-        // console.log("window path: " + win.window.PATH);
-        // self.saveTarget = self.currentFile;
-        //menu.setup(self);
         menu.resetMenu();
       });
     },
@@ -239,15 +234,7 @@ var appConfig = {
         Files.removeFromTree(path, self.files);
       }).on('unlinkDir', function(path) {
         Files.removeFromTree(path, self.files);
-      }).on('change', function(path) {
-        //console.log(String(self.justSaved));
-        if (self.justSaved) {
-          self.justSaved = false; 
-          //console.log("File " + path + " changed internally");
-        } else {
-          console.log("File " + path + " changed externally");
-        }
-      })
+      });
     },
 
     // close the window, checking for unsaved file changes
@@ -311,18 +298,8 @@ var appConfig = {
     },
 
     writeFile: function() {
-      var win = gui.Window.get()
-      var self = this;
-
-      //console.log("currentFile: " + this.currentFile.path + "window.PATH: " + 
-      //            win.window.PATH + "saveTarget: " + this.saveTarget.path);
-      self.justSaved = true;
-      self.currentFile = Files.find(self.files, win.window.PATH);
-
       fs.writeFileSync(this.currentFile.path, this.currentFile.contents, "utf8");
       this.currentFile.originalContents = this.currentFile.contents;
-      //console.log("change made to " + this.currentFile.path);
-
     },
 
     // open up a file - read its contents if it's not already opened
