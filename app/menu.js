@@ -9,6 +9,7 @@ var win = gui.Window.get();
 var recentFilesMenu = new gui.Menu();
 var openRecent;
 
+
 module.exports.setup = function(app) {
   fileMenu.append(new gui.MenuItem({ label: 'New File', modifiers: 'cmd', key: 'n', click: function(){
     app.newFile();
@@ -31,6 +32,7 @@ module.exports.setup = function(app) {
   }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Save', modifiers: 'cmd', key: 's', click: function(){
+    console.log(app);
     app.saveFile();
   }}));
 
@@ -57,11 +59,15 @@ module.exports.setup = function(app) {
     app.showHelp();
   }}));
 
+  menubar.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}),1);
+  menubar.append(new gui.MenuItem({ label: 'Help', submenu: help}));
   win.menu = menubar;
-  win.menu.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}),1);
-  win.menu.append(new gui.MenuItem({ label: 'Help', submenu: help}));
 
 };
+
+module.exports.resetMenu = function() {
+  win.menu = menubar;
+}
 
 module.exports.updateRecentFiles = function(app, path) {
   var recentFiles = JSON.parse(localStorage.recentFiles || '[]');
