@@ -9,7 +9,7 @@
     "browserify": "^3.33.1",
     "express": "^4.12.3",
     "github-release": "~0.1.0",
-    "gulp": "^3.5.6",
+    "gulp": "^3.8.11",
     "gulp-browserify": "~0.5.0",
     "gulp-concat": "^2.2.0",
     "gulp-download": "0.0.1",
