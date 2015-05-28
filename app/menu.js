@@ -32,7 +32,7 @@ module.exports.setup = function(app) {
   }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Save', modifiers: 'cmd', key: 's', click: function(){
-    console.log(app);
+    //console.log(app);
     app.saveFile();
   }}));
 

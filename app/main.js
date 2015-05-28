@@ -314,14 +314,14 @@ var appConfig = {
       var win = gui.Window.get()
       var self = this;
 
-      console.log("currentFile: " + this.currentFile.path + "window.PATH: " + 
-                  win.window.PATH + "saveTarget: " + this.saveTarget.path);
+      //console.log("currentFile: " + this.currentFile.path + "window.PATH: " + 
+      //            win.window.PATH + "saveTarget: " + this.saveTarget.path);
       self.justSaved = true;
       self.currentFile = Files.find(self.files, win.window.PATH);
 
       fs.writeFileSync(this.currentFile.path, this.currentFile.contents, "utf8");
       this.currentFile.originalContents = this.currentFile.contents;
-      console.log("change made to " + this.currentFile.path);
+      //console.log("change made to " + this.currentFile.path);
 
     },
 
