@@ -96,7 +96,7 @@ var popupMenu = function(target, e) {
   e.preventDefault();
   var self = this;
   var menu = new gui.Menu();
-  if (target.type === "file") {
+  if (target.type === "file" || target.type === "folder") {
     menu.append(new gui.MenuItem({
     label: "Reveal",
     click: function() {
