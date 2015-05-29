@@ -42,8 +42,9 @@ var appConfig = {
     focused: false,
     settings: {},
     showSettings: false,
-    files: []
-    //saveTarget: window 
+    files: [],
+    justSaved: false,
+    askReload: false
   },
 
   computed: {
@@ -162,6 +163,15 @@ var appConfig = {
       win.on('focus', function(){
         self.focused = true;
         menu.resetMenu();
+        if (self.askReload) {
+          self.askReload = false;
+          var shouldRefresh = confirm(self.currentFile.path + ' was edited somewhere else. Reload? You will lose any changes.');
+          if (shouldRefresh) {
+              //self.openProject(self.currentFile.path);
+              //gui.Window.get().close(true);
+            window.location = 'index.html';
+          }
+        }
       });
 
       win.on('blur', function(){
@@ -218,7 +228,6 @@ var appConfig = {
         }
         win.window.PATH = path;
       });
-
       return win;
     },
 
@@ -255,6 +264,13 @@ var appConfig = {
         Files.removeFromTree(path, self.files);
       }).on('unlinkDir', function(path) {
         Files.removeFromTree(path, self.files);
+      }).on('change', function(path) {
+        if (self.justSaved) {
+          self.justSaved = false; 
+        } else {
+          self.askReload = true;
+        
+        }
       });
     },
 
@@ -327,8 +343,13 @@ var appConfig = {
     },
 
     writeFile: function() {
+      var self = this;
+
+      self.justSaved = true;
+
       fs.writeFileSync(this.currentFile.path, this.currentFile.contents, "utf8");
       this.currentFile.originalContents = this.currentFile.contents;
+
     },
 
     // open up a file - read its contents if it's not already opened
