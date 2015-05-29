@@ -202,6 +202,10 @@ var appConfig = {
 
       // set the project path of the new window
       win.on('document-start', function(){
+        if (fs.lstatSync(path).isDirectory()) {
+          var sketchPath = Path.join(path, 'sketch.js');
+          if (fs.existsSync(sketchPath)) path = sketchPath;
+        }
         win.window.PATH = path;
       });
 
