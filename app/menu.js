@@ -123,16 +123,14 @@ function makeExampleSubmenu() {
   files.forEach(function(category) {
     var sketchMenu = new gui.Menu();
     var categoryLabel = new gui.MenuItem({label: category});
-    //...
-    categoryLabel.submenu = sketchMenu;
-    exampleCategoryMenu.append(categoryLabel);
-    /*
     var sketches = fs.readdirSync(exampleDir.concat('/').concat(category));
     sketches.forEach(function(fileName) {
-      console.log(fileName);
-      // add option to submenu labeled with file name
-      sketchMenu.append(new gui.MenuItem({label: fileName}));
+      sketchMenu.append(new gui.MenuItem({label: fileName, click: function(){
+        console.log(fileName);
+      }}));
     });
-    */
+
+    categoryLabel.submenu = sketchMenu;
+    exampleCategoryMenu.append(categoryLabel);
   });
 }
