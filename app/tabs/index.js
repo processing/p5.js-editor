@@ -20,9 +20,6 @@ module.exports = {
 					var c = '';
 					if (this.$root.currentFile == this.file) c += 'selected';
 					return c;
-				},
-				width: function(){
-
 				}
 			},
 

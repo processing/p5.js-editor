@@ -54,14 +54,6 @@ var appConfig = {
 
     orientation: function(){
      var orientation = this.settings.consoleOrientation;
-     var container = $('#debug-container');
-     if(orientation==='vertical'){
-      container.css({width:'100px',height:'auto'});
-      }
-     else{
-        container.css({width:'auto', height:'100px'});
-     }
-     console.log('orientation=',orientation);
      return orientation;
     }
   },

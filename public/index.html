@@ -4,7 +4,7 @@
   <title>{{title}} {{currentFile.contents !== currentFile.originalContents ? '*' : ''}}</title>
   <link rel="stylesheet" href="css/main.css">
 </head>
-<body class="{{settings.consoleOrientation}}">
+<body class="{{orientation}}">
   <div v-component="sidebar" v-with="files : files" id="side-container"></div>
   <div id="main-container">
     <div v-component="tabs" v-ref="tabs" id="header-container"></div>

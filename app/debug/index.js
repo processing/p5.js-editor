@@ -51,7 +51,6 @@ module.exports = {
         this.orientation = value.consoleOrientation;
         var container = $('#debug-container');
         var d;
-        console.log('settings-changed', this.orientation, container.css('height'));
         if (this.orientation === 'vertical') {
           d = container.css('height');
           container.css({
@@ -72,6 +71,7 @@ module.exports = {
   },
 
   ready: function() {
+    this.orientation = this.$root.settings.consoleOrientation;
     this.$on('settings-changed', this.checkSize);
   }
 
