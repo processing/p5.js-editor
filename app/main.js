@@ -268,8 +268,7 @@ var appConfig = {
         if (self.justSaved) {
           self.justSaved = false; 
         } else {
-          self.askReload = true;
-        
+          if (!self.temp) self.askReload = true;
         }
       });
     },
