@@ -11,12 +11,16 @@ var openRecent;
 
 
 module.exports.setup = function(app) {
+  fileMenu.append(new gui.MenuItem({ label: 'New Project', modifiers: 'shift-cmd', key: 'n', click: function(){
+    app.newWindow(app.windowURL);
+  }}));
+  
   fileMenu.append(new gui.MenuItem({ label: 'New File', modifiers: 'cmd', key: 'n', click: function(){
     app.newFile();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'New Project', modifiers: 'shift-cmd', key: 'n', click: function(){
-    app.newWindow(app.windowURL);
+  fileMenu.append(new gui.MenuItem({ label: 'New Folder', click: function(){
+    app.newFolder();
   }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Open', modifiers: 'cmd', key: 'o', click: function(){
@@ -32,12 +36,11 @@ module.exports.setup = function(app) {
   }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Save', modifiers: 'cmd', key: 's', click: function(){
-    //console.log(app);
     app.saveFile();
   }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Save File As...', modifiers: 'shift-cmd', key: 's', click: function(){
-    $('#saveFile').trigger('click');
+    app.saveFileAs(app.currentFile.path);
   }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Save Project As...', modifiers: 'alt-shift-cmd', key: 's', click: function(){
@@ -67,7 +70,7 @@ module.exports.setup = function(app) {
 
 module.exports.resetMenu = function() {
   win.menu = menubar;
-}
+};
 
 module.exports.updateRecentFiles = function(app, path) {
   var recentFiles = JSON.parse(localStorage.recentFiles || '[]');
@@ -90,7 +93,7 @@ module.exports.updateRecentFiles = function(app, path) {
   recentFiles.forEach(function(p) {
     var m = new gui.MenuItem({ label: Path.basename(p), click: function() {
       app.openProject(p);
-    }})
+    }});
     recentFilesMenu.append(m);
   });
   if (recentFiles.length > 0) {

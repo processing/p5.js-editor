@@ -39,10 +39,12 @@ var appConfig = {
     windowURL: window.location.href,
     temp: true,
     running: false,
+    focused: false,
     settings: {},
     showSettings: false,
-    files: []
-    //saveTarget: window 
+    files: [],
+    justSaved: false,
+    askReload: false
   },
 
   computed: {
@@ -74,10 +76,20 @@ var appConfig = {
         this.projectPath = Path.dirname(this.projectPath);
       }
 
+      if (window.FILEPATH && fs.lstatSync(window.FILEPATH).isFile()) {
+        filename = window.FILEPATH;
+      }
+
       // load the project and open the selected file
       var self = this;
       this.loadProject(this.projectPath, function(){
-        if (filename) self.openFile(filename);
+        if (filename) {
+          if (Path.dirname(filename) === self.projectPath) {
+            self.openFile(filename);
+          } else {
+            self.$broadcast('open-nested-file', filename);
+          }
+        }
         gui.Window.get().show();
       });
 
@@ -147,8 +159,23 @@ var appConfig = {
           win = null;
         }
       });
+
       win.on('focus', function(){
+        self.focused = true;
         menu.resetMenu();
+        if (self.askReload) {
+          self.askReload = false;
+          var shouldRefresh = confirm(self.currentFile.path + ' was edited somewhere else. Reload? You will lose any changes.');
+          if (shouldRefresh) {
+              //self.openProject(self.currentFile.path);
+              //gui.Window.get().close(true);
+            window.location = 'index.html';
+          }
+        }
+      });
+
+      win.on('blur', function(){
+        self.focused = false;
       });
     },
 
@@ -195,9 +222,12 @@ var appConfig = {
 
       // set the project path of the new window
       win.on('document-start', function(){
+        if (fs.lstatSync(path).isDirectory()) {
+          var sketchPath = Path.join(path, 'sketch.js');
+          if (fs.existsSync(sketchPath)) path = sketchPath;
+        }
         win.window.PATH = path;
       });
-
       return win;
     },
 
@@ -234,16 +264,28 @@ var appConfig = {
         Files.removeFromTree(path, self.files);
       }).on('unlinkDir', function(path) {
         Files.removeFromTree(path, self.files);
+      }).on('change', function(path) {
+        if (self.justSaved) {
+          self.justSaved = false; 
+        } else {
+          if (!self.temp) self.askReload = true;
+        }
       });
     },
 
     // close the window, checking for unsaved file changes
     closeProject: function() {
-      if (this.outputWindow) {
-        this.outputWindow.close(true);
-        this.outputWindow = null;
+      if (this.focused) {
+        if (this.outputWindow) {
+          this.outputWindow.close(true);
+          this.outputWindow = null;
+        }
+        gui.Window.get().close();
+      } else {
+        if (this.outputWindow) {
+          this.toggleRun();
+        }
       }
-      gui.Window.get().close();
     },
 
     // save all open files
@@ -298,9 +340,27 @@ var appConfig = {
       }
     },
 
+    saveFileAs: function(path) {
+      var originalName = Path.basename(path);
+      var newName = prompt('Save file as:', originalName);
+      if (!newName || newName === originalName) return false;
+
+      var self = this;
+      var filename = Path.join(Path.dirname(path), newName);
+      fs.writeFile(filename, this.currentFile.contents, 'utf8', function(err){
+        var f = Files.setup(filename);
+        self.openFile(filename);
+      });
+    },
+
     writeFile: function() {
+      var self = this;
+
+      self.justSaved = true;
+
       fs.writeFileSync(this.currentFile.path, this.currentFile.contents, "utf8");
       this.currentFile.originalContents = this.currentFile.contents;
+
     },
 
     // open up a file - read its contents if it's not already opened
