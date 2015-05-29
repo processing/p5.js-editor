@@ -14,7 +14,7 @@
  * <a href="http://p5js.org/libraries/#using-a-library">using a library</a>
  * section for information on how to include this library. p5.dom comes with
  * <a href="http://p5js.org/download">p5 complete</a> or you can download the single file
- * <a href="https://raw.githubusercontent.com/lmccart/p5.js/master/lib/addons/p5.dom.js">
+ * <a href="https://raw.githubusercontent.com/processing/p5.js/master/lib/addons/p5.dom.js">
  * here</a>.</p>
  * <p>See <a href="https://github.com/processing/p5.js/wiki/Beyond-the-canvas">tutorial: beyond the canvas]</a>
  * for more info on how to use this libary.</a>
