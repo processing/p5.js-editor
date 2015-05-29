@@ -250,6 +250,9 @@ var appConfig = {
       });
     },
 
+
+
+
     // close the window, checking for unsaved file changes
     closeProject: function() {
       if (this.focused) {
@@ -308,6 +311,8 @@ var appConfig = {
       this.modeFunction('saveAs', path);
     },
 
+   
+
     saveFile: function() {
       // if this is a new project then trigger a save-as
       if (this.temp) {
@@ -329,11 +334,9 @@ var appConfig = {
 
       var file = Files.find(this.files, path);
       if (!file) return false;
-
       if (file.open) {
         this.title = file.name;
         this.currentFile = file;
-        console.log('broadcasting file already open');
         this.$broadcast('open-file', this.currentFile);
       } else {
         fs.readFile(path, 'utf8', function(err, fileContents) {
@@ -342,7 +345,6 @@ var appConfig = {
           file.open = true;
           self.title = file.name;
           self.currentFile = file;
-           console.log('broadcasting file open');
           self.$broadcast('open-file', self.currentFile);
           self.$broadcast('add-tab', self.currentFile,self.tabs);
 
@@ -350,19 +352,30 @@ var appConfig = {
         });
       }
     },
+    
+    closeFile: function(path){
+        // check to see if there are unsaved files
+         var file = Files.find(this.files, path);
+        if (!file) return false;
+        
 
-    /* // close a file - effectively, remove it from the tab
-    closeFile: function(path, callback) {
-      var self = this;
-
-      var file = Files.find(this.files, path);
-      if (!file) return false;
-
-      if (file.open) {
-        file.open = false;
-        self.$broadcast('remove-tab', self.currentFile);   
-      }
-    },*/
+        if(this.tabs.length==1){
+            var win = gui.Window.get();
+            win.close();
+        }
+        var shouldClose = true;
+        var win = gui.Window.get();
+        if (file.contents != file.originalContents){
+          shouldClose = confirm('You have unsaved changes. Close file and lose changes?');
+        }
+        if (shouldClose) {
+          file.open = false;
+          file.contents = file.originalContents; 
+          this.$broadcast('close-file', file);
+          return true;
+        }
+        return false;
+    },
 
     // create a new file and save it in the project path
     newFile: function(basepath) {

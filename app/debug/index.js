@@ -64,7 +64,6 @@ module.exports = {
             height: d
           });
         }
-        console.log('orientation=', this.orientation);
       }
     }
 

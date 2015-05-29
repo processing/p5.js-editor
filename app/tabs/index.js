@@ -31,41 +31,30 @@ module.exports = {
 	},
 
 	methods: {
-		openFile: function(file) {
-			this.$root.openFile(file.path);
-		},
 
-		closeFile: function(file) {
-			console.log("starting path=",this.$root.currentFile.path);
-			var tabs =  this.$root.tabs;
+		closeFile: function(fileObject) {
+			var tabs = this.$root.tabs;
 			var target_tabs = tabs.filter(function(tab) {
-				return tab.name === file.name;
+				return tab.name === fileObject.name;
 			});
 			if (target_tabs[0]) {
-				target_tabs[0].file.open = false;
 				var newTarget;
 				var index = _.indexOf(tabs, target_tabs[0]);
-				console.log('index =', index);
 
 				switch (index) {
 					case 0:
-						console.log('closing first');
 						newTarget = 0;
 						break;
 					case tabs.length - 1:
-						console.log('closing last');
 						newTarget = tabs.length - 2;
 						break;
 					default:
-						console.log('closing middle');
 						newTarget = index - 1;
 						break;
-				}
-				tabs.splice(index, 1);
-				this.$root.openFile(tabs[newTarget].path);
-				console.log("ending path=",this.$root.currentFile.path);
-
-			}
+				}				
+					tabs.splice(index, 1);
+					this.$root.openFile(tabs[newTarget].path);
+			}			
 		},
 
 		addTab: function(fileObject, tabs) {
@@ -86,6 +75,8 @@ module.exports = {
 
 	ready: function() {
 		this.$on('add-tab', this.addTab);
+		this.$on('close-file', this.closeFile);
+
 
 	},
 };

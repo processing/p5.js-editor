@@ -35,6 +35,7 @@ module.exports = {
     this.sessions = [];
 
     this.$on('open-file', this.openFile);
+    this.$on('close-file', this.closeFile);
     this.$on('save-project-as', this.saveProjectAs);
     this.$on('reformat', this.reformat);
     this.$on('settings-changed', this.updateSettings);
@@ -49,7 +50,6 @@ module.exports = {
   methods: {
     openFile: function(fileObject) {
       var session = _.findWhere(this.sessions, {path: fileObject.path});
-
       if (!session) {
         var doc = ace.createEditSession(fileObject.contents, "ace/mode/" + modes[fileObject.ext]);
 
@@ -75,6 +75,14 @@ module.exports = {
       if (this.newProject) {
         this.ace.gotoLine(2, 2);
         this.newProject = false;
+      }
+    },
+
+    closeFile: function(fileObject){
+      var session = _.findWhere(this.sessions, {path: fileObject.path});
+      if(session){
+        var index = _.indexOf(this.sessions, session);
+        this.sessions.splice(index,1);
       }
     },
 
