@@ -75,10 +75,20 @@ var appConfig = {
         this.projectPath = Path.dirname(this.projectPath);
       }
 
+      if (window.FILEPATH && fs.lstatSync(window.FILEPATH).isFile()) {
+        filename = window.FILEPATH;
+      }
+
       // load the project and open the selected file
       var self = this;
       this.loadProject(this.projectPath, function(){
-        if (filename) self.openFile(filename);
+        if (filename) {
+          if (Path.dirname(filename) === this.projectPath) {
+            self.openFile(filename);
+          } else {
+            self.$broadcast('open-nested-file', filename);
+          }
+        }
         gui.Window.get().show();
       });
 
