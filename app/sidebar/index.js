@@ -11,12 +11,12 @@ module.exports = {
 
 
   data: {
-   sidebarWidth:160
+    sidebarWidth: 160
   },
+  
   computed: {
     className: function() {
       var container = $('#sidebar-container');
-
       if (!this.$root.settings.showSidebar) {
         container.css({
           width: this.sidebarWidth
@@ -24,8 +24,7 @@ module.exports = {
         ace.resize();
         return "expanded";
       } else {
-        console.log('width:',container.width());
-        this.sidebarWidth = container.width()<160 ? 160:container.width();
+        this.sidebarWidth = container.width() < 160 ? 160 : container.width();
         container.css({
           width: 10
         });

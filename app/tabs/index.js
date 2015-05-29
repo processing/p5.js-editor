@@ -49,12 +49,15 @@ module.exports = {
 
 				switch (index) {
 					case 0:
+						console.log('closing first');
 						newTarget = 0;
 						break;
 					case tabs.length - 1:
-						newTarget = tabs.length - 1;
+						console.log('closing last');
+						newTarget = tabs.length - 2;
 						break;
 					default:
+						console.log('closing middle');
 						newTarget = index - 1;
 						break;
 				}
