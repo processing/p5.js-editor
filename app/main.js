@@ -340,6 +340,19 @@ var appConfig = {
       }
     },
 
+    saveFileAs: function(path) {
+      var originalName = Path.basename(path);
+      var newName = prompt('Save file as:', originalName);
+      if (!newName || newName === originalName) return false;
+
+      var self = this;
+      var filename = Path.join(Path.dirname(path), newName);
+      fs.writeFile(filename, this.currentFile.contents, 'utf8', function(err){
+        var f = Files.setup(filename);
+        self.openFile(filename);
+      });
+    },
+
     writeFile: function() {
       var self = this;
 
