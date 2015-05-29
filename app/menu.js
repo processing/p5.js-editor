@@ -11,12 +11,16 @@ var openRecent;
 
 
 module.exports.setup = function(app) {
+  fileMenu.append(new gui.MenuItem({ label: 'New Project', modifiers: 'shift-cmd', key: 'n', click: function(){
+    app.newWindow(app.windowURL);
+  }}));
+  
   fileMenu.append(new gui.MenuItem({ label: 'New File', modifiers: 'cmd', key: 'n', click: function(){
     app.newFile();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'New Project', modifiers: 'shift-cmd', key: 'n', click: function(){
-    app.newWindow(app.windowURL);
+  fileMenu.append(new gui.MenuItem({ label: 'New Folder', click: function(){
+    app.newFolder();
   }}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Open', modifiers: 'cmd', key: 'o', click: function(){

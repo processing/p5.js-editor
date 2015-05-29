@@ -39,12 +39,12 @@ var appConfig = {
     windowURL: window.location.href,
     temp: true,
     running: false,
+    focused: false,
     settings: {},
     showSettings: false,
     files: [],
     justSaved: false,
     askReload: false
-    //saveTarget: window 
   },
 
   computed: {
@@ -149,7 +149,9 @@ var appConfig = {
           win = null;
         }
       });
+
       win.on('focus', function(){
+        self.focused = true;
         menu.resetMenu();
         if (self.askReload) {
           self.askReload = false;
@@ -160,6 +162,10 @@ var appConfig = {
             window.location = 'index.html';
           }
         }
+      });
+
+      win.on('blur', function(){
+        self.focused = false;
       });
     },
 
@@ -206,6 +212,10 @@ var appConfig = {
 
       // set the project path of the new window
       win.on('document-start', function(){
+        if (fs.lstatSync(path).isDirectory()) {
+          var sketchPath = Path.join(path, 'sketch.js');
+          if (fs.existsSync(sketchPath)) path = sketchPath;
+        }
         win.window.PATH = path;
       });
       return win;
@@ -251,14 +261,22 @@ var appConfig = {
           self.askReload = true;
         
         }
-      })
+      });
     },
 
     // close the window, checking for unsaved file changes
     closeProject: function() {
-      if (this.outputWindow) {
-        this.outputWindow.close(true);
-        this.outputWindow = null;
+      if (this.focused) {
+        if (this.outputWindow) {
+          this.outputWindow.close(true);
+          this.outputWindow = null;
+        }
+        gui.Window.get().close();
+      } else {
+        if (this.outputWindow) {
+          this.outputWindow.close(true);
+          this.outputWindow = null;
+        }
       }
     },
 
@@ -315,7 +333,6 @@ var appConfig = {
     },
 
     writeFile: function() {
-      var win = gui.Window.get()
       var self = this;
 
       self.justSaved = true;
