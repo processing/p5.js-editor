@@ -43,6 +43,7 @@ var appConfig = {
     showSettings: false,
     files: [],
     justSaved: false,
+    askReload: false
     //saveTarget: window 
   },
 
@@ -149,11 +150,16 @@ var appConfig = {
         }
       });
       win.on('focus', function(){
-        // console.log("window focus: " + self.currentFile.path);
-        // console.log("window path: " + win.window.PATH);
-        // self.saveTarget = self.currentFile;
-        //menu.setup(self);
         menu.resetMenu();
+        if (self.askReload) {
+          self.askReload = false;
+          var shouldRefresh = confirm(self.currentFile.path + ' was edited somewhere else. Reload? You will lose any changes.');
+          if (shouldRefresh) {
+              //self.openProject(self.currentFile.path);
+              //gui.Window.get().close(true);
+            window.location = 'index.html';
+          }
+        }
       });
     },
 
@@ -202,7 +208,6 @@ var appConfig = {
       win.on('document-start', function(){
         win.window.PATH = path;
       });
-
       return win;
     },
 
@@ -240,12 +245,11 @@ var appConfig = {
       }).on('unlinkDir', function(path) {
         Files.removeFromTree(path, self.files);
       }).on('change', function(path) {
-        //console.log(String(self.justSaved));
         if (self.justSaved) {
           self.justSaved = false; 
-          //console.log("File " + path + " changed internally");
         } else {
-          console.log("File " + path + " changed externally");
+          self.askReload = true;
+        
         }
       })
     },
@@ -314,14 +318,10 @@ var appConfig = {
       var win = gui.Window.get()
       var self = this;
 
-      //console.log("currentFile: " + this.currentFile.path + "window.PATH: " + 
-      //            win.window.PATH + "saveTarget: " + this.saveTarget.path);
       self.justSaved = true;
-      self.currentFile = Files.find(self.files, win.window.PATH);
 
       fs.writeFileSync(this.currentFile.path, this.currentFile.contents, "utf8");
       this.currentFile.originalContents = this.currentFile.contents;
-      //console.log("change made to " + this.currentFile.path);
 
     },
 
