@@ -84,7 +84,7 @@ var appConfig = {
       var self = this;
       this.loadProject(this.projectPath, function(){
         if (filename) {
-          if (Path.dirname(filename) === this.projectPath) {
+          if (Path.dirname(filename) === self.projectPath) {
             self.openFile(filename);
           } else {
             self.$broadcast('open-nested-file', filename);
