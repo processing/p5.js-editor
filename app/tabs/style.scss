@@ -1,4 +1,10 @@
 
+#header-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  max-height: 85px;
+}
 
 #play {
  background: none;
@@ -25,6 +31,8 @@
   }
 }
 }  
+
+
 
 #button_header {
   margin-left: 15px;

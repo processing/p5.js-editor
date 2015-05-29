@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" id="app">
-  <head>
-    <title>{{title}} {{currentFile.contents !== currentFile.originalContents ? '*' : ''}}</title>
-    <link rel="stylesheet" href="css/main.css">
-  </head>
-  <body class="{{settings.consoleOrientation}}">
-    <div v-component="sidebar" v-with="files : files" id="side-container"></div>
-    <div id="main-container">
-      <div v-component="tabs" v-ref="tabs"></div>
+<head>
+  <title>{{title}} {{currentFile.contents !== currentFile.originalContents ? '*' : ''}}</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body class="{{settings.consoleOrientation}}">
+  <div v-component="sidebar" v-with="files : files" id="side-container"></div>
+  <div id="main-container">
+    <div v-component="tabs" v-ref="tabs" id="header-container"></div>
+    <div id = "editor-container">
       <div v-component="editor" v-ref="editor" id="main"></div>
       <div v-component="debug" id="debug-container"></div>
     </div>
+  </div>
 
-    <div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
+  <div v-component="settings" v-with="settings" v-show="showSettings" id="settingsContainer"></div>
 
-    <input class="file-handler" id="openFile" type="file" />
-    <input class="file-handler" id="saveFile" type="file" nwsaveas />
-    <input class="file-handler" id="saveProject" type="file" nwsaveas />
+  <input class="file-handler" id="openFile" type="file" />
+  <input class="file-handler" id="saveFile" type="file" nwsaveas />
+  <input class="file-handler" id="saveProject" type="file" nwsaveas />
 
-    <script>
+  <script>
       //save the gui as a global
       var gui = window.require('nw.gui');
 
@@ -26,7 +28,7 @@
       var nodeRequire = require;
       var nodeProcess = process;
       var nodeGlobal = global;
-    </script>
-    <script src="js/main.js"></script>
-  </body>
-</html>
+      </script>
+      <script src="js/main.js"></script>
+    </body>
+    </html>

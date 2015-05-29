@@ -50,6 +50,19 @@ var appConfig = {
   computed: {
     projectName: function() {
       return Path.basename(this.projectPath);
+    },
+
+    orientation: function(){
+     var orientation = this.settings.consoleOrientation;
+     var container = $('#debug-container');
+     if(orientation==='vertical'){
+      container.css({width:'100px',height:'auto'});
+      }
+     else{
+        container.css({width:'auto', height:'100px'});
+     }
+     console.log('orientation=',orientation);
+     return orientation;
     }
   },
 
@@ -91,8 +104,6 @@ var appConfig = {
     }
     var win = gui.Window.get();
     win.setMinimumSize(400,400);
-
-
   },
 
   methods: {
