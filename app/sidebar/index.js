@@ -8,11 +8,28 @@ var $ = require('jquery');
 
 module.exports = {
   template: require('./sidebar.html'),
+
+
+  data: {
+   sidebarWidth:160
+  },
   computed: {
     className: function() {
+      var container = $('#sidebar-container');
+
       if (!this.$root.settings.showSidebar) {
+        container.css({
+          width: this.sidebarWidth
+        });
+        ace.resize();
         return "expanded";
       } else {
+        console.log('width:',container.width());
+        this.sidebarWidth = container.width()<160 ? 160:container.width();
+        container.css({
+          width: 10
+        });
+        ace.resize();
         return "";
       }
     }

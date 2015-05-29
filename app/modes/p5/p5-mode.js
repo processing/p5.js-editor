@@ -41,6 +41,9 @@ module.exports = {
     this.files.forEach(function(file) {
       file.path = Path.join(path, file.name);
     });
+    this.tabs.forEach(function(tab){
+      tab.path = Path.join(path, tab.name);
+    });
 
     this.$broadcast('save-project-as', path);
 

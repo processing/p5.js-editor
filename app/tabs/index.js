@@ -18,7 +18,7 @@ module.exports = {
 				},
 				className: function() {
 					var c = '';
-					if (this.$root.currentFile.path == this.path) c += 'selected';
+					if (this.$root.currentFile == this.file) c += 'selected';
 					return c;
 				}
 			},
@@ -30,50 +30,42 @@ module.exports = {
 
 	},
 
-	data: {
-		tabs: []
-	},
-
 	methods: {
-		
 		openFile: function(file) {
 			this.$root.openFile(file.path);
 		},
 
 		closeFile: function(file) {
-			console.log('closing file');
-
-			var target_tabs = this.tabs.filter(function(tab){
+			console.log("starting path=",this.$root.currentFile.path);
+			var tabs =  this.$root.tabs;
+			var target_tabs = tabs.filter(function(tab) {
 				return tab.name === file.name;
 			});
-			if(target_tabs[0]){
+			if (target_tabs[0]) {
 				target_tabs[0].file.open = false;
-				console.log('target tab found');
 				var newTarget;
-				var index = _.indexOf(this.tabs,target_tabs[0]);
-				console.log('index =',index);
+				var index = _.indexOf(tabs, target_tabs[0]);
+				console.log('index =', index);
 
-				switch(index){
+				switch (index) {
 					case 0:
 						newTarget = 0;
-					break;
-					case tabs.length-1:
-					newTarget = tabs.length-1;
-					break;
+						break;
+					case tabs.length - 1:
+						newTarget = tabs.length - 1;
+						break;
 					default:
-						newTarget = index-1;
-					break;					
+						newTarget = index - 1;
+						break;
 				}
-				console.log('newTarget =',newTarget);
-				this.tabs.splice(index, 1);
+				tabs.splice(index, 1);
+				this.$root.openFile(tabs[newTarget].path);
+				console.log("ending path=",this.$root.currentFile.path);
 
-				this.$root.openFile(this.tabs[newTarget].path);
 			}
 		},
 
-
-		addTab: function(fileObject) {
-			console.log('attempting to add tab', fileObject);
+		addTab: function(fileObject, tabs) {
 			if (fileObject.open) {
 				var tabObject = {
 					name: fileObject.name,
@@ -84,14 +76,13 @@ module.exports = {
 					file: fileObject
 				};
 
-				this.tabs.push(tabObject);
+				tabs.push(tabObject);
 			}
 		},
 	},
 
 	ready: function() {
-		console.log('tabs are ready', this.$root);
 		this.$on('add-tab', this.addTab);
-		this.$on('close-file', this.removeTab);
+
 	},
 };

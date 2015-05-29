@@ -42,7 +42,8 @@ var appConfig = {
     running: false,
     settings: {},
     showSettings: false,
-    files: []
+    files: [],
+    tabs: []
   },
 
   computed: {
@@ -318,7 +319,7 @@ var appConfig = {
           self.currentFile = file;
            console.log('broadcasting file open');
           self.$broadcast('open-file', self.currentFile);
-          self.$broadcast('add-tab', self.currentFile);
+          self.$broadcast('add-tab', self.currentFile,self.tabs);
 
           if (typeof callback === 'function') callback(file);
         });
