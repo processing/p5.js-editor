@@ -78,7 +78,10 @@ module.exports = {
       if (folder.open) {
         File.list(folder.path, function(files){
           folder.children = files;
-          self.$root.watch(folder.path);
+          if (!folder.watching) {
+            folder.watching = true;
+            self.$root.watch(folder.path);
+          }
           if (typeof cb === 'function') cb();
         });
       }
