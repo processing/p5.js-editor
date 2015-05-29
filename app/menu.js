@@ -7,7 +7,9 @@ var fileMenu = new gui.Menu();
 var help = new gui.Menu();
 var win = gui.Window.get();
 var recentFilesMenu = new gui.Menu();
-var openRecent;
+var exampleCategoryMenu = new gui.Menu();
+var openRecent, examples;
+var fs = nodeRequire('fs');
 
 
 module.exports.setup = function(app) {
@@ -47,6 +49,10 @@ module.exports.setup = function(app) {
     $('#saveProject').trigger('click');
     
   }}));
+
+  makeExampleSubmenu();
+  examples.submenu = exampleCategoryMenu;
+  fileMenu.append(examples);
 
   fileMenu.append(new gui.MenuItem({ type: 'separator' }));
 
@@ -106,3 +112,13 @@ module.exports.updateRecentFiles = function(app, path) {
 
   openRecent.enabled = (recentFiles.length !== 0);
 };
+
+
+function makeExampleSubmenu() {
+  // example sketches
+  examples = new gui.MenuItem({label: 'Examples'});
+  var files = fs.readdirSync('mode_assets/examples');
+  files.forEach(function(category) {
+    exampleCategoryMenu.append(new gui.MenuItem({label: category}));
+  })
+}
