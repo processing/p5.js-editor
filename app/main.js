@@ -88,6 +88,8 @@ var appConfig = {
       this.modeFunction('newProject');
       menu.updateRecentFiles(this);
     }
+    var win = gui.Window.get();
+    win.setMinimumSize(400,400);
 
 
   },

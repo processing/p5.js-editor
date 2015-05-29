@@ -21,6 +21,9 @@ module.exports = {
 					if (this.$root.currentFile == this.file) c += 'selected';
 					return c;
 				}
+				width: function(){
+					
+				}
 			},
 
 			methods: {
