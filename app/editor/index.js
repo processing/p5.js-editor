@@ -6,9 +6,8 @@ var beautify = require('js-beautify').js_beautify;
 var beautify_css = require('js-beautify').css;
 var beautify_html = require('js-beautify').html;
 var ace = require('brace');
-require('brace/mode/javascript');
 require('brace/mode/html');
-require('brace/mode/ejs');
+require('brace/mode/javascript');
 require('brace/mode/css');
 require('brace/mode/json');
 require('brace/mode/text');
@@ -16,8 +15,8 @@ require('brace/theme/tomorrow');
 require('brace/ext/searchbox');
 
 var modes = {
-  ".html": "ejs",
-  ".htm": "ejs",
+  ".html": "html",
+  ".htm": "html",
   ".js": "javascript",
   ".css": "css",
   ".json": "json",

@@ -40,6 +40,7 @@ var appConfig = {
     windowURL: window.location.href,
     temp: true,
     running: false,
+    focused: false,
     settings: {},
     showSettings: false,
     files: [],
@@ -150,6 +151,15 @@ var appConfig = {
           win = null;
         }
       });
+
+      win.on('focus', function(){
+        self.focused = true;
+        menu.resetMenu();
+      });
+
+      win.on('blur', function(){
+        self.focused = false;
+      });
     },
 
     // todo: setup drag and drop
@@ -173,7 +183,7 @@ var appConfig = {
         x: currentWindow.x + 50,
         y: currentWindow.y + 50,
         width: 1024,
-        height: 768,
+        height: 700,
         toolbar: false,
         focus: true,
         show: false
@@ -234,14 +244,22 @@ var appConfig = {
         Files.removeFromTree(path, self.files);
       }).on('unlinkDir', function(path) {
         Files.removeFromTree(path, self.files);
-      })
+      });
     },
 
     // close the window, checking for unsaved file changes
     closeProject: function() {
-      if (this.outputWindow) {
-        this.outputWindow.close(true);
-        this.outputWindow = null;
+      if (this.focused) {
+        if (this.outputWindow) {
+          this.outputWindow.close(true);
+          this.outputWindow = null;
+        }
+        gui.Window.get().close();
+      } else {
+        if (this.outputWindow) {
+          this.outputWindow.close(true);
+          this.outputWindow = null;
+        }
       }
     },
 
@@ -253,6 +271,7 @@ var appConfig = {
           file.originalContents = file.contents;
         }
       });
+      menu.updateRecentFiles(this, this.projectPath);
     },
 
     saveAs: function(event) {
@@ -262,6 +281,7 @@ var appConfig = {
       if (this.temp) {
         // mode specific action
         this.modeFunction('saveAs', file);
+        menu.updateRecentFiles(this, this.projectPath);
       } else {
         // save a file
         // if the we are saving inside the project path just open the new file
