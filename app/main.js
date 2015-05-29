@@ -283,8 +283,7 @@ var appConfig = {
         gui.Window.get().close();
       } else {
         if (this.outputWindow) {
-          this.outputWindow.close(true);
-          this.outputWindow = null;
+          this.toggleRun();
         }
       }
     },
