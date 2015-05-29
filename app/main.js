@@ -243,6 +243,7 @@ var appConfig = {
         this.outputWindow.close(true);
         this.outputWindow = null;
       }
+      gui.Window.get().close();
     },
 
     // save all open files
