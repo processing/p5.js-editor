@@ -50,6 +50,8 @@ module.exports.setup = function(app) {
     
   }}));
 
+  // ??
+  examples = new gui.MenuItem({label: 'Examples'});
   makeExampleSubmenu();
   examples.submenu = exampleCategoryMenu;
   fileMenu.append(examples);
@@ -115,10 +117,22 @@ module.exports.updateRecentFiles = function(app, path) {
 
 
 function makeExampleSubmenu() {
+  var exampleDir = 'mode_assets/examples';
   // example sketches
-  examples = new gui.MenuItem({label: 'Examples'});
-  var files = fs.readdirSync('mode_assets/examples');
+  var files = fs.readdirSync(exampleDir);
   files.forEach(function(category) {
-    exampleCategoryMenu.append(new gui.MenuItem({label: category}));
-  })
+    var sketchMenu = new gui.Menu();
+    var categoryLabel = new gui.MenuItem({label: category});
+    //...
+    categoryLabel.submenu = sketchMenu;
+    exampleCategoryMenu.append(categoryLabel);
+    /*
+    var sketches = fs.readdirSync(exampleDir.concat('/').concat(category));
+    sketches.forEach(function(fileName) {
+      console.log(fileName);
+      // add option to submenu labeled with file name
+      sketchMenu.append(new gui.MenuItem({label: fileName}));
+    });
+    */
+  });
 }
