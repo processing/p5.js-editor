@@ -77,6 +77,9 @@ module.exports = {
             self.outputWindow = null;
             this.close(true);
           });
+          self.outputWindow.on('focus', function(){
+            self.resetMenu();
+          });
         }
         self.running = true;
       });

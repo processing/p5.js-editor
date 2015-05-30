@@ -163,7 +163,7 @@ var appConfig = {
 
       win.on('focus', function(){
         self.focused = true;
-        menu.resetMenu();
+        self.resetMenu();
         if (self.askReload) {
           self.askReload = false;
           var shouldRefresh = confirm(self.currentFile.path + ' was edited somewhere else. Reload? You will lose any changes.');
@@ -240,6 +240,10 @@ var appConfig = {
         self.watch(path);
         if (typeof callback === 'function') callback();
       });
+    },
+
+    resetMenu: function(){
+      menu.resetMenu();
     },
 
     // watch the project file tree for changes
