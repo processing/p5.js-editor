@@ -60,10 +60,6 @@
 }
 
 #actions {
-  margin: 10px;
-  padding-top: 10px;
-  overflow: auto;
-
   button {
     border: 0;
     cursor: pointer;
@@ -89,6 +85,7 @@
 
   #settings {
     float: right;
+    margin-top: 10px;
   }
 }
 
