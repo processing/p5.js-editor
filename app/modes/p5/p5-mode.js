@@ -4,14 +4,6 @@ var os = nodeRequire('os');
 var fs = nodeRequire('fs');
 var Files = require('../../files');
 
-var Files = require('../../files');
-
-var liveCodingEnabled = true;
-//global objects tracked for live coding
-var globalObjs = {};
-
-
-
 
 module.exports = {
   newProject: function() {
@@ -113,11 +105,6 @@ module.exports = {
         } else {
           self.outputWindow = self.newWindow(url, {toolbar: true, 'inject-js-start': 'js/debug-console.js'});
           self.outputWindow.on('document-start', function(){
-
-            //call codeChanged to get the globalObjs initialized. for the first time it doen't emit any change.
-            var content = self.currentFile.contents;
-            //TODO get the file by name to make sure sketch.js gets parsed.
-            self.modeFunction('codeChanged', content);
             self.outputWindow.show();
           });
           self.outputWindow.on("close", function(){
@@ -167,7 +154,6 @@ module.exports = {
     });
   },
 
-
   referenceURL: 'http://p5js.org/reference/'
 
 };
@@ -200,7 +186,6 @@ function startServer(path, app, callback) {
         socket.on('console', function (data) {
           app.debugOut(data);
         });
-
       });
     });
 

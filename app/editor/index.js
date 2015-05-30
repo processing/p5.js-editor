@@ -7,12 +7,6 @@ var beautify_css = require('js-beautify').css;
 var beautify_html = require('js-beautify').html;
 var ace = require('brace');
 
-//TODO: use modes in main.js?
-// var modes = {
-//   p5: require('../modes/p5/p5-mode')
-// };
-//var p5mode = require('../modes/p5/p5-mode');
-
 require('brace/mode/html');
 require('brace/mode/javascript');
 require('brace/mode/css');
