@@ -67,7 +67,6 @@ module.exports = {
             height: this.debugWidth > $('#editor-container').height() ? "100px" : this.debugWidth.toString() + "px"
           });
         }
-        console.log('debug width sizing=', this.debugWidth.toString() + "px");
       }
     }
 
@@ -78,7 +77,6 @@ module.exports = {
     this.$on('settings-changed', this.checkSize);
     var container = $('#debug-container');
     this.debugWidth = container.width();
-    console.log('debug width=', this.debugWidth);
   }
 
 }
