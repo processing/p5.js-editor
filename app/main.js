@@ -494,6 +494,7 @@ var appConfig = {
       var line = data.num;
       var type = data.type;
       if (typeof msg === 'object') msg = JSON.stringify(msg);
+      if (msg === 'Uncaught ReferenceError: require is not defined') return false;
       if (style) {
         msg = msg.replace(/%c/g, '');
         msg = msg.replace('[', '');
