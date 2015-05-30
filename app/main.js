@@ -490,8 +490,8 @@ var appConfig = {
       if (typeof msg === 'object') msg = JSON.stringify(msg);
       if (style) {
         msg = msg.replace(/%c/g, '');
-        msg = msg.replace('[', '[ ');
-        msg = msg.replace(']', '[ ');
+        msg = msg.replace('[', '');
+        msg = msg.replace(']', '');
       }
       msg = AutoLinker.link(msg);
       // console.log(data);
