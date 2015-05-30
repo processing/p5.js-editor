@@ -15,7 +15,6 @@ var fs = require('fs');
 var info = require('./package.json');
 var request = require('request');
 
-console.log(info.devDependencies.nw)
 var builderOptions = {
   version: info.devDependencies.nw,
   buildType: 'versioned',
@@ -125,7 +124,7 @@ gulp.task('p5', function () {
 gulp.task('release', function(){
   build(function(){
     latest().pipe(release(info));
-  })
+  });
 });
 
 function saveDataForCategory(requestParams) {
@@ -141,13 +140,13 @@ function saveDataForCategory(requestParams) {
     request(options, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         var json = JSON.parse(body);
+        json.forEach(function(data) {
+          var fileName = data.name;
+          var destination = "./public/mode_assets/p5/examples/".concat(params.category);
+          download(data.download_url)
+            .pipe(gulp.dest(destination));
+        });
       }
-      json.forEach(function(data) {
-        var fileName = data.name;
-        var destination = "./public/mode_assets/examples/".concat(params.category);
-        download(data.download_url)
-          .pipe(gulp.dest(destination));
-      });
     });
   });
 }
@@ -162,24 +161,18 @@ gulp.task('getExamples', function(){
   };
   var requestParams = [];
   request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var json = JSON.parse(body);
-      json.forEach(function(metadata) {
-        // extract category for filename
-        var category = metadata.name.split("_")[1];
-        requestParams.push({url: metadata.url, category: category});
-      });
-      saveDataForCategory(requestParams);
-    }
+    var json = JSON.parse(body);
+    json.forEach(function(metadata) {
+      // extract category for filename
+      var category = metadata.name.split("_")[1];
+      requestParams.push({url: metadata.url, category: category});
+    });
+    saveDataForCategory(requestParams);
   });
   // get example assets
-  var options = {
-      url: 'https://api.github.com/repos/processing/p5.js-website/contents/examples/examples/assets',
-      method: 'GET',
-      headers: headers
-  };
+  options.url = 'https://api.github.com/repos/processing/p5.js-website/contents/examples/examples/assets';
   request(options, function (error, response, body) {
-    var assetsDest = "./public/mode_assets/p5/empty_project/assets";
+    var assetsDest = "./public/mode_assets/p5/example_assets/";
     if (!error && response.statusCode == 200) {
       var json = JSON.parse(body);
       json.forEach(function(data) {
@@ -194,4 +187,4 @@ gulp.task('getExamples', function(){
 gulp.task('build',  build);
 //gulp.task('build', ['nw-build', 'copy-ffmpeg-build']);
 gulp.task('latest', latest);
-gulp.task('default', ['copy-ffmpeg-default', 'css', 'browserify', 'watch', 'getExamples']);
+gulp.task('default', ['copy-ffmpeg-default', 'css', 'browserify', 'watch']);
