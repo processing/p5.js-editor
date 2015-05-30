@@ -94,8 +94,6 @@ module.exports = {
         gui.Shell.openExternal(url);
       } else {
         this.outputWindow.reloadIgnoringCache();
-        this.outputWindow.show();
-        this.outputWindow.focus();
       }
     } else {
       // gui.App.clearCache();
