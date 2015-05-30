@@ -110,6 +110,9 @@ var appConfig = {
     }
     var win = gui.Window.get();
     win.setMinimumSize(400,400);
+    if(($(window).width() + 100 >= screen.width) || ($(window).height() + 100 >= screen.height)){
+      win.resizeTo((screen.width * 4)/5,(screen.height * 7)/8);
+    }
   },
 
   methods: {
@@ -174,7 +177,7 @@ var appConfig = {
         self.resetMenu();
         if (self.askReload) {
           self.askReload = false;
-          var shouldRefresh = confirm(self.currentFile.path + ' was edited somewhere else. Reload? You will lose any changes.');
+          var shouldRefresh = confirm(self.currentFile.path + ' was edited on the disk. Reload? You will lose any changes.');
           if (shouldRefresh) {
               //self.openProject(self.currentFile.path);
               //gui.Window.get().close(true);
@@ -209,7 +212,7 @@ var appConfig = {
         x: currentWindow.x + 50,
         y: currentWindow.y + 50,
         width: 1024,
-        height: 700,
+        height: 768,
         toolbar: false,
         focus: true,
         show: false
