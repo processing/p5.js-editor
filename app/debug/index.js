@@ -50,15 +50,15 @@ module.exports = {
       if (this.orientation != value.consoleOrientation) {
         this.orientation = value.consoleOrientation;
         var container = $('#debug-container');
-        var d;
+        var d = '100px'
         if (this.orientation === 'vertical') {
-          d = container.css('height');
+          //d = container.css('height');
           container.css({
             width: d,
             height: 'auto'
           });
         } else {
-          d = container.css('width');
+          //d = container.css('width');
           container.css({
             width: 'auto',
             height: d

@@ -27,11 +27,9 @@ module.exports = {
 
 			}
 		}
-
 	},
 
 	methods: {
-
 		closeFile: function(fileObject) {
 			var tabs = this.$root.tabs;
 			var target_tabs = tabs.filter(function(tab) {

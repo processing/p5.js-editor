@@ -9,7 +9,6 @@ var $ = require('jquery');
 module.exports = {
   template: require('./sidebar.html'),
 
-
   data: {
     sidebarWidth: 160
   },
@@ -34,18 +33,22 @@ module.exports = {
     }
   },
 
+  ready: function() {
+    this.$on('open-nested-file', this.openNestedFile);
+  },
+
   components: {
 
     file: {
       template: require('./file.html'),
       computed: {
         hidden: function() {
-          return this.name[0] === '.'
+          return this.name[0] === '.';
         },
         icon: function() {
           if (this.ext.match(/(png|jpg|gif|svg|jpeg)$/i)) return 'image';
           else if (this.ext.match(/db$/i)) return 'db';
-          else return 'file'
+          else return 'file';
         },
         className: function() {
           var c = 'item';
@@ -85,13 +88,29 @@ module.exports = {
       this.$root.openFile(file.path);
     },
 
-    toggleFolder: function(folder) {
+    toggleFolder: function(folder, cb) {
       var self = this;
       folder.open = !folder.open;
       if (folder.open) {
         File.list(folder.path, function(files) {
           folder.children = files;
-          self.$root.watch(folder.path);
+          if (!folder.watching) {
+            folder.watching = true;
+            self.$root.watch(folder.path);
+          }
+          if (typeof cb === 'function') cb();
+        });
+      }
+    },
+
+
+    openNestedFile: function(path) {
+      var self = this;
+      var dirname = Path.dirname(path);
+      var f = _.findWhere(this.$root.files, {path: dirname});
+      if (f) {
+        this.toggleFolder(f, function(){
+          self.$root.openFile(path);
         });
       }
     },
@@ -108,7 +127,7 @@ module.exports = {
       });
     }
   }
-}
+};
 
 // to do - onely make this once! don't generate each time
 var popupMenu = function(target, e) {
@@ -119,7 +138,7 @@ var popupMenu = function(target, e) {
     menu.append(new gui.MenuItem({
     label: "Reveal",
     click: function() {
-      gui.Shell.showItemInFolder(target.path)
+      gui.Shell.showItemInFolder(target.path);
     }
   }));
   menu.append(new gui.MenuItem({
@@ -143,6 +162,7 @@ var popupMenu = function(target, e) {
       self.$root.newFile(target.type=='folder' ? target.path : self.$root.projectPath);
     }
   }));
+
   menu.append(new gui.MenuItem({
     label: "New folder",
     click: function() {
@@ -150,4 +170,5 @@ var popupMenu = function(target, e) {
     }
   }));
   menu.popup(e.clientX, e.clientY);
-}
+
+};
