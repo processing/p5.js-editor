@@ -105,6 +105,13 @@ var Files = {
       });
     });
   },
+
+  cleanExampleName: function(examplePath) {
+    examplePath = Path.basename(examplePath);
+    examplePath = examplePath.replace(/([0-9]+_)|(\.js)/g,'');
+    examplePath = examplePath.replace(/_/g,' ');
+    return examplePath;
+  },
 };
 
 module.exports = Files;
