@@ -3,6 +3,22 @@ var Path = nodeRequire('path');
 var os = nodeRequire('os');
 var fs = nodeRequire('fs');
 
+var Files = require('../../files');
+
+var _ = require('underscore');
+
+//parsers
+var esprima = require('esprima');
+var escodegen = require('escodegen');
+
+
+var liveCodingEnabled = true;
+//global objects tracked for live coding
+var globalObjs = {};
+
+
+
+
 module.exports = {
   newProject: function() {
     //copy the empty project folder to a temporary directory
@@ -74,6 +90,11 @@ module.exports = {
         } else {
           self.outputWindow = self.newWindow(url, {toolbar: true, 'inject-js-start': 'js/debug-console.js'});
           self.outputWindow.on('document-start', function(){
+
+            //call codeChanged to get the globalObjs initialized. for the first time it doen't emit any change.
+            var content = self.currentFile.contents;
+            //TODO get the file by name to make sure sketch.js gets parsed.
+            self.modeFunction('codeChanged', content);
             self.outputWindow.show();
           });
           self.outputWindow.on("close", function(){
@@ -123,12 +144,84 @@ module.exports = {
     });
   },
 
+  codeChanged: function(codeContent) {
+    //if live coding enabled and socket connection is established (e.g. code is running)
+    if(liveCodingEnabled && io) {
+
+
+      try {
+        //TODO is there any way of doing a shallow parse since we just need global stuff (most likely not)
+        var syntax = esprima.parse(codeContent);
+
+      }
+      catch(e) {
+        return;
+      }
+
+        _.each(syntax.body, function(i) {
+            if (i.type === 'FunctionDeclaration') {
+              // Global functions: 
+
+
+              //TODO: is there a better way of getting the content of the function than unparsing it?
+              //var unparsed = escodegen.generate(i.body).replace('\n','');
+
+              
+              var name = i.id.name;
+              var value = escodegen.generate(i.body).replace('\n','');;
+
+              
+              //if object doesn't exist or has been changed, update and emit change.
+              if(!globalObjs[name]) {
+                globalObjs[name] = {name: name, type: 'function', value: value};
+              }
+              else if( globalObjs[name].value !== value) {
+                globalObjs[name] = {name: name, type: 'function', value: value};
+                io.emit('codechange', globalObjs[name]);
+              }
+
+            }
+            else if (i.type === 'VariableDeclaration') {
+              // Global variables: 
+
+              var name = i.declarations[0].id.name;
+              var value = escodegen.generate(i.declarations[0].init);
+
+              // client should know if the value is number to parseFloat string that is received.
+              var isNumber = (i.declarations[0].init.type==='Literal' 
+                                && typeof i.declarations[0].init.value === 'number')  //for numbers
+                            || (i.declarations[0].init.type==='UnaryExpression' 
+                                && typeof i.declarations[0].init.argument.value === 'number'); //for negative numbers
+                            //TODO what else? is there any other type of parse tree for numbers?
+              
+              var type = isNumber ? 'number' : 'variable';
+
+
+              //if object doesn't exist or has been changed, update and emit change.
+              if(!globalObjs[name]) {
+                globalObjs[name] = {name: name, type: 'variable', value: value};
+              }
+              else if( globalObjs[name].value !== value) {
+                globalObjs[name] = {name: name, type: type , value: value};
+                io.emit('codechange', globalObjs[name]);
+              }
+
+            }
+        });
+      
+    }
+          
+
+
+  },
+
   referenceURL: 'http://p5js.org/reference/'
 
 };
 
 var running = false;
 var url = '';
+var io;
 
 function startServer(path, app, callback) {
   if (running === false) {
@@ -136,7 +229,7 @@ function startServer(path, app, callback) {
     portscanner.findAPortNotInUse(3000, 4000, '127.0.0.1', function(error, port) {
       var staticServer = nodeRequire('node-static');
       var server = nodeRequire('http').createServer(handler);
-      var io = nodeRequire('socket.io')(server);
+      io = nodeRequire('socket.io')(server);
       var file = new staticServer.Server(path, {cache: false});
 
       server.listen(port, function(){
@@ -155,6 +248,7 @@ function startServer(path, app, callback) {
         socket.on('console', function (data) {
           app.debugOut(data);
         });
+
       });
     });
 

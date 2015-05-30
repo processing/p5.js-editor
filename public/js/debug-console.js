@@ -5,6 +5,27 @@ callback([encoding])}};function encodeAsString(obj){var str="";var nsp=false;str
 (function() {
 
   var socket = io.connect(window.location.origin);
+
+  //when recieved a list of global function changes from editor, apply them. 
+  socket.on('codechange', function(change) {
+  	var value = change.value;
+  	if(change.type=='function') {
+  		 value = new Function(change.value);
+  	}
+  	else if(change.type=='number') {
+  		 value = parseFloat(change.value);
+  	}
+
+
+  	if(change.type==='function' && change.name==='setup') {
+  		//TODO display a message saying setup method is not live (because 1. its hard to implement 2. it doesn't make sense)
+  	}
+  	else {
+  		window[change.name] = value;	
+  	}
+
+	});
+
   var original = window.console;
   window.console = {};
 
@@ -18,6 +39,7 @@ callback([encoding])}};function encodeAsString(obj){var str="";var nsp=false;str
       original[func].apply(original, arguments)
     };
   });
+
 
   window.onerror = function (msg, url, num, column, errorObj) {
     socket.emit('console', { num: num, msg: msg, type: 'error' });
