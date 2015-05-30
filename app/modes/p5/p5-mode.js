@@ -146,7 +146,7 @@ function startServer(path, app, callback) {
 
       io.on('connection', function (socket) {
         socket.on('console', function (data) {
-          app.debugOut(data.msg, data.num, data.type);
+          app.debugOut(data);
         });
       });
     });

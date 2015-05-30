@@ -8,6 +8,7 @@ var chokidar = nodeRequire('chokidar');
 var Vue = require('vue');
 var $ = require('jquery');
 var _ = require('underscore');
+var AutoLinker = require('autolinker');
 var keybindings = require('./keybindings');
 var Files = require('./files');
 var menu = require('./menu');
@@ -297,6 +298,7 @@ var appConfig = {
         }
       });
       menu.updateRecentFiles(this, this.projectPath);
+      this.justSaved = true;
     },
 
     saveAs: function(event) {
@@ -428,9 +430,20 @@ var appConfig = {
       fs.rename(path, Path.join(Path.dirname(path), newName));
     },
 
-    debugOut: function(msg, line, type) {
+    debugOut: function(data) {
+      var msg = data.msg;
+      var style = data.style;
+      var line = data.num;
+      var type = data.type;
       if (typeof msg === 'object') msg = JSON.stringify(msg);
-      $('#debug').append('<pre class="'+type+'">' + (line ? line + ': ' : '') + msg + '</pre>');
+      if (style) {
+        msg = msg.replace(/%c/g, '');
+        msg = msg.replace('[', '[ ');
+        msg = msg.replace(']', '[ ');
+      }
+      msg = AutoLinker.link(msg);
+      // console.log(data);
+      $('#debug').append('<div class="'+type+'" style="'+(style ? style : '')+'">' + (line ? line + ': ' : '') + msg + '</div>');
       $('#debug').scrollTop($('#debug')[0].scrollHeight);
     },
 

@@ -10,7 +10,11 @@ callback([encoding])}};function encodeAsString(obj){var str="";var nsp=false;str
 
   ["log", "warn", "error"].forEach(function(func){
     window.console[func] = function(msg) {
-      socket.emit('console', { msg: msg, type: func });
+      var style = null;
+      if (arguments[2] && arguments[0].indexOf('%c') > -1) {
+        style = arguments[1];
+      }
+      socket.emit('console', { msg: msg, style: style, type: func });
       original[func].apply(original, arguments)
     };
   });

@@ -32,5 +32,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/antiboredom/jside.git"
+  },
+  "dependencies": {
+    "autolinker": "^0.17.1"
   }
 }
