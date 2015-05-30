@@ -4,6 +4,8 @@
   flex: 1;
   flex-direction: column;
   max-height: 85px;
+   -webkit-touch-callout: none;
+    -webkit-user-select: none;
 }
 
 #play {
@@ -104,7 +106,7 @@
 
   li {
     margin: 0 0 0 0;
-    display: inline;
+    display: inline-block;
   }
   
   div {
@@ -131,8 +133,11 @@
   a.delete{
     color: #aaa;
   }
+}
 
-  div#add {
+li#add{
+ width: 29px;
+  div{
     min-width: 20px;
   }
 }
