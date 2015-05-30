@@ -154,6 +154,7 @@ function saveDataForCategory(requestParams) {
 
 gulp.task('getExamples', function(){
   var headers = {'User-Agent': 'p5.js-editor/0.0.1'};
+  // get example source files
   var options = {
       url: 'https://api.github.com/repos/processing/p5.js-website/contents/examples/examples_src',
       method: 'GET',
@@ -168,7 +169,24 @@ gulp.task('getExamples', function(){
         var category = metadata.name.split("_")[1];
         requestParams.push({url: metadata.url, category: category});
       });
-      saveDataForCategory(requestParams)
+      saveDataForCategory(requestParams);
+    }
+  });
+  // get example assets
+  var options = {
+      url: 'https://api.github.com/repos/processing/p5.js-website/contents/examples/examples/assets',
+      method: 'GET',
+      headers: headers
+  };
+  request(options, function (error, response, body) {
+    var assetsDest = "./public/mode_assets/p5/empty_project/assets";
+    if (!error && response.statusCode == 200) {
+      var json = JSON.parse(body);
+      json.forEach(function(data) {
+        var fileName = data.name;
+        download(data.download_url)
+          .pipe(gulp.dest(assetsDest));
+      });
     }
   });
 });
