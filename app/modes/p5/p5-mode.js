@@ -25,6 +25,21 @@ module.exports = {
     });
   },
 
+  launchExample: function(examplePath) {
+    //copy the empty project folder to a temporary directory
+    var emptyProject = 'mode_assets/p5/empty_project';
+    var tempProjectPath = Path.join(os.tmpdir(), 'p5' + Date.now(), 'Untitled');
+    wrench.mkdirSyncRecursive(tempProjectPath);
+    wrench.copyDirSyncRecursive(emptyProject, tempProjectPath, {
+      excludeHiddenUnix: true,
+      inflateSymlinks: true,
+      forceDelete: true
+    });
+    // replace contents of sketch.js with the requested example
+    //TODO
+    this.openProject(tempProjectPath);
+  },
+
   exportProject: function() {
     console.log('hello');
   },

@@ -50,9 +50,26 @@ module.exports.setup = function(app) {
     
   }}));
 
-  // ??
+  // add menu option for loading example sketches
   examples = new gui.MenuItem({label: 'Examples'});
-  makeExampleSubmenu();
+  // create submenu
+  var exampleDir = 'mode_assets/examples';
+  // get latest example categories
+  var files = fs.readdirSync(exampleDir);
+  files.forEach(function(category) {
+    var sketchMenu = new gui.Menu();
+    var categoryLabel = new gui.MenuItem({label: category});
+    // populate submenu with sketches for that category
+    var sketches = fs.readdirSync(exampleDir.concat('/').concat(category));
+    sketches.forEach(function(fileName) {
+      sketchMenu.append(new gui.MenuItem({label: fileName, click: function(){
+        app.modeFunction('launchExample', fileName);
+      }}));
+    });
+    categoryLabel.submenu = sketchMenu;
+    exampleCategoryMenu.append(categoryLabel);
+  });
+
   examples.submenu = exampleCategoryMenu;
   fileMenu.append(examples);
 
@@ -114,23 +131,3 @@ module.exports.updateRecentFiles = function(app, path) {
 
   openRecent.enabled = (recentFiles.length !== 0);
 };
-
-
-function makeExampleSubmenu() {
-  var exampleDir = 'mode_assets/examples';
-  // example sketches
-  var files = fs.readdirSync(exampleDir);
-  files.forEach(function(category) {
-    var sketchMenu = new gui.Menu();
-    var categoryLabel = new gui.MenuItem({label: category});
-    var sketches = fs.readdirSync(exampleDir.concat('/').concat(category));
-    sketches.forEach(function(fileName) {
-      sketchMenu.append(new gui.MenuItem({label: fileName, click: function(){
-        console.log(fileName);
-      }}));
-    });
-
-    categoryLabel.submenu = sketchMenu;
-    exampleCategoryMenu.append(categoryLabel);
-  });
-}
