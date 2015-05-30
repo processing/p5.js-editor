@@ -23,6 +23,7 @@ module.exports = {
       self.openFile(Path.join(tempProject, 'sketch.js'));
       gui.Window.get().show();
     });
+
   },
 
   exportProject: function() {
@@ -39,6 +40,9 @@ module.exports = {
     //change file paths
     this.files.forEach(function(file) {
       file.path = Path.join(path, file.name);
+    });
+    this.tabs.forEach(function(tab){
+      tab.path = Path.join(path, tab.name);
     });
 
     this.$broadcast('save-project-as', path);

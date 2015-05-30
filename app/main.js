@@ -31,7 +31,8 @@ var appConfig = {
     editor: require('./editor/index'),
     sidebar: require('./sidebar/index'),
     settings: require('./settings/index'),
-    debug: require('./debug/index')
+    debug: require('./debug/index'),
+    tabs: require('./tabs/index')
   },
 
   data: {
@@ -45,6 +46,7 @@ var appConfig = {
     settings: {},
     showSettings: false,
     files: [],
+    tabs: [],
     justSaved: false,
     askReload: false
   },
@@ -52,6 +54,11 @@ var appConfig = {
   computed: {
     projectName: function() {
       return Path.basename(this.projectPath);
+    },
+
+    orientation: function(){
+     var orientation = this.settings.consoleOrientation;
+     return orientation;
     }
   },
 
@@ -101,8 +108,8 @@ var appConfig = {
       this.modeFunction('newProject');
       menu.updateRecentFiles(this);
     }
-
-
+    var win = gui.Window.get();
+    win.setMinimumSize(400,400);
   },
 
   methods: {
@@ -279,6 +286,9 @@ var appConfig = {
       });
     },
 
+
+
+
     // close the window, checking for unsaved file changes
     closeProject: function() {
       if (this.focused) {
@@ -347,6 +357,8 @@ var appConfig = {
       });
     },
 
+   
+
     saveFile: function() {
       // if this is a new project then trigger a save-as
       if (this.temp) {
@@ -386,7 +398,6 @@ var appConfig = {
 
       var file = Files.find(this.files, path);
       if (!file) return false;
-
       if (file.open) {
         this.title = file.name;
         this.currentFile = file;
@@ -399,9 +410,35 @@ var appConfig = {
           self.title = file.name;
           self.currentFile = file;
           self.$broadcast('open-file', self.currentFile);
+          self.$broadcast('add-tab', self.currentFile,self.tabs);
+
           if (typeof callback === 'function') callback(file);
         });
       }
+    },
+    
+    closeFile: function(path){
+        // check to see if there are unsaved files
+         var file = Files.find(this.files, path);
+        if (!file) return false;
+        
+
+        if(this.tabs.length==1){
+            var win = gui.Window.get();
+            win.close();
+        }
+        var shouldClose = true;
+        var win = gui.Window.get();
+        if (file.contents != file.originalContents){
+          shouldClose = confirm('You have unsaved changes. Close file and lose changes?');
+        }
+        if (shouldClose) {
+          file.open = false;
+          file.contents = file.originalContents; 
+          this.$broadcast('close-file', file);
+          return true;
+        }
+        return false;
     },
 
     // create a new file and save it in the project path

@@ -4,7 +4,7 @@ var defaults = {
   tabType: "spaces",
   theme: 'tomorrow',
   consoleOrientation: 'horizontal',
-  showLibs: false,
+  showSidebar: false,
   wordWrap: false,
   runInBrowser: false
 };
