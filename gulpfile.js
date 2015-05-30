@@ -13,8 +13,8 @@ var download = require("gulp-download");
 var Path = require('path');
 var fs = require('fs');
 var info = require('./package.json');
+var request = require('request');
 
-console.log(info.devDependencies.nw)
 var builderOptions = {
   version: info.devDependencies.nw,
   buildType: 'versioned',
@@ -124,7 +124,64 @@ gulp.task('p5', function () {
 gulp.task('release', function(){
   build(function(){
     latest().pipe(release(info));
-  })
+  });
+});
+
+function saveDataForCategory(requestParams) {
+  var headers = {'User-Agent': 'p5.js-editor/0.0.1'};
+  requestParams.forEach(function(params)  {
+    // extract download URL for examples in this category
+    var options = {
+      url: params.url,
+      method: 'GET',
+      headers: headers
+    };
+    var fileMetadata = [];
+    request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var json = JSON.parse(body);
+        json.forEach(function(data) {
+          var fileName = data.name;
+          var destination = "./public/mode_assets/p5/examples/".concat(params.category);
+          download(data.download_url)
+            .pipe(gulp.dest(destination));
+        });
+      }
+    });
+  });
+}
+
+gulp.task('getExamples', function(){
+  var headers = {'User-Agent': 'p5.js-editor/0.0.1'};
+  // get example source files
+  var options = {
+      url: 'https://api.github.com/repos/processing/p5.js-website/contents/examples/examples_src',
+      method: 'GET',
+      headers: headers
+  };
+  var requestParams = [];
+  request(options, function (error, response, body) {
+    var json = JSON.parse(body);
+    json.forEach(function(metadata) {
+      // extract category for filename
+      var category = metadata.name.split("_")[1];
+      requestParams.push({url: metadata.url, category: category});
+    });
+    saveDataForCategory(requestParams);
+  });
+  // get example assets
+  options.url = 'https://api.github.com/repos/processing/p5.js-website/contents/examples/examples/assets';
+  request(options, function (error, response, body) {
+    var assetsDest = "./public/mode_assets/p5/example_assets/";
+    if (!error && response.statusCode == 200) {
+      var json = JSON.parse(body);
+      json.forEach(function(data) {
+        var fileName = data.name;
+        download(data.download_url)
+          .pipe(gulp.dest(assetsDest));
+      });
+    }
+  });
 });
 
 gulp.task('build',  build);

@@ -1,13 +1,17 @@
 var Path = nodeRequire('path');
 var $ = require('jquery');
 var _ = require('underscore');
+var Files = require('./files');
+
 var menubar = new gui.Menu({ type: 'menubar' });
 menubar.createMacBuiltin("p5");
 var fileMenu = new gui.Menu();
 var help = new gui.Menu();
 var win = gui.Window.get();
 var recentFilesMenu = new gui.Menu();
-var openRecent;
+var exampleCategoryMenu = new gui.Menu();
+var openRecent, examples;
+var fs = nodeRequire('fs');
 
 
 module.exports.setup = function(app) {
@@ -47,6 +51,32 @@ module.exports.setup = function(app) {
     $('#saveProject').trigger('click');
     
   }}));
+
+  // add menu option for loading example sketches
+  examples = new gui.MenuItem({label: 'Examples'});
+  // create submenu
+  var exampleDir = 'mode_assets/p5/examples';
+  // get latest example categories
+  var files = fs.readdirSync(exampleDir);
+  files.forEach(function(category) {
+    var sketchMenu = new gui.Menu();
+    var categoryLabel = new gui.MenuItem({label: category});
+    // populate submenu with sketches for that category
+    var categoryDir = Path.join(exampleDir, category);
+    if (fs.lstatSync(categoryDir).isDirectory()) {
+      var sketches = fs.readdirSync(categoryDir);
+      sketches.forEach(function(fileName) {
+        sketchMenu.append(new gui.MenuItem({label: Files.cleanExampleName(fileName), click: function(){
+          app.modeFunction('launchExample', exampleDir.concat('/').concat(category).concat('/').concat(fileName));
+        }}));
+      });
+      categoryLabel.submenu = sketchMenu;
+      exampleCategoryMenu.append(categoryLabel);
+    }
+  });
+
+  examples.submenu = exampleCategoryMenu;
+  fileMenu.append(examples);
 
   fileMenu.append(new gui.MenuItem({ type: 'separator' }));
 

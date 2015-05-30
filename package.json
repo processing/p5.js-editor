@@ -36,6 +36,7 @@
   "dependencies": {
     "escodegen": "^1.6.1",
     "esprima": "^2.2.0",
+    "request": "^2.56.0",
     "autolinker": "^0.17.1"
   }
 }
