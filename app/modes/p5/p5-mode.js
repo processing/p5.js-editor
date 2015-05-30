@@ -36,7 +36,9 @@ module.exports = {
       forceDelete: true
     });
     // replace contents of sketch.js with the requested example
-    //TODO
+    var sketchContents = fs.readFileSync(examplePath);
+    var destination = tempProjectPath.concat("/sketch.js");
+    fs.writeFileSync(destination, sketchContents);
     this.openProject(tempProjectPath);
   },
 

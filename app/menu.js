@@ -63,7 +63,7 @@ module.exports.setup = function(app) {
     var sketches = fs.readdirSync(exampleDir.concat('/').concat(category));
     sketches.forEach(function(fileName) {
       sketchMenu.append(new gui.MenuItem({label: fileName, click: function(){
-        app.modeFunction('launchExample', fileName);
+        app.modeFunction('launchExample', exampleDir.concat('/').concat(category).concat('/').concat(fileName));
       }}));
     });
     categoryLabel.submenu = sketchMenu;
