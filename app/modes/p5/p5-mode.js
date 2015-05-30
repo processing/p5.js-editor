@@ -98,7 +98,7 @@ module.exports = {
 
   update: function(callback) {
     var pathPrefix = 'mode_assets/p5/empty_project/libraries/';
-    var urlPrefex = 'https://raw.githubusercontent.com/lmccart/p5.js/master/lib/';
+    var urlPrefex = 'https://raw.githubusercontent.com/processing/p5.js/master/lib/';
 
     var files = [
       { local: pathPrefix + 'p5.js', remote: urlPrefex + 'p5.js' },
