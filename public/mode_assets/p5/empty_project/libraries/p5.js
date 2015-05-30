@@ -1,4 +1,4 @@
-/*! p5.js v0.4.5 May 29, 2015 */
+/*! p5.js v0.4.5 May 30, 2015 */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd)
     define('p5', [], function () { return (root.returnExportsGlobal = factory());});
@@ -12,6 +12,13 @@ amdclean['shim'] = function (require) {
   window.requestDraw = function () {
     return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback, element) {
       window.setTimeout(callback, 1000 / 60);
+    };
+  }();
+  window.performance = window.performance || {};
+  window.performance.now = function () {
+    var load_date = Date.now();
+    return window.performance.now || window.performance.mozNow || window.performance.msNow || window.performance.oNow || window.performance.webkitNow || function () {
+      return Date.now() - load_date;
     };
   }();
   (function () {
@@ -127,7 +134,6 @@ amdclean['core'] = function (require, shim, constants) {
     }
     this._setupDone = false;
     this.pixelDensity = window.devicePixelRatio || 1;
-    this._startTime = new Date().getTime();
     this._userNode = node;
     this._curElement = null;
     this._elements = [];
@@ -240,7 +246,7 @@ amdclean['core'] = function (require, shim, constants) {
       this._loadingScreen.parentNode.removeChild(this._loadingScreen);
     }.bind(this);
     this._draw = function () {
-      var now = new Date().getTime();
+      var now = window.performance.now();
       this._frameRate = 1000 / (now - this._lastFrameTime);
       this._lastFrameTime = now;
       this._setProperty('frameCount', this.frameCount + 1);
@@ -967,34 +973,49 @@ amdclean['p5Font'] = function (require, core, constants) {
     this.font = undefined;
   };
   p5.Font.prototype.renderPath = function (line, x, y, fontSize, options) {
-    var path, p = this.parent, textWidth, textHeight, textAscent, textDescent;
+    var pathdata, p = this.parent, pg = p._graphics, ctx = pg.drawingContext, textWidth, textHeight, textAscent, textDescent;
     fontSize = fontSize || p._textSize;
     options = options || {};
     textWidth = p.textWidth(line);
     textAscent = p.textAscent();
     textDescent = p.textDescent();
     textHeight = textAscent + textDescent;
-    if (p.drawingContext.textAlign === constants.CENTER) {
+    if (ctx.textAlign === constants.CENTER) {
       x -= textWidth / 2;
-    } else if (p.drawingContext.textAlign === constants.RIGHT) {
+    } else if (ctx.textAlign === constants.RIGHT) {
       x -= textWidth;
     }
-    if (p.drawingContext.textBaseline === constants.TOP) {
+    if (ctx.textBaseline === constants.TOP) {
       y += textHeight;
-    } else if (p.drawingContext.textBaseline === constants._CTX_MIDDLE) {
+    } else if (ctx.textBaseline === constants._CTX_MIDDLE) {
       y += textHeight / 2 - textDescent;
-    } else if (p.drawingContext.textBaseline === constants.BOTTOM) {
+    } else if (ctx.textBaseline === constants.BOTTOM) {
       y -= textDescent;
     }
-    path = this.font.getPath(line, x, y, fontSize, options);
+    pathdata = this.font.getPath(line, x, y, fontSize, options).commands;
+    ctx.beginPath();
+    for (var i = 0; i < pathdata.length; i += 1) {
+      var cmd = pathdata[i];
+      if (cmd.type === 'M') {
+        ctx.moveTo(cmd.x, cmd.y);
+      } else if (cmd.type === 'L') {
+        ctx.lineTo(cmd.x, cmd.y);
+      } else if (cmd.type === 'C') {
+        ctx.bezierCurveTo(cmd.x1, cmd.y1, cmd.x2, cmd.y2, cmd.x, cmd.y);
+      } else if (cmd.type === 'Q') {
+        ctx.quadraticCurveTo(cmd.x1, cmd.y1, cmd.x, cmd.y);
+      } else if (cmd.type === 'Z') {
+        ctx.closePath();
+      }
+    }
     if (p._doStroke && p._strokeSet) {
-      path.strokeWidth = p.drawingContext.lineWidth;
-      path.stroke = p.drawingContext.strokeStyle;
+      ctx.stroke();
     }
     if (p._doFill) {
-      path.fill = p._fillSet ? p.drawingContext.fillStyle : constants._DEFAULT_TEXT_FILL;
+      ctx.fillStyle = p._fillSet ? ctx.fillStyle : constants._DEFAULT_TEXT_FILL;
+      ctx.fill();
     }
-    path.draw(p.drawingContext);
+    return this;
   };
   p5.Font.prototype.textBounds = function (str, x, y, fontSize) {
     if (!this.parent._isOpenType()) {
@@ -1003,26 +1024,22 @@ amdclean['p5Font'] = function (require, core, constants) {
     x = x !== undefined ? x : 0;
     y = y !== undefined ? y : 0;
     fontSize = fontSize || this.parent._textSize;
-    var xCoords = [], yCoords = [], scale = 1 / this.font.unitsPerEm * fontSize;
+    var xCoords = [], yCoords = [], minX, minY, maxX, maxY, scale = 1 / this.font.unitsPerEm * fontSize;
     this.font.forEachGlyph(str, x, y, fontSize, {}, function (glyph, gX, gY) {
       if (glyph.name !== 'space') {
         gX = gX !== undefined ? gX : 0;
         gY = gY !== undefined ? gY : 0;
         var gm = glyph.getMetrics();
-        var x1 = gX + gm.xMin * scale;
-        var y1 = gY + -gm.yMin * scale;
-        var x2 = gX + gm.xMax * scale;
-        var y2 = gY + -gm.yMax * scale;
-        xCoords.push(x1);
-        yCoords.push(y1);
-        xCoords.push(x2);
-        yCoords.push(y2);
+        xCoords.push(gX + gm.xMin * scale);
+        yCoords.push(gY + -gm.yMin * scale);
+        xCoords.push(gX + gm.xMax * scale);
+        yCoords.push(gY + -gm.yMax * scale);
       }
     });
-    var minX = Math.min.apply(null, xCoords);
-    var minY = Math.min.apply(null, yCoords);
-    var maxX = Math.max.apply(null, xCoords);
-    var maxY = Math.max.apply(null, yCoords);
+    minX = Math.min.apply(null, xCoords);
+    minY = Math.min.apply(null, yCoords);
+    maxX = Math.max.apply(null, xCoords);
+    maxY = Math.max.apply(null, yCoords);
     return {
       x: minX,
       y: minY,
@@ -1481,7 +1498,7 @@ amdclean['p5Graphics'] = function (require, core) {
       this._pInst._setProperty('width', this.width);
       this._pInst._setProperty('height', this.height);
     }
-    this.drawingContext.scale(this._pInst.pixelDensity, this._pInst.pixelDensity);
+    this._resizeHelper();
   };
   return p5.Graphics;
 }({}, amdclean['core']);
@@ -1503,6 +1520,9 @@ amdclean['p5Graphics2D'] = function (require, core, canvas, constants, filters, 
     this.drawingContext.strokeStyle = constants._DEFAULT_STROKE;
     this.drawingContext.lineCap = constants.ROUND;
     this.drawingContext.font = 'normal 12px sans-serif';
+  };
+  p5.Graphics2D.prototype._resizeHelper = function () {
+    this.drawingContext.scale(this._pInst.pixelDensity, this._pInst.pixelDensity);
   };
   p5.Graphics2D.prototype.background = function () {
     this.drawingContext.save();
@@ -1570,6 +1590,9 @@ amdclean['p5Graphics2D'] = function (require, core, canvas, constants, filters, 
     }
     tmpCtx.putImageData(id, 0, 0);
     return tmpCanvas;
+  };
+  p5.Graphics2D.prototype.blendMode = function (mode) {
+    this.drawingContext.globalCompositeOperation = mode;
   };
   p5.Graphics2D.prototype.blend = function () {
     var currBlend = this.drawingContext.globalCompositeOperation;
@@ -2285,7 +2308,7 @@ amdclean['p5Graphics2D'] = function (require, core, canvas, constants, filters, 
     return this;
   };
   p5.Graphics2D.prototype.text = function (str, x, y, maxWidth, maxHeight) {
-    var p = this._pInst, cars, n, ii, jj, line, testLine, testWidth, words, totalHeight;
+    var p = this._pInst, cars, n, ii, jj, line, testLine, testWidth, words, totalHeight, baselineHacked;
     if (!(p._doFill || p._doStroke)) {
       return;
     }
@@ -2327,7 +2350,8 @@ amdclean['p5Graphics2D'] = function (require, core, canvas, constants, filters, 
           y += (maxHeight - totalHeight) / 2;
           break;
         case constants.BASELINE:
-          y += maxHeight - totalHeight;
+          baselineHacked = true;
+          this.drawingContext.textBaseline = constants.TOP;
           break;
         }
       }
@@ -2353,6 +2377,9 @@ amdclean['p5Graphics2D'] = function (require, core, canvas, constants, filters, 
         this._renderText(p, cars[jj], x, y);
         y += p.textLeading();
       }
+    }
+    if (baselineHacked) {
+      this.drawingContext.textBaseline = constants.BASELINE;
     }
     return p;
   };
@@ -3157,6 +3184,9 @@ amdclean['p5Vector'] = function (require, core, polargeometry, constants) {
     this.x = x;
     this.y = y;
     this.z = z;
+  };
+  p5.Vector.prototype.toString = function p5VectorToString() {
+    return 'p5.Vector Object : [' + this.x + ', ' + this.y + ', ' + this.z + ']';
   };
   p5.Vector.prototype.set = function (x, y, z) {
     if (x instanceof p5.Vector) {
@@ -4236,12 +4266,16 @@ amdclean['environment'] = function (require, core, constants) {
       C.WAIT
     ];
   p5.prototype._frameRate = 0;
-  p5.prototype._lastFrameTime = new Date().getTime();
+  p5.prototype._lastFrameTime = window.performance.now();
   p5.prototype._targetFrameRate = 60;
   if (window.console && console.log) {
     p5.prototype.print = function (args) {
-      var newArgs = JSON.parse(JSON.stringify(args));
-      console.log(newArgs);
+      try {
+        var newArgs = JSON.parse(JSON.stringify(args));
+        console.log(newArgs);
+      } catch (err) {
+        console.log(args);
+      }
     };
   } else {
     p5.prototype.print = function () {
@@ -6048,7 +6082,7 @@ amdclean['inputtime_date'] = function (require, core) {
     return new Date().getMinutes();
   };
   p5.prototype.millis = function () {
-    return new Date().getTime() - this._startTime;
+    return window.performance.now();
   };
   p5.prototype.month = function () {
     return new Date().getMonth() + 1;
@@ -6586,7 +6620,7 @@ amdclean['renderingrendering'] = function (require, core, constants, p5Graphics2
   };
   p5.prototype.blendMode = function (mode) {
     if (mode === constants.BLEND || mode === constants.DARKEST || mode === constants.LIGHTEST || mode === constants.DIFFERENCE || mode === constants.MULTIPLY || mode === constants.EXCLUSION || mode === constants.SCREEN || mode === constants.REPLACE || mode === constants.OVERLAY || mode === constants.HARD_LIGHT || mode === constants.SOFT_LIGHT || mode === constants.DODGE || mode === constants.BURN || mode === constants.ADD || mode === constants.NORMAL) {
-      this.drawingContext.globalCompositeOperation = mode;
+      this._graphics.blendMode(mode);
     } else {
       throw new Error('Mode ' + mode + ' not recognized.');
     }
