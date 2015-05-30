@@ -225,7 +225,7 @@ var appConfig = {
       $('#openFile').val('');
     },
 
-    openProject: function(path) {
+    openProject: function(path, temp) {
       // create the new window
       var win = this.newWindow(this.windowURL);
 
@@ -236,6 +236,9 @@ var appConfig = {
           if (fs.existsSync(sketchPath)) path = sketchPath;
         }
         win.window.PATH = path;
+        if (typeof temp === 'boolean' && temp === true) {
+          win.window.UNSAVED = true;
+        }
       });
       return win;
     },

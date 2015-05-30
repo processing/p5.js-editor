@@ -53,7 +53,7 @@ module.exports = {
     }
     var destination = Path.join(tempProjectPath, "sketch.js");
     fs.writeFileSync(destination, sketchContents);
-    this.openProject(tempProjectPath);
+    this.openProject(tempProjectPath, true);
   },
 
   exportProject: function() {
