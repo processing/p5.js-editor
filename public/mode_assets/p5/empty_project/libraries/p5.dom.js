@@ -1,4 +1,4 @@
-/*! p5.dom.js v0.2.0 February 2, 2015 */
+/*! p5.dom.js v0.2.1 May 24, 2015 */
 /**
  * <p>The web is much more than just canvas and p5.dom makes it easy to interact
  * with other HTML5 objects, including text, hyperlink, image, input, video,
@@ -435,51 +435,97 @@
 
   /**
    * Creates a new &lt;video&gt; element that contains the audio/video feed
-   * from a webcam. This can be drawn onto the canvas using video().
+   * from a webcam. This can be drawn onto the canvas using video(). More
+   * specific properties of the stream can be passing in a Constraints object.
+   * See the 
+   * <a href="http://w3c.github.io/mediacapture-main/getusermedia.html">W3C 
+   * spec</a> for possible properties. Note that not all of these are supported
+   * by all browsers.
    *
    * @method createCapture
-   * @param  {String/Constant}   type type of capture, either VIDEO or
-   *                             AUDIO if none specified, default both
+   * @param  {String/Constant|Object}   type type of capture, either VIDEO or
+   *                                    AUDIO if none specified, default both,
+   *                                    or a Constraints boject
+   * @param  {Function}                 callback function to be called once
+   *                                    stream has loaded
    * @return {Object/p5.Element} capture video p5.Element
+   * @example
+   * <div><class='norender'><code>
+   * var capture;
+   *
+   * function setup() {
+   *   createCanvas(480, 120);
+   *   capture = createCapture(VIDEO);
+   * }
+   *
+   * function draw() {
+   *   image(capture, 0, 0, width, width*capture.height/capture.width);
+   *   filter(INVERT);
+   * }
+   * </code></div>
+   * <div><class='norender'><code>
+   * function setup() {
+   *   createCanvas(480, 120);
+   *   var constraints = {
+   *     video: {
+   *       mandatory: {
+   *         minWidth: 1280,
+   *         minHeight: 720
+   *       },
+   *       optional: [
+   *         { maxFrameRate: 10 }
+   *       ]
+   *     },
+   *     audio: true
+   *   };
+   *   createCapture(constraints, function(stream) {
+   *     console.log(stream);
+   *   });
+   * }
+   * </code></div>
    */
   p5.prototype.createCapture = function() {
-    var useVideo, useAudio;
-    var type = arguments[0];
-    if (type === p5.prototype.VIDEO) {
-      useVideo = true;
-    } else if (type === p5.prototype.AUDIO) {
-      useAudio = true;
-    } else {
-      useVideo = true;
-      useAudio = true;
-    }
-
-    var fps;
-    if (typeof arguments[0] === 'number') {
-      fps = arguments[0];
-    } else if (arguments.length == 2 && typeof arguments[1] === 'number') {
-      fps = arguments[1];
+    var useVideo = true;
+    var useAudio = true;
+    var constraints;
+    var cb;
+    for (var i=0; i<arguments.length; i++) {
+      if (arguments[i] === p5.prototype.VIDEO) {
+        useAudio = false;
+      } else if (arguments[i] === p5.prototype.AUDIO) {
+        useVideo = false;
+      } else if (typeof arguments[i] === 'object') {
+        constraints = arguments[i];
+      } else if (typeof arguments[i] === 'function') {
+        cb = arguments[i];
+      }
     }
 
     if (navigator.getUserMedia) {
       var elt = document.createElement('video');
 
-      var constraints;
-      // if (fps) {
-      //   constraints = { mandatory: { minFrameRate: 1, maxFrameRate: fps } };
-      // }
+      if (!constraints) {
+        constraints = {video: useVideo, audio: useAudio};
+      }
 
-      useVideo = constraints || useVideo;
-
-      navigator.getUserMedia({video: useVideo, audio: useAudio}, function(stream) {
+      navigator.getUserMedia(constraints, function(stream) {
         elt.src = window.URL.createObjectURL(stream);
         elt.play();
+        if (cb) {
+          cb(stream);
+        }
       }, function(e) { console.log(e); });
     } else {
       throw 'getUserMedia not supported in this browser';
     }
     var c = addElement(elt, this, true);
-    c.loadedmetadata = true;
+    c.loadedmetadata = false;
+    // set width and height onload metadata
+    elt.addEventListener('loadedmetadata', function() {
+      c.width = elt.videoWidth;
+      c.height = elt.videoHeight;
+      c.loadedmetadata = true;
+    });
     return c;
   };
 
@@ -761,10 +807,10 @@
         for (var prop in k) {
           j[prop] = k[prop];
         }
-        this.elt.setAttribute('width', aW * this._pInst._pixelDensity);
-        this.elt.setAttribute('height', aH * this._pInst._pixelDensity);
+        this.elt.setAttribute('width', aW * this._pInst.pixelDensity);
+        this.elt.setAttribute('height', aH * this._pInst.pixelDensity);
         this.elt.setAttribute('style', 'width:' + aW + 'px !important; height:' + aH + 'px !important;');
-        this._pInst.scale(this._pInst._pixelDensity, this._pInst._pixelDensity);
+        this._pInst.scale(this._pInst.pixelDensity, this._pInst.pixelDensity);
         for (var prop in j) {
           this.elt.getContext('2d')[prop] = j[prop];
         }
@@ -828,6 +874,12 @@
    */
   p5.MediaElement = function(elt, pInst) {
     p5.Element.call(this, elt, pInst);
+
+
+    this._prevTime = 0;
+    this._cueIDCounter = 0;
+    this._cues = [];
+
   };
   p5.MediaElement.prototype = Object.create(p5.Element.prototype);
 
@@ -844,7 +896,14 @@
     if (this.elt.currentTime === this.elt.duration) {
       this.elt.currentTime = 0;
     }
-    this.elt.play();
+
+    if (this.elt.readyState > 1) {
+      this.elt.play();
+    } else {
+      // in Chrome, playback cannot resume after being stopped and must reload
+      this.elt.load();
+      this.elt.play();
+    }
     return this;
   };
 
@@ -979,4 +1038,278 @@
       p5.prototype.set.call(this, x, y, imgOrCol);
     }
   };
+
+  /*** CONNECT TO WEB AUDIO API / p5.sound.js ***/
+
+  /**
+   *  Send the audio output of this element to a specified audioNode or
+   *  p5.sound object. If no element is provided, connects to p5's master
+   *  output. That connection is established when this method is first called.
+   *  All connections are removed by the .disconnect() method.
+   *  
+   *  This method is meant to be used with the p5.sound.js addon library.
+   *
+   *  @method  connect
+   *  @param  {AudioNode|p5.sound object} audioNode AudioNode from the Web
+   *                                      Audio API, or an object from the
+   *                                      p5.sound library
+   */
+  p5.MediaElement.prototype.connect = function(obj) {
+    var audioContext, masterOutput;
+
+    // if p5.sound exists, same audio context
+    if (typeof p5.prototype.getAudioContext === 'function') {
+      audioContext = p5.prototype.getAudioContext(); 
+      masterOutput = p5.soundOut.input;
+    } else {
+      try {
+        audioContext = obj.context;
+        masterOutput = audioContext.destination
+      } catch(e) {
+        throw 'connect() is meant to be used with Web Audio API or p5.sound.js'
+      }
+    }
+
+    // create a Web Audio MediaElementAudioSourceNode if none already exists
+    if (!this.audioSourceNode) {
+      this.audioSourceNode = audioContext.createMediaElementSource(this.elt);
+
+      // connect to master output when this method is first called
+      this.audioSourceNode.connect(masterOutput);
+    }
+
+    // connect to object if provided
+    if (obj) {
+      if (obj.input) {
+        this.audioSourceNode.connect(obj.input);
+      } else {
+        this.audioSourceNode.connect(obj);
+      }
+    }
+
+    // otherwise connect to master output of p5.sound / AudioContext
+    else {
+      this.audioSourceNode.connect(masterOutput);
+    }
+
+  };
+
+  /**
+   *  Disconnect all Web Audio routing, including to master output.
+   *  This is useful if you want to re-route the output through
+   *  audio effects, for example.
+   *  
+   *  @method  disconnect
+   */
+  p5.MediaElement.prototype.disconnect = function() {
+    if (this.audioSourceNode) {
+      this.audioSourceNode.disconnect();
+    } else {
+      throw 'nothing to disconnect';
+    }
+  };
+
+
+  /*** SHOW / HIDE CONTROLS ***/
+
+  /**
+   *  Show the default MediaElement controls, as determined by the web browser.
+   *
+   *  @method  showControls
+   */
+  p5.MediaElement.prototype.showControls = function() {
+    // must set style for the element to show on the page
+    this.elt.style['text-align'] = 'inherit';
+    this.elt.controls = true;
+  };
+
+  /**
+   *  Hide the default mediaElement controls.
+   *  
+   *  @method hideControls
+   */
+  p5.MediaElement.prototype.hideControls = function() {
+    this.elt.controls = false;
+  };
+
+
+  /*** SCHEDULE EVENTS ***/
+
+  /**
+   *  Schedule events to trigger every time a MediaElement
+   *  (audio/video) reaches a playback cue point.
+   *
+   *  Accepts a callback function, a time (in seconds) at which to trigger
+   *  the callback, and an optional parameter for the callback.
+   *
+   *  Time will be passed as the first parameter to the callback function,
+   *  and param will be the second parameter.
+   *
+   *
+   *  @method  addCue
+   *  @param {Number}   time     Time in seconds, relative to this media
+   *                             element's playback. For example, to trigger
+   *                             an event every time playback reaches two
+   *                             seconds, pass in the number 2. This will be
+   *                             passed as the first parameter to
+   *                             the callback function.
+   *  @param {Function} callback Name of a function that will be
+   *                             called at the given time. The callback will
+   *                             receive time and (optionally) param as its
+   *                             two parameters.
+   *  @param {Object} [value]    An object to be passed as the
+   *                             second parameter to the
+   *                             callback function.
+   *  @return {Number} id ID of this cue,
+   *                      useful for removeCue(id)
+   *  @example
+   *  <div><code>
+   *  function setup() {
+   *    background(255,255,255);
+   *    
+   *    audioEl = createAudio('assets/beat.mp3');
+   *    audioEl.show();
+   *
+   *    // schedule three calls to changeBackground
+   *    audioEl.addCue(0.50, changeBackground, color(255,0,0) );
+   *    audioEl.addCue(2.02, changeBackground, color(0,255,0) );
+   *    audioEl.addCue(3.02, changeBackground, color(0,0,255) );
+   *  }
+   *
+   *  function changeBackground(val) {
+   *    background(val);
+   *  }
+   *  </code></div>
+   */
+  p5.MediaElement.prototype.addCue = function(time, callback, val) {
+    var id = this._cueIDCounter++;
+
+    var cue = new Cue(callback, time, id, val);
+    this._cues.push(cue);
+
+    if (!this.elt.ontimeupdate) {
+      this.elt.ontimeupdate = this._onTimeUpdate.bind(this);
+    }
+
+    return id;
+  };
+
+  /**
+   *  Remove a callback based on its ID. The ID is returned by the
+   *  addCue method.
+   *
+   *  @method removeCue
+   *  @param  {Number} id ID of the cue, as returned by addCue
+   */
+  p5.MediaElement.prototype.removeCue = function(id) {
+    for (var i = 0; i < this._cues.length; i++) {
+      var cue = this._cues[i];
+      if (cue.id === id) {
+        this.cues.splice(i, 1);
+      }
+    }
+
+    if (this._cues.length === 0) {
+      this.elt.ontimeupdate = null
+    }
+  };
+
+  /**
+   *  Remove all of the callbacks that had originally been scheduled
+   *  via the addCue method.
+   *
+   *  @method  clearCues
+   */
+  p5.MediaElement.prototype.clearCues = function() {
+    this._cues = [];
+    this.elt.ontimeupdate = null;
+  };
+
+  // private method that checks for cues to be fired if events
+  // have been scheduled using addCue(callback, time).
+  p5.MediaElement.prototype._onTimeUpdate = function() {
+    var playbackTime = this.time();
+
+    for (var i = 0 ; i < this._cues.length; i++) {
+      var callbackTime = this._cues[i].time;
+      var val = this._cues[i].val;
+
+
+      if (this._prevTime < callbackTime && callbackTime <= playbackTime) {
+
+        // pass the scheduled callbackTime as parameter to the callback
+        this._cues[i].callback(val);
+      }
+
+    }
+
+    this._prevTime = playbackTime;
+  };
+
+
+  // Cue inspired by JavaScript setTimeout, and the
+  // Tone.js Transport Timeline Event, MIT License Yotam Mann 2015 tonejs.org
+  var Cue = function(callback, time, id, val) {
+    this.callback = callback;
+    this.time = time;
+    this.id = id;
+    this.val = val;
+  };
+
+// =============================================================================
+//                         p5.File
+// =============================================================================
+
+
+  /**
+   * Base class for a file
+   * Using this for createFileInput
+   *
+   * @class p5.File
+   * @constructor
+   * @param {File} file File that is wrapped
+   * @param {Object} [pInst] pointer to p5 instance
+   */
+  p5.File = function(file, pInst) {
+    /**
+     * Underlying File object. All normal File methods can be called on this.
+     *
+     * @property file
+     */
+    this.file = file;
+
+    this._pInst = pInst;
+
+    // Splitting out the file type into two components
+    // This makes determining if image or text etc simpler
+    var typeList = file.type.split('/');
+    /**
+     * File type (image, text, etc.)
+     *
+     * @property type
+     */
+    this.type = typeList[0];
+    /**
+     * File subtype (usually the file extension jpg, png, xml, etc.)
+     *
+     * @property subtype
+     */
+    this.subtype = typeList[1];
+    /**
+     * File name
+     *
+     * @property name
+     */
+    this.name = file.name;
+    /**
+     * File size
+     *
+     * @property size
+     */
+    this.size = file.size;
+    
+    // Data not loaded yet
+    this.data = undefined;
+  };
+
 }));

@@ -1,0 +1,140 @@
+
+#header-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  max-height: 85px;
+   -webkit-touch-callout: none;
+    -webkit-user-select: none;
+}
+
+#play {
+ background: none;
+ background-image: url('../images/play-gray.svg');
+ border: 0;
+ width: 33px;
+ height: 34px;
+ padding: 7px;
+ font-size: 25px;
+ display: inline;
+ cursor: pointer;
+ outline: 0; 
+ float: left;
+ margin-top: 8px;
+ &:hover {
+  background-image: url('../images/play-green.svg');
+}
+
+&.running {
+  background-image: url('../images/stop-gray.svg');
+
+  &:hover {
+    background-image: url('../images/stop-red.svg');
+  }
+}
+}  
+
+
+
+#button_header {
+  margin-left: 15px;
+  height: 50px;
+  margin-bottom: 8px;
+}
+
+#project-name {
+  padding-left: 20px;
+  font-size: 24px;
+  color: #58585b;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  cursor: default; 
+  float:left;
+}
+
+
+#toolbar {
+  height: 60px;
+  width: 100%;
+}
+
+#actions {
+  button {
+    border: 0;
+    cursor: pointer;
+    background: none;
+    margin: 0;
+    padding: 0;
+    margin-right: 15px;
+    outline: 0;
+  }
+
+  button, button img {
+    width: 32px;
+  }
+
+  
+  button img:hover {
+    opacity: 0.6;
+  }
+
+  #add, #export {
+    float: left;
+  }
+
+  #settings {
+    float: right;
+    margin-top: 10px;
+  }
+}
+
+#tabs {
+  margin-left: 53px;
+  overflow: hidden;
+
+
+  ul {
+    list-style: none;
+    padding:0;
+    margin:0;
+    white-space: nowrap;
+  }
+
+  li {
+    margin: 0 0 0 0;
+    display: inline-block;
+  }
+  
+  div {
+    display: inline-block;
+    height: 30px;
+    background-color: #DCDCDC;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width:20px;
+    padding: 0 5px 0 5px; 
+    margin-right:2px;
+    text-align: center;
+  }
+  div.selected{
+     background-color: #fff
+  }
+  a{
+    display: inline-block;
+    text-decoration: none;
+    line-height: 2.5;
+    text-align: center;
+    color: #000;
+  }
+  a.delete{
+    color: #aaa;
+  }
+}
+
+li#add{
+ width: 29px;
+  div{
+    min-width: 20px;
+  }
+}

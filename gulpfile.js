@@ -111,9 +111,9 @@ function latest () {
 
 gulp.task('p5', function () {
   var urls = [
-    'https://raw.githubusercontent.com/lmccart/p5.js/master/lib/p5.js',
-    'https://raw.githubusercontent.com/lmccart/p5.js/master/lib/addons/p5.sound.js',
-    'https://raw.githubusercontent.com/lmccart/p5.js/master/lib/addons/p5.dom.js',
+    'https://raw.githubusercontent.com/processing/p5.js/master/lib/p5.js',
+    'https://raw.githubusercontent.com/processing/p5.js/master/lib/addons/p5.sound.js',
+    'https://raw.githubusercontent.com/processing/p5.js/master/lib/addons/p5.dom.js',
   ];
 
   urls.forEach(function(url) {
