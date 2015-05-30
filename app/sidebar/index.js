@@ -9,6 +9,30 @@ var $ = require('jquery');
 module.exports = {
   template: require('./sidebar.html'),
 
+  data: {
+    sidebarWidth: 160
+  },
+  
+  computed: {
+    className: function() {
+      var container = $('#sidebar-container');
+      if (!this.$root.settings.showSidebar) {
+        container.css({
+          width: this.sidebarWidth
+        });
+        ace.resize();
+        return "expanded";
+      } else {
+        this.sidebarWidth = container.width() < 160 ? 160 : container.width();
+        container.css({
+          width: 10
+        });
+        ace.resize();
+        return "";
+      }
+    }
+  },
+
   ready: function() {
     this.$on('open-nested-file', this.openNestedFile);
   },
@@ -46,15 +70,7 @@ module.exports = {
         open: false,
         icon: 'folder'
       },
-      computed: {
-        hidden: function() {
-          if (!this.$root.settings.showLibs) {
-            return this.name[0] === '.' || this.name === 'node_modules' || this.name === 'libraries';
-          } else {
-            return this.name[0] === '.';
-          }
-        }
-      },
+      computed: {},
       methods: {
         popupMenu: function(target, event) {
           popupMenu.apply(this, arguments);
@@ -76,7 +92,7 @@ module.exports = {
       var self = this;
       folder.open = !folder.open;
       if (folder.open) {
-        File.list(folder.path, function(files){
+        File.list(folder.path, function(files) {
           folder.children = files;
           if (!folder.watching) {
             folder.watching = true;
@@ -101,10 +117,12 @@ module.exports = {
 
     startDrag: function(e) {
       var container = $('#sidebar-container');
-      $(document).on('mousemove', function (e) {
-        container.css({width: e.clientX});
+      $(document).on('mousemove', function(e) {
+        container.css({
+          width: e.clientX
+        });
         ace.resize();
-      }).on('mouseup', function (e) {
+      }).on('mouseup', function(e) {
         $(document).off('mouseup').off('mousemove');
       });
     }
@@ -126,13 +144,13 @@ var popupMenu = function(target, e) {
   menu.append(new gui.MenuItem({
     label: "Rename",
     click: function() {
-      self.$root.renameFile(target.path);
+      self.$root.newFile(file.type == 'folder' ? file.path : Path.dirname(file.path));
     }
   }));
   menu.append(new gui.MenuItem({
     label: "Delete",
     click: function() {
-      trash([target.path], function(err) {});
+      self.$root.newFolder(file.type == 'folder' ? file.path : Path.dirname(file.path));  
     }
   }));
   }
@@ -144,6 +162,7 @@ var popupMenu = function(target, e) {
       self.$root.newFile(target.type=='folder' ? target.path : self.$root.projectPath);
     }
   }));
+
   menu.append(new gui.MenuItem({
     label: "New folder",
     click: function() {
@@ -151,4 +170,5 @@ var popupMenu = function(target, e) {
     }
   }));
   menu.popup(e.clientX, e.clientY);
+
 };
