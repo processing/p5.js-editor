@@ -2,7 +2,7 @@
 
 The p5.js Editor is a simple coding environment designed for new programmers to get started with p5.js. It's modelled off of the Processing editor, and intended to provide a similar experience.
 
-![p5.js Editor Screenshot](http://saaaam.s3.amazonaws.com/p5editor.png)
+![p5.js Editor Screenshot](http://saaaam.s3.amazonaws.com/p5editor2.png)
 
 ### Features
 * Code editor with syntax highlighting that supports javascript, p5.js syntax, html and css.
@@ -14,9 +14,8 @@ The p5.js Editor is a simple coding environment designed for new programmers to 
 
 ### Future Plans
 * Windows & Linux versions
-* Integrated p5.js documentation and examples
+* Integrated p5.js documentation
 * Update sketches live
-* Support for mp4 and mp3
 
 ### Download
 To get started, [download the editor here](https://github.com/antiboredom/jside/releases/latest), and visit [p5js.org](http://p5js.org) for more info on p5.js.
