@@ -7,6 +7,8 @@ var menubar = new gui.Menu({ type: 'menubar' });
 menubar.createMacBuiltin("p5");
 var fileMenu = new gui.Menu();
 var help = new gui.Menu();
+//var edit = new gui.Menu();
+var view = new gui.Menu();
 var win = gui.Window.get();
 var recentFilesMenu = new gui.Menu();
 var exampleCategoryMenu = new gui.Menu();
@@ -92,7 +94,33 @@ module.exports.setup = function(app) {
     app.showHelp();
   }}));
 
+  view.append(new gui.MenuItem({ label: 'Reformat', modifiers: 'cmd', key: 't', click: function(){
+    app.$.editor.reformat();
+  }}));
+
+  view.append(new gui.MenuItem({ type: 'separator' }));
+
+  view.append(new gui.MenuItem({ label: 'Toggle Settings Panel', modifiers: 'cmd', key: ',', click: function(){
+    app.toggleSettingsPane();
+  }}))
+
+  view.append(new gui.MenuItem({ label: 'Toggle Sidebar', modifiers: 'cmd', key: '.', click: function(){
+    app.toggleSidebar();
+  }}))
+
+  view.append(new gui.MenuItem({ type: 'separator' }));
+
+  view.append(new gui.MenuItem({ label: 'Increase Font Size', modifiers: 'cmd', key: '=', click: function(){
+    app.changeFontSize(1);
+  }}))
+
+  view.append(new gui.MenuItem({ label: 'Decrease Font Size', modifiers: 'cmd', key: '-', click: function(){
+    app.changeFontSize(-1);
+  }}))
+
   menubar.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}),1);
+  //menubar.insert(new gui.MenuItem({ label: 'Edit', submenu: edit}), 2);
+  menubar.insert(new gui.MenuItem({ label: 'View', submenu: view}), 3);
   menubar.append(new gui.MenuItem({ label: 'Help', submenu: help}));
   win.menu = menubar;
 

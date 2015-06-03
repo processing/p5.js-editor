@@ -38,21 +38,21 @@ module.exports.setup = function(app) {
     gui.Window.get().showDevTools();
   });
 
-  Mousetrap.bind(['command+=', 'ctrl+='], function(e) {
+  /*Mousetrap.bind(['command+=', 'ctrl+='], function(e) {
     app.changeFontSize(1);
   });
 
   Mousetrap.bind(['command+-', 'ctrl+-'], function(e) {
     app.changeFontSize(-1);
-  });
+  });*/
 
-  Mousetrap.bind(['command+t', 'ctrl+t'], function(e) {
+  /*Mousetrap.bind(['command+t', 'ctrl+t'], function(e) {
     app.$.editor.reformat();
-  });
+  });*/
 
-  Mousetrap.bind(['command+,', 'ctrl+,'], function(e) {
+  /*Mousetrap.bind(['command+,', 'ctrl+,'], function(e) {
     app.toggleSettingsPane();
-  });
+  });*/
 
   Mousetrap.stopCallback = function(e, element, combo) {
     return false;

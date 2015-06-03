@@ -528,6 +528,10 @@ var appConfig = {
       this.showSettings = !this.showSettings;
     },
 
+    toggleSidebar: function() {
+      this.settings.showSidebar = !this.settings.showSidebar;
+    },
+
     showHelp: function() {
       gui.Shell.openExternal(this.$options.mode.referenceURL);
     }
