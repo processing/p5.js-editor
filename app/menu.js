@@ -119,9 +119,21 @@ module.exports.setup = function(app) {
   }}))
 
   menubar.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}),1);
-  //menubar.insert(new gui.MenuItem({ label: 'Edit', submenu: edit}), 2);
   menubar.insert(new gui.MenuItem({ label: 'View', submenu: view}), 3);
   menubar.append(new gui.MenuItem({ label: 'Help', submenu: help}));
+
+
+  var edit = menubar.items[2].submenu;
+  edit.append(new gui.MenuItem({ type: 'separator' }));
+
+  edit.append(new gui.MenuItem(
+    { label: 'Find', modifiers: 'cmd', key: 'f', click: function(){}}
+  ));
+
+  edit.append(new gui.MenuItem(
+    { label: 'Find and Replace', modifiers: 'cmd-option', key: 'f', click: function(){}}
+  ));
+
   win.menu = menubar;
 
 };
