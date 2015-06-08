@@ -401,25 +401,31 @@ var appConfig = {
     // open up a file - read its contents if it's not already opened
     openFile: function(path, callback) {
       var self = this;
+      var re = /(?:\.([^.]+))?$/;
+      var ext = re.exec(path)[1];
 
       var file = Files.find(this.files, path);
       if (!file) return false;
-      if (file.open) {
-        this.title = file.name;
-        this.currentFile = file;
-        this.$broadcast('open-file', this.currentFile);
+      if (['txt', 'html', 'css', 'js'].indexOf(ext) < 0) {
+        window.alert("Unsupported file type. we can edit '.txt', '.js', '.html' and '.css' files");
       } else {
-        fs.readFile(path, 'utf8', function(err, fileContents) {
-          if (err) throw err;
-          file.contents = file.originalContents = fileContents;
-          file.open = true;
-          self.title = file.name;
-          self.currentFile = file;
-          self.$broadcast('open-file', self.currentFile);
-          self.$broadcast('add-tab', self.currentFile,self.tabs);
+        if (file.open) {
+          this.title = file.name;
+          this.currentFile = file;
+          this.$broadcast('open-file', this.currentFile);
+        } else {
+          fs.readFile(path, 'utf8', function(err, fileContents) {
+            if (err) throw err;
+            file.contents = file.originalContents = fileContents;
+            file.open = true;
+            self.title = file.name;
+            self.currentFile = file;
+            self.$broadcast('open-file', self.currentFile);
+            self.$broadcast('add-tab', self.currentFile,self.tabs);
 
-          if (typeof callback === 'function') callback(file);
-        });
+            if (typeof callback === 'function') callback(file);
+          });
+        }
       }
     },
     

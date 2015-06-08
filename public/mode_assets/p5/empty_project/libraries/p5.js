@@ -1,4 +1,4 @@
-/*! p5.js v0.4.5 May 30, 2015 */
+/*! p5.js v0.4.5 June 08, 2015 */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd)
     define('p5', [], function () { return (root.returnExportsGlobal = factory());});
@@ -8,8 +8,8 @@
     root['p5'] = factory();
 }(this, function () {
 var amdclean = {};
-amdclean['shim'] = function (require) {
-  window.requestDraw = function () {
+amdclean['core_shim'] = function (require) {
+  window.requestAnimationFrame = function () {
     return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback, element) {
       window.setTimeout(callback, 1000 / 60);
     };
@@ -28,7 +28,7 @@ amdclean['shim'] = function (require) {
     }
   }());
 }({});
-amdclean['constants'] = function (require) {
+amdclean['core_constants'] = function (require) {
   var PI = Math.PI;
   return {
     P2D: 'p2d',
@@ -73,6 +73,7 @@ amdclean['constants'] = function (require) {
     MITER: 'miter',
     RGB: 'rgb',
     HSB: 'hsb',
+    HSL: 'hsl',
     AUTO: 'auto',
     ALT: 18,
     BACKSPACE: 8,
@@ -124,9 +125,9 @@ amdclean['constants'] = function (require) {
     _DEFAULT_FILL: '#FFFFFF'
   };
 }({});
-amdclean['core'] = function (require, shim, constants) {
+amdclean['core_core'] = function (require, core_shim, core_constants) {
   'use strict';
-  var constants = constants;
+  var constants = core_constants;
   var p5 = function (sketch, node, sync) {
     if (arguments.length === 2 && typeof node === 'boolean') {
       sync = node;
@@ -247,21 +248,21 @@ amdclean['core'] = function (require, shim, constants) {
     }.bind(this);
     this._draw = function () {
       var now = window.performance.now();
-      this._frameRate = 1000 / (now - this._lastFrameTime);
-      this._lastFrameTime = now;
-      this._setProperty('frameCount', this.frameCount + 1);
-      if (this._loop) {
-        if (this._drawInterval) {
-          clearInterval(this._drawInterval);
-        }
-        this._drawInterval = setTimeout(function () {
-          window.requestDraw(this._draw.bind(this));
-        }.bind(this), 1000 / this._targetFrameRate);
+      var time_since_last = now - this._lastFrameTime;
+      var target_time_between_frames = 1000 / this._targetFrameRate;
+      var epsilon = 5;
+      if (!this.loop || time_since_last >= target_time_between_frames - epsilon) {
+        this._setProperty('frameCount', this.frameCount + 1);
+        this.redraw();
+        this._updatePAccelerations();
+        this._updatePMouseCoords();
+        this._updatePTouchCoords();
+        this._frameRate = 1000 / (now - this._lastFrameTime);
+        this._lastFrameTime = now;
       }
-      this.redraw();
-      this._updatePAccelerations();
-      this._updatePMouseCoords();
-      this._updatePTouchCoords();
+      if (this._loop) {
+        window.requestAnimationFrame(this._draw);
+      }
     }.bind(this);
     this._runFrames = function () {
       if (this._updateInterval) {
@@ -277,9 +278,6 @@ amdclean['core'] = function (require, shim, constants) {
     this.remove = function () {
       if (this._curElement) {
         this._loop = false;
-        if (this._drawInterval) {
-          clearTimeout(this._drawInterval);
-        }
         if (this._updateInterval) {
           clearTimeout(this._updateInterval);
         }
@@ -393,24 +391,26 @@ amdclean['core'] = function (require, shim, constants) {
     p5.prototype._registeredMethods[name].push(m);
   }.bind(this);
   return p5;
-}({}, amdclean['shim'], amdclean['constants']);
-amdclean['utilscolor_utils'] = function (require, core) {
-  var p5 = core;
+}({}, amdclean['core_shim'], amdclean['core_constants']);
+amdclean['color_color_utils'] = function (require, core_core) {
+  var p5 = core_core;
   p5.ColorUtils = {};
-  p5.ColorUtils.hsbaToRGBA = function (hsba) {
+  p5.ColorUtils.hsbaToRGBA = function (hsba, maxes) {
     var h = hsba[0];
     var s = hsba[1];
     var v = hsba[2];
-    h /= 255;
-    s /= 255;
-    v /= 255;
+    var a = hsba[3] || maxes[3];
+    h /= maxes[0];
+    s /= maxes[1];
+    v /= maxes[2];
+    a /= maxes[3];
     var RGBA = [];
     if (s === 0) {
       RGBA = [
         Math.round(v * 255),
         Math.round(v * 255),
         Math.round(v * 255),
-        hsba[3]
+        a * 255
       ];
     } else {
       var var_h = h * 6;
@@ -421,132 +421,234 @@ amdclean['utilscolor_utils'] = function (require, core) {
       var var_1 = v * (1 - s);
       var var_2 = v * (1 - s * (var_h - var_i));
       var var_3 = v * (1 - s * (1 - (var_h - var_i)));
-      var var_r;
-      var var_g;
-      var var_b;
+      var r;
+      var g;
+      var b;
       if (var_i === 0) {
-        var_r = v;
-        var_g = var_3;
-        var_b = var_1;
+        r = v;
+        g = var_3;
+        b = var_1;
       } else if (var_i === 1) {
-        var_r = var_2;
-        var_g = v;
-        var_b = var_1;
+        r = var_2;
+        g = v;
+        b = var_1;
       } else if (var_i === 2) {
-        var_r = var_1;
-        var_g = v;
-        var_b = var_3;
+        r = var_1;
+        g = v;
+        b = var_3;
       } else if (var_i === 3) {
-        var_r = var_1;
-        var_g = var_2;
-        var_b = v;
+        r = var_1;
+        g = var_2;
+        b = v;
       } else if (var_i === 4) {
-        var_r = var_3;
-        var_g = var_1;
-        var_b = v;
+        r = var_3;
+        g = var_1;
+        b = v;
       } else {
-        var_r = v;
-        var_g = var_1;
-        var_b = var_2;
+        r = v;
+        g = var_1;
+        b = var_2;
       }
       RGBA = [
-        Math.round(var_r * 255),
-        Math.round(var_g * 255),
-        Math.round(var_b * 255),
-        hsba[3]
+        Math.round(r * 255),
+        Math.round(g * 255),
+        Math.round(b * 255),
+        a * 255
       ];
     }
     return RGBA;
   };
-  p5.ColorUtils.rgbaToHSBA = function (rgba) {
-    var var_R = rgba[0] / 255;
-    var var_G = rgba[1] / 255;
-    var var_B = rgba[2] / 255;
-    var var_Min = Math.min(var_R, var_G, var_B);
-    var var_Max = Math.max(var_R, var_G, var_B);
-    var del_Max = var_Max - var_Min;
-    var H;
-    var S;
-    var V = var_Max;
-    if (del_Max === 0) {
-      H = 0;
-      S = 0;
+  p5.ColorUtils.rgbaToHSBA = function (rgba, maxes) {
+    var r = rgba[0] / maxes[0];
+    var g = rgba[1] / maxes[1];
+    var b = rgba[2] / maxes[2];
+    var a = rgba[3] / maxes[3];
+    var min = Math.min(r, g, b);
+    var max = Math.max(r, g, b);
+    var delta_max = max - min;
+    var h;
+    var s;
+    var v = max;
+    if (delta_max === 0) {
+      h = 0;
+      s = 0;
     } else {
-      S = del_Max / var_Max;
-      var del_R = ((var_Max - var_R) / 6 + del_Max / 2) / del_Max;
-      var del_G = ((var_Max - var_G) / 6 + del_Max / 2) / del_Max;
-      var del_B = ((var_Max - var_B) / 6 + del_Max / 2) / del_Max;
-      if (var_R === var_Max) {
-        H = del_B - del_G;
-      } else if (var_G === var_Max) {
-        H = 1 / 3 + del_R - del_B;
-      } else if (var_B === var_Max) {
-        H = 2 / 3 + del_G - del_R;
+      s = delta_max / max;
+      var delta_r = ((max - r) / 6 + delta_max / 2) / delta_max;
+      var delta_g = ((max - g) / 6 + delta_max / 2) / delta_max;
+      var delta_b = ((max - b) / 6 + delta_max / 2) / delta_max;
+      if (r === max) {
+        h = delta_b - delta_g;
+      } else if (g === max) {
+        h = 1 / 3 + delta_r - delta_b;
+      } else if (b === max) {
+        h = 2 / 3 + delta_g - delta_r;
       }
-      if (H < 0) {
-        H += 1;
+      if (h < 0) {
+        h += 1;
       }
-      if (H > 1) {
-        H -= 1;
+      if (h > 1) {
+        h -= 1;
       }
     }
     return [
-      Math.round(H * 255),
-      Math.round(S * 255),
-      Math.round(V * 255),
-      rgba[3]
+      Math.round(h * 360),
+      Math.round(s * 100),
+      Math.round(v * 100),
+      a * 1
+    ];
+  };
+  p5.ColorUtils.hslaToRGBA = function (hsla, maxes) {
+    var h = hsla[0];
+    var s = hsla[1];
+    var l = hsla[2];
+    var a = hsla[3] || maxes[3];
+    h /= maxes[0];
+    s /= maxes[1];
+    l /= maxes[2];
+    a /= maxes[3];
+    var rgba = [];
+    if (s === 0) {
+      rgba = [
+        Math.round(l * 255),
+        Math.round(l * 255),
+        Math.round(l * 255),
+        a
+      ];
+    } else {
+      var m, n, r, g, b;
+      n = l < 0.5 ? l * (1 + s) : l + s - s * l;
+      m = 2 * l - n;
+      var convert = function (x, y, hue) {
+        if (hue < 0) {
+          hue += 1;
+        } else if (hue > 1) {
+          hue -= 1;
+        }
+        if (6 * hue < 1) {
+          return x + (y - x) * 6 * hue;
+        } else if (2 * hue < 1) {
+          return y;
+        } else if (3 * hue < 2) {
+          return x + (y - x) * (2 / 3 - hue) * 6;
+        } else {
+          return x;
+        }
+      };
+      r = convert(m, n, h + 1 / 3);
+      g = convert(m, n, h);
+      b = convert(m, n, h - 1 / 3);
+      rgba = [
+        Math.round(r * 255),
+        Math.round(g * 255),
+        Math.round(b * 255),
+        Math.round(a * 255)
+      ];
+    }
+    return rgba;
+  };
+  p5.ColorUtils.rgbaToHSLA = function (rgba, maxes) {
+    var r = rgba[0] / maxes[0];
+    var g = rgba[1] / maxes[1];
+    var b = rgba[2] / maxes[2];
+    var a = rgba[3] / maxes[3];
+    var min = Math.min(r, g, b);
+    var max = Math.max(r, g, b);
+    var delta_max = max - min;
+    var h;
+    var s;
+    var l = (max + min) / 2;
+    var delta_r;
+    var delta_g;
+    var delta_b;
+    if (delta_max === 0) {
+      h = 0;
+      s = 0;
+    } else {
+      delta_r = ((max - r) / 6 + delta_max / 2) / delta_max;
+      delta_g = ((max - g) / 6 + delta_max / 2) / delta_max;
+      delta_b = ((max - b) / 6 + delta_max / 2) / delta_max;
+      if (r === max) {
+        h = delta_b - delta_g;
+      } else if (g === max) {
+        h = 1 / 3 + delta_r - delta_b;
+      } else if (b === max) {
+        h = 2 / 3 + delta_g - delta_r;
+      }
+      if (h < 0) {
+        h += 1;
+      }
+      if (h > 1) {
+        h -= 1;
+      }
+      if (l < 0.5) {
+        s = delta_max / (max + min);
+      } else {
+        s = delta_max / (2 - max - min);
+      }
+    }
+    return [
+      Math.round(h * 360),
+      Math.round(s * 100),
+      Math.round(l * 100),
+      a * 1
     ];
   };
   return p5.ColorUtils;
-}({}, amdclean['core']);
-amdclean['p5Color'] = function (require, core, utilscolor_utils, constants) {
-  var p5 = core;
-  var color_utils = utilscolor_utils;
-  var constants = constants;
+}({}, amdclean['core_core']);
+amdclean['color_p5Color'] = function (require, core_core, color_color_utils, core_constants) {
+  var p5 = core_core;
+  var color_utils = color_color_utils;
+  var constants = core_constants;
   p5.Color = function (pInst, vals) {
+    this.maxArr = pInst._colorMaxes[pInst._colorMode];
     this.color_array = p5.Color._getFormattedColor.apply(pInst, vals);
-    this._converted_color = this._convertTo255(pInst);
-    var isHSB = pInst._colorMode === constants.HSB;
-    if (isHSB) {
-      this.hsba = this.color_array;
-      this.rgba = color_utils.hsbaToRGBA(this._converted_color);
-    } else {
+    var isHSB = pInst._colorMode === constants.HSB, isRGB = pInst._colorMode === constants.RGB, isHSL = pInst._colorMode === constants.HSL;
+    if (isRGB) {
       this.rgba = this.color_array;
+    } else if (isHSL) {
+      this.hsla = this.color_array;
+      this.rgba = color_utils.hslaToRGBA(this.color_array, this.maxArr);
+    } else if (isHSB) {
+      this.hsba = this.color_array;
+      this.rgba = color_utils.hsbaToRGBA(this.color_array, this.maxArr);
+    } else {
+      throw new Error(pInst._colorMode + 'is an invalid colorMode.');
     }
     return this;
   };
-  p5.Color.prototype._convertTo255 = function (pInst) {
-    var isRGB = pInst._colorMode === constants.RGB;
-    var maxArr = isRGB ? pInst._maxRGB : pInst._maxHSB;
-    var arr = [];
-    arr[0] = this.color_array[0] * 255 / maxArr[0];
-    arr[1] = this.color_array[1] * 255 / maxArr[1];
-    arr[2] = this.color_array[2] * 255 / maxArr[2];
-    arr[3] = this.color_array[3] * 255 / maxArr[3];
-    return arr;
-  };
   p5.Color.prototype.getHue = function () {
-    if (this.hsba) {
-      return this.hsba[0];
+    if (this.hsla || this.hsba) {
+      return this.hsla ? this.hsla[0] : this.hsba[0];
     } else {
-      this.hsba = color_utils.rgbaToHSBA(this._converted_color);
-      return this.hsba[0];
+      this.hsla = color_utils.rgbaToHSLA(this.color_array, this.maxArr);
+      return this.hsla[0];
     }
   };
   p5.Color.prototype.getSaturation = function () {
-    if (this.hsba) {
+    if (this.hsla) {
+      return this.hsla[1];
+    } else if (this.hsba) {
       return this.hsba[1];
     } else {
-      this.hsba = color_utils.rgbaToHSBA(this._converted_color);
-      return this.hsba[1];
+      this.hsla = color_utils.rgbaToHSLA(this.color_array, this.maxArr);
+      return this.hsla[1];
     }
   };
   p5.Color.prototype.getBrightness = function () {
     if (this.hsba) {
       return this.hsba[2];
     } else {
-      this.hsba = color_utils.rgbaToHSBA(this._converted_color);
+      this.hsba = color_utils.rgbaToHSBA(this.color_array, this.maxArr);
       return this.hsba[2];
+    }
+  };
+  p5.Color.prototype.getLightness = function () {
+    if (this.hsla) {
+      return this.hsla[2];
+    } else {
+      this.hsla = color_utils.rgbaToHSLA(this.color_array, this.maxArr);
+      return this.hsla[2];
     }
   };
   p5.Color.prototype.getRed = function () {
@@ -559,8 +661,8 @@ amdclean['p5Color'] = function (require, core, utilscolor_utils, constants) {
     return this.rgba[2];
   };
   p5.Color.prototype.getAlpha = function () {
-    if (this.hsba) {
-      return this.hsba[3];
+    if (this.hsba || this.hsla) {
+      return this.hsla ? this.hsla[3] : this.hsba[3];
     } else {
       return this.rgba[3];
     }
@@ -768,16 +870,36 @@ amdclean['p5Color'] = function (require, core, utilscolor_utils, constants) {
         ',',
         DECIMAL.source,
         '\\)$'
+      ].join(WHITESPACE.source), 'i'),
+      HSL: new RegExp([
+        '^hsl\\(',
+        INTEGER.source,
+        ',',
+        PERCENT.source,
+        ',',
+        PERCENT.source,
+        '\\)$'
+      ].join(WHITESPACE.source), 'i'),
+      HSLA: new RegExp([
+        '^hsla\\(',
+        INTEGER.source,
+        ',',
+        PERCENT.source,
+        ',',
+        PERCENT.source,
+        ',',
+        DECIMAL.source,
+        '\\)$'
       ].join(WHITESPACE.source), 'i')
     };
   p5.Color._getFormattedColor = function () {
-    var r, g, b, a, str, vals;
-    if (arguments.length >= 3) {
-      r = arguments[0];
-      g = arguments[1];
-      b = arguments[2];
-      a = typeof arguments[3] === 'number' ? arguments[3] : 255;
-    } else if (typeof arguments[0] === 'string') {
+    var numArgs = arguments.length, mode = this._colorMode, first, second, third, alpha, str, vals;
+    if (numArgs >= 3) {
+      first = arguments[0];
+      second = arguments[1];
+      third = arguments[2];
+      alpha = typeof arguments[3] === 'number' ? arguments[3] : this._colorMaxes[mode][3];
+    } else if (numArgs === 1 && typeof arguments[0] === 'string') {
       str = arguments[0].trim().toLowerCase();
       if (namedColors[str]) {
         return p5.Color._getFormattedColor.apply(this, [namedColors[str]]);
@@ -812,30 +934,48 @@ amdclean['p5Color'] = function (require, core, utilscolor_utils, constants) {
           }
           return parseInt(parseFloat(color) / 100 * 255, 10);
         });
+      } else if (colorPatterns.HSL.test(str)) {
+        vals = colorPatterns.HSL.exec(str).slice(1).map(function (color) {
+          return parseInt(color, 10);
+        });
+      } else if (colorPatterns.HSLA.test(str)) {
+        vals = colorPatterns.HSLA.exec(str).slice(1).map(function (color) {
+          return parseFloat(color, 10);
+        });
       } else {
         vals = [255];
       }
       return p5.Color._getFormattedColor.apply(this, vals);
-    } else {
-      if (this._colorMode === constants.RGB) {
-        r = g = b = arguments[0];
-      } else {
-        r = b = arguments[0];
-        g = 0;
+    } else if (numArgs === 1 && typeof arguments[0] === 'number') {
+      if (mode === constants.RGB) {
+        first = second = third = arguments[0];
+      } else if (mode === constants.HSB || mode === constants.HSL) {
+        first = third = arguments[0];
+        second = 0;
       }
-      a = typeof arguments[1] === 'number' ? arguments[1] : 255;
+      alpha = typeof arguments[1] === 'number' ? arguments[1] : this._colorMaxes[mode][3];
+    } else if (numArgs === 2 && typeof arguments[0] === 'number' && typeof arguments[1] === 'number') {
+      if (mode === constants.RGB) {
+        first = second = third = arguments[0];
+      } else if (mode === constants.HSB || mode === constants.HSL) {
+        first = third = arguments[0];
+        second = 0;
+      }
+      alpha = arguments[1];
+    } else {
+      throw new Error(arguments + 'is not a valid color representation.');
     }
     return [
-      r,
-      g,
-      b,
-      a
+      first,
+      second,
+      third,
+      alpha
     ];
   };
   return p5.Color;
-}({}, amdclean['core'], amdclean['utilscolor_utils'], amdclean['constants']);
-amdclean['p5Element'] = function (require, core) {
-  var p5 = core;
+}({}, amdclean['core_core'], amdclean['color_color_utils'], amdclean['core_constants']);
+amdclean['core_p5Element'] = function (require, core_core) {
+  var p5 = core_core;
   p5.Element = function (elt, pInst) {
     this.elt = elt;
     this._pInst = pInst;
@@ -963,16 +1103,16 @@ amdclean['p5Element'] = function (require, core) {
     this[prop] = value;
   };
   return p5.Element;
-}({}, amdclean['core']);
-amdclean['p5Font'] = function (require, core, constants) {
+}({}, amdclean['core_core']);
+amdclean['typography_p5Font'] = function (require, core_core, core_constants) {
   'use strict';
-  var p5 = core;
-  var constants = constants;
+  var p5 = core_core;
+  var constants = core_constants;
   p5.Font = function (p) {
     this.parent = p;
     this.font = undefined;
   };
-  p5.Font.prototype.renderPath = function (line, x, y, fontSize, options) {
+  p5.Font.prototype._renderPath = function (line, x, y, fontSize, options) {
     var pathdata, p = this.parent, pg = p._graphics, ctx = pg.drawingContext, textWidth, textHeight, textAscent, textDescent;
     fontSize = fontSize || p._textSize;
     options = options || {};
@@ -1051,9 +1191,9 @@ amdclean['p5Font'] = function (require, core, constants) {
     throw 'not yet implemented';
   };
   return p5.Font;
-}({}, amdclean['core'], amdclean['constants']);
-amdclean['canvas'] = function (require, constants) {
-  var constants = constants;
+}({}, amdclean['core_core'], amdclean['core_constants']);
+amdclean['core_canvas'] = function (require, core_constants) {
+  var constants = core_constants;
   return {
     modeAdjust: function (a, b, c, d, mode) {
       if (mode === constants.CORNER) {
@@ -1118,8 +1258,8 @@ amdclean['canvas'] = function (require, constants) {
       }
     }
   };
-}({}, amdclean['constants']);
-amdclean['filters'] = function (require) {
+}({}, amdclean['core_constants']);
+amdclean['image_filters'] = function (require) {
   'use strict';
   var Filters = {};
   Filters._toPixels = function (canvas) {
@@ -1175,9 +1315,9 @@ amdclean['filters'] = function (require) {
       var r = pixels[i];
       var g = pixels[i + 1];
       var b = pixels[i + 2];
-      var grey = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      var gray = 0.2126 * r + 0.7152 * g + 0.0722 * b;
       var val;
-      if (grey >= thresh) {
+      if (gray >= thresh) {
         val = 255;
       } else {
         val = 0;
@@ -1469,8 +1609,8 @@ amdclean['filters'] = function (require) {
   };
   return Filters;
 }({});
-amdclean['p5Graphics'] = function (require, core) {
-  var p5 = core;
+amdclean['core_p5Graphics'] = function (require, core_core) {
+  var p5 = core_core;
   p5.Graphics = function (elt, pInst, isMainCanvas) {
     p5.Element.call(this, elt, pInst);
     this.canvas = elt;
@@ -1501,12 +1641,12 @@ amdclean['p5Graphics'] = function (require, core) {
     this._resizeHelper();
   };
   return p5.Graphics;
-}({}, amdclean['core']);
-amdclean['p5Graphics2D'] = function (require, core, canvas, constants, filters, p5Graphics) {
-  var p5 = core;
-  var canvas = canvas;
-  var constants = constants;
-  var filters = filters;
+}({}, amdclean['core_core']);
+amdclean['core_p5Graphics2D'] = function (require, core_core, core_canvas, core_constants, image_filters, core_p5Graphics) {
+  var p5 = core_core;
+  var canvas = core_canvas;
+  var constants = core_constants;
+  var filters = image_filters;
   var styleEmpty = 'rgba(0,0,0,0)';
   p5.Graphics2D = function (elt, pInst, isMainCanvas) {
     p5.Graphics.call(this, elt, pInst, isMainCanvas);
@@ -1829,10 +1969,16 @@ amdclean['p5Graphics2D'] = function (require, core, canvas, constants, filters, 
     } else if (ctx.strokeStyle === styleEmpty) {
       return this;
     }
+    if (ctx.lineWidth % 2 === 1) {
+      ctx.translate(0.5, 0.5);
+    }
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
+    if (ctx.lineWidth % 2 === 1) {
+      ctx.translate(-0.5, -0.5);
+    }
     return this;
   };
   p5.Graphics2D.prototype.point = function (x, y) {
@@ -2385,7 +2531,7 @@ amdclean['p5Graphics2D'] = function (require, core, canvas, constants, filters, 
   };
   p5.Graphics2D.prototype._renderText = function (p, line, x, y) {
     if (p._isOpenType()) {
-      return p._textFont.renderPath(line, x, y);
+      return p._textFont._renderPath(line, x, y);
     }
     if (p._doStroke && p._strokeSet) {
       this.drawingContext.strokeText(line, x, y);
@@ -2446,8 +2592,8 @@ amdclean['p5Graphics2D'] = function (require, core, canvas, constants, filters, 
     this.drawingContext.restore();
   };
   return p5.Graphics2D;
-}({}, amdclean['core'], amdclean['canvas'], amdclean['constants'], amdclean['filters'], amdclean['p5Graphics']);
-amdclean['shaders'] = function (require) {
+}({}, amdclean['core_core'], amdclean['core_canvas'], amdclean['core_constants'], amdclean['image_filters'], amdclean['core_p5Graphics']);
+amdclean['_3d_shaders'] = function (require) {
   return {
     defaultVertShader: [
       'attribute vec3 a_VertexPosition;',
@@ -2469,7 +2615,7 @@ amdclean['shaders'] = function (require) {
     ].join('\n')
   };
 }({});
-amdclean['mat4'] = function (require) {
+amdclean['_3d_mat4'] = function (require) {
   var GLMAT_EPSILON = 0.000001;
   var GLMAT_ARRAY_TYPE = typeof Float32Array !== 'undefined' ? Float32Array : Array;
   var mat4 = {};
@@ -2904,10 +3050,10 @@ amdclean['mat4'] = function (require) {
   };
   return mat4;
 }({});
-amdclean['p5Graphics3D'] = function (require, core, shaders, p5Graphics, mat4) {
-  var p5 = core;
-  var shaders = shaders;
-  var mat4 = mat4;
+amdclean['_3d_p5Graphics3D'] = function (require, core_core, _3d_shaders, core_p5Graphics, _3d_mat4) {
+  var p5 = core_core;
+  var shaders = _3d_shaders;
+  var mat4 = _3d_mat4;
   var gl, shaderProgram;
   var mvMatrix;
   var pMatrix;
@@ -3049,11 +3195,11 @@ amdclean['p5Graphics3D'] = function (require, core, shaders, p5Graphics, mat4) {
     gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
   }
   return p5.Graphics3D;
-}({}, amdclean['core'], amdclean['shaders'], amdclean['p5Graphics'], amdclean['mat4']);
-amdclean['p5Image'] = function (require, core, filters) {
+}({}, amdclean['core_core'], amdclean['_3d_shaders'], amdclean['core_p5Graphics'], amdclean['_3d_mat4']);
+amdclean['image_p5Image'] = function (require, core_core, image_filters) {
   'use strict';
-  var p5 = core;
-  var Filters = filters;
+  var p5 = core_core;
+  var Filters = image_filters;
   p5.Image = function (width, height) {
     this.width = width;
     this.height = height;
@@ -3153,8 +3299,8 @@ amdclean['p5Image'] = function (require, core, filters) {
     p5.prototype.downloadFile(imageData, filename, extension);
   };
   return p5.Image;
-}({}, amdclean['core'], amdclean['filters']);
-amdclean['polargeometry'] = function (require) {
+}({}, amdclean['core_core'], amdclean['image_filters']);
+amdclean['math_polargeometry'] = function (require) {
   return {
     degreesToRadians: function (x) {
       return 2 * Math.PI * x / 360;
@@ -3164,11 +3310,11 @@ amdclean['polargeometry'] = function (require) {
     }
   };
 }({});
-amdclean['p5Vector'] = function (require, core, polargeometry, constants) {
+amdclean['math_p5Vector'] = function (require, core_core, math_polargeometry, core_constants) {
   'use strict';
-  var p5 = core;
-  var polarGeometry = polargeometry;
-  var constants = constants;
+  var p5 = core_core;
+  var polarGeometry = math_polargeometry;
+  var constants = core_constants;
   p5.Vector = function () {
     var x, y, z;
     if (arguments[0] instanceof p5) {
@@ -3351,20 +3497,21 @@ amdclean['p5Vector'] = function (require, core, polargeometry, constants) {
     ];
   };
   p5.Vector.prototype.equals = function (x, y, z) {
+    var a, b, c;
     if (x instanceof p5.Vector) {
-      x = x.x || 0;
-      y = x.y || 0;
-      z = x.z || 0;
+      a = x.x || 0;
+      b = x.y || 0;
+      c = x.z || 0;
     } else if (x instanceof Array) {
-      x = x[0] || 0;
-      y = x[1] || 0;
-      z = x[2] || 0;
+      a = x[0] || 0;
+      b = x[1] || 0;
+      c = x[2] || 0;
     } else {
-      x = x || 0;
-      y = y || 0;
-      z = z || 0;
+      a = x || 0;
+      b = y || 0;
+      c = z || 0;
     }
-    return this.x === x && this.y === y && this.z === z;
+    return this.x === a && this.y === b && this.z === c;
   };
   p5.Vector.fromAngle = function (angle) {
     if (this.p5) {
@@ -3480,10 +3627,10 @@ amdclean['p5Vector'] = function (require, core, polargeometry, constants) {
     return angle;
   };
   return p5.Vector;
-}({}, amdclean['core'], amdclean['polargeometry'], amdclean['constants']);
-amdclean['p5TableRow'] = function (require, core) {
+}({}, amdclean['core_core'], amdclean['math_polargeometry'], amdclean['core_constants']);
+amdclean['io_p5TableRow'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.TableRow = function (str, separator) {
     var arr = [];
     var obj = {};
@@ -3554,10 +3701,10 @@ amdclean['p5TableRow'] = function (require, core) {
     }
   };
   return p5.TableRow;
-}({}, amdclean['core']);
-amdclean['p5Table'] = function (require, core) {
+}({}, amdclean['core_core']);
+amdclean['io_p5Table'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.Table = function (rows) {
     this.columns = [];
     this.rows = [];
@@ -3806,10 +3953,10 @@ amdclean['p5Table'] = function (require, core) {
     return tableArray;
   };
   return p5.Table;
-}({}, amdclean['core']);
-amdclean['colorcreating_reading'] = function (require, core, p5Color) {
+}({}, amdclean['core_core']);
+amdclean['color_creating_reading'] = function (require, core_core, color_p5Color) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.alpha = function (c) {
     if (c instanceof p5.Color || c instanceof Array) {
       return this.color(c).getAlpha();
@@ -3872,6 +4019,13 @@ amdclean['colorcreating_reading'] = function (require, core, p5Color) {
       return Math.sqrt(p5.prototype.lerp(c1 * c1, c2 * c2, amt));
     }
   };
+  p5.prototype.lightness = function (c) {
+    if (c instanceof p5.Color || c instanceof Array) {
+      return this.color(c).getLightness();
+    } else {
+      throw new Error('Needs p5.Color or pixel array as argument.');
+    }
+  };
   p5.prototype.red = function (c) {
     if (c instanceof p5.Color || c instanceof Array) {
       return this.color(c).getRed();
@@ -3886,28 +4040,36 @@ amdclean['colorcreating_reading'] = function (require, core, p5Color) {
     return c.getSaturation();
   };
   return p5;
-}({}, amdclean['core'], amdclean['p5Color']);
-amdclean['colorsetting'] = function (require, core, constants, p5Color) {
+}({}, amdclean['core_core'], amdclean['color_p5Color']);
+amdclean['color_setting'] = function (require, core_core, core_constants, color_p5Color) {
   'use strict';
-  var p5 = core;
-  var constants = constants;
+  var p5 = core_core;
+  var constants = core_constants;
   p5.prototype._doStroke = true;
   p5.prototype._doFill = true;
   p5.prototype._strokeSet = false;
   p5.prototype._fillSet = false;
   p5.prototype._colorMode = constants.RGB;
-  p5.prototype._maxRGB = [
-    255,
-    255,
-    255,
-    255
-  ];
-  p5.prototype._maxHSB = [
-    255,
-    255,
-    255,
-    255
-  ];
+  p5.prototype._colorMaxes = {
+    rgb: [
+      255,
+      255,
+      255,
+      255
+    ],
+    hsb: [
+      360,
+      100,
+      100,
+      1
+    ],
+    hsl: [
+      360,
+      100,
+      100,
+      1
+    ]
+  };
   p5.prototype.background = function () {
     if (arguments[0] instanceof p5.Image) {
       this.image(arguments[0], 0, 0, this.width, this.height);
@@ -3921,10 +4083,9 @@ amdclean['colorsetting'] = function (require, core, constants, p5Color) {
     return this;
   };
   p5.prototype.colorMode = function () {
-    if (arguments[0] === constants.RGB || arguments[0] === constants.HSB) {
+    if (arguments[0] === constants.RGB || arguments[0] === constants.HSB || arguments[0] === constants.HSL) {
       this._colorMode = arguments[0];
-      var isRGB = this._colorMode === constants.RGB;
-      var maxArr = isRGB ? this._maxRGB : this._maxHSB;
+      var maxArr = this._colorMaxes[this._colorMode];
       if (arguments.length === 2) {
         maxArr[0] = arguments[1];
         maxArr[1] = arguments[1];
@@ -3962,10 +4123,10 @@ amdclean['colorsetting'] = function (require, core, constants, p5Color) {
     return this;
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants'], amdclean['p5Color']);
-amdclean['dataconversion'] = function (require, core) {
+}({}, amdclean['core_core'], amdclean['core_constants'], amdclean['color_p5Color']);
+amdclean['utilities_conversion'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.float = function (str) {
     return parseFloat(str);
   };
@@ -4053,10 +4214,10 @@ amdclean['dataconversion'] = function (require, core) {
     }
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['dataarray_functions'] = function (require, core) {
+}({}, amdclean['core_core']);
+amdclean['utilities_array_functions'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.append = function (array, value) {
     array.push(value);
     return array;
@@ -4131,10 +4292,10 @@ amdclean['dataarray_functions'] = function (require, core) {
     }
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['datastring_functions'] = function (require, core) {
+}({}, amdclean['core_core']);
+amdclean['utilities_string_functions'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.join = function (list, separator) {
     return list.join(separator);
   };
@@ -4159,7 +4320,18 @@ amdclean['datastring_functions'] = function (require, core) {
         return doNf(x, a, b);
       });
     } else {
-      return doNf.apply(this, arguments);
+      var typeOfFirst = Object.prototype.toString.call(arguments[0]);
+      if (typeOfFirst === '[object Arguments]') {
+        if (arguments[0].length === 3) {
+          return this.nf(arguments[0][0], arguments[0][1], arguments[0][2]);
+        } else if (arguments[0].length === 2) {
+          return this.nf(arguments[0][0], arguments[0][1]);
+        } else {
+          return this.nf(arguments[0][0]);
+        }
+      } else {
+        return doNf.apply(this, arguments);
+      }
     }
   };
   function doNf() {
@@ -4171,11 +4343,18 @@ amdclean['datastring_functions'] = function (require, core) {
     var decPart = decimalInd !== -1 ? n.substring(decimalInd + 1) : '';
     var str = neg ? '-' : '';
     if (arguments.length === 3) {
+      var decimal = '';
+      if (decimalInd !== -1 || arguments[2] - decPart.length > 0) {
+        decimal = '.';
+      }
+      if (decPart.length > arguments[2]) {
+        decPart = decPart.substring(0, arguments[2]);
+      }
       for (var i = 0; i < arguments[1] - intPart.length; i++) {
         str += '0';
       }
       str += intPart;
-      str += '.';
+      str += decimal;
       str += decPart;
       for (var j = 0; j < arguments[2] - decPart.length; j++) {
         str += '0';
@@ -4207,9 +4386,16 @@ amdclean['datastring_functions'] = function (require, core) {
     n = n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     if (arguments[1] === 0) {
       rem = '';
-    }
-    if (arguments.length > 1) {
-      rem = rem.substring(0, arguments[1] + 1);
+    } else if (arguments[1] !== undefined) {
+      if (arguments[1] > rem.length) {
+        rem += dec === -1 ? '.' : '';
+        var len = arguments[1] - rem.length + 1;
+        for (var i = 0; i < len; i++) {
+          rem += '0';
+        }
+      } else {
+        rem = rem.substring(0, arguments[1] + 1);
+      }
     }
     return n + rem;
   }
@@ -4252,11 +4438,11 @@ amdclean['datastring_functions'] = function (require, core) {
     }
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['environment'] = function (require, core, constants) {
+}({}, amdclean['core_core']);
+amdclean['core_environment'] = function (require, core_core, core_constants) {
   'use strict';
-  var p5 = core;
-  var C = constants;
+  var p5 = core_core;
+  var C = core_constants;
   var standardCursors = [
       C.ARROW,
       C.CROSS,
@@ -4283,7 +4469,7 @@ amdclean['environment'] = function (require, core, constants) {
   }
   p5.prototype.println = p5.prototype.print;
   p5.prototype.frameCount = 0;
-  p5.prototype.focused = true;
+  p5.prototype.focused = document.hasFocus();
   p5.prototype.cursor = function (type, x, y) {
     var cursor = 'auto';
     var canvas = this._curElement.elt;
@@ -4410,11 +4596,11 @@ amdclean['environment'] = function (require, core, constants) {
     return v;
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants']);
-amdclean['imageimage'] = function (require, core, constants) {
+}({}, amdclean['core_core'], amdclean['core_constants']);
+amdclean['image_image'] = function (require, core_core, core_constants) {
   'use strict';
-  var p5 = core;
-  var constants = constants;
+  var p5 = core_core;
+  var constants = core_constants;
   p5.prototype._imageMode = constants.CORNER;
   p5.prototype._tint = null;
   p5.prototype.createImage = function (width, height) {
@@ -4531,10 +4717,10 @@ amdclean['imageimage'] = function (require, core, constants) {
     frames.push(thisFrame);
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants']);
-amdclean['helpers'] = function (require, core) {
+}({}, amdclean['core_core'], amdclean['core_constants']);
+amdclean['core_error_helpers'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   var class2type = {};
   var toString = class2type.toString;
   var names = [
@@ -4658,13 +4844,13 @@ amdclean['helpers'] = function (require, core) {
     report(str, 'println', '#4DB200');
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['imageloading_displaying'] = function (require, core, filters, canvas, constants, helpers) {
+}({}, amdclean['core_core']);
+amdclean['image_loading_displaying'] = function (require, core_core, image_filters, core_canvas, core_constants, core_error_helpers) {
   'use strict';
-  var p5 = core;
-  var Filters = filters;
-  var canvas = canvas;
-  var constants = constants;
+  var p5 = core_core;
+  var Filters = image_filters;
+  var canvas = core_canvas;
+  var constants = core_constants;
   p5.prototype.loadImage = function (path, successCallback, failureCallback) {
     var img = new Image();
     var pImg = new p5.Image(1, 1, this);
@@ -4746,11 +4932,11 @@ amdclean['imageloading_displaying'] = function (require, core, filters, canvas, 
     }
   };
   return p5;
-}({}, amdclean['core'], amdclean['filters'], amdclean['canvas'], amdclean['constants'], amdclean['helpers']);
-amdclean['imagepixels'] = function (require, core, filters, p5Color) {
+}({}, amdclean['core_core'], amdclean['image_filters'], amdclean['core_canvas'], amdclean['core_constants'], amdclean['core_error_helpers']);
+amdclean['image_pixels'] = function (require, core_core, image_filters, color_p5Color) {
   'use strict';
-  var p5 = core;
-  var Filters = filters;
+  var p5 = core_core;
+  var Filters = image_filters;
   p5.prototype.pixels = [];
   p5.prototype.blend = function () {
     this._graphics.blend.apply(this._graphics, arguments);
@@ -4774,7 +4960,7 @@ amdclean['imagepixels'] = function (require, core, filters, p5Color) {
     this._graphics.updatePixels(x, y, w, h);
   };
   return p5;
-}({}, amdclean['core'], amdclean['filters'], amdclean['p5Color']);
+}({}, amdclean['core_core'], amdclean['image_filters'], amdclean['color_p5Color']);
 !function (name, context, definition) {
   if (typeof module != 'undefined' && module.exports)
     module.exports = definition();
@@ -5233,9 +5419,9 @@ amdclean['imagepixels'] = function (require, core, filters, p5Color) {
   };
   return reqwest;
 });
-amdclean['inputfiles'] = function (require, core, reqwest) {
+amdclean['io_files'] = function (require, core_core, reqwest) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   var reqwest = reqwest;
   p5.prototype.loadFont = function (path, callback) {
     var p5Font = new p5.Font(this);
@@ -5461,13 +5647,17 @@ amdclean['inputfiles'] = function (require, core, reqwest) {
     return ret;
   }
   p5.prototype.loadXML = function (path, callback) {
-    var ret = [];
+    var ret = document.implementation.createDocument(null, null);
     reqwest({
       url: path,
       type: 'xml',
       crossOrigin: true
     }).then(function (resp) {
-      callback(resp);
+      var x = resp.documentElement;
+      ret.appendChild(x);
+      if (typeof callback !== 'undefined') {
+        callback(resp);
+      }
     });
     return ret;
   };
@@ -5789,10 +5979,10 @@ amdclean['inputfiles'] = function (require, core, reqwest) {
     document.body.removeChild(event.target);
   }
   return p5;
-}({}, amdclean['core'], amdclean['reqwest']);
-amdclean['inputkeyboard'] = function (require, core) {
+}({}, amdclean['core_core'], amdclean['reqwest']);
+amdclean['events_keyboard'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   var downKeys = {};
   p5.prototype.isKeyPressed = false;
   p5.prototype.keyIsPressed = false;
@@ -5852,10 +6042,10 @@ amdclean['inputkeyboard'] = function (require, core) {
     return downKeys[code];
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['inputacceleration'] = function (require, core) {
+}({}, amdclean['core_core']);
+amdclean['events_acceleration'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.deviceOrientation = undefined;
   p5.prototype.accelerationX = 0;
   p5.prototype.accelerationY = 0;
@@ -5929,11 +6119,11 @@ amdclean['inputacceleration'] = function (require, core) {
     }
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['inputmouse'] = function (require, core, constants) {
+}({}, amdclean['core_core']);
+amdclean['events_mouse'] = function (require, core_core, core_constants) {
   'use strict';
-  var p5 = core;
-  var constants = constants;
+  var p5 = core_core;
+  var constants = core_constants;
   p5.prototype.mouseX = 0;
   p5.prototype.mouseY = 0;
   p5.prototype.pmouseX = 0;
@@ -6061,6 +6251,7 @@ amdclean['inputmouse'] = function (require, core, constants) {
   p5.prototype._onmousewheel = p5.prototype._onDOMMouseScroll = function (e) {
     var context = this._isGlobal ? window : this;
     if (typeof context.mouseWheel === 'function') {
+      e.delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
       var executeDefault = context.mouseWheel(e);
       if (executeDefault === false) {
         e.preventDefault();
@@ -6068,10 +6259,10 @@ amdclean['inputmouse'] = function (require, core, constants) {
     }
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants']);
-amdclean['inputtime_date'] = function (require, core) {
+}({}, amdclean['core_core'], amdclean['core_constants']);
+amdclean['utilities_time_date'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.day = function () {
     return new Date().getDate();
   };
@@ -6094,10 +6285,10 @@ amdclean['inputtime_date'] = function (require, core) {
     return new Date().getFullYear();
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['inputtouch'] = function (require, core) {
+}({}, amdclean['core_core']);
+amdclean['events_touch'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.touchX = 0;
   p5.prototype.touchY = 0;
   p5.prototype.ptouchX = 0;
@@ -6191,10 +6382,10 @@ amdclean['inputtouch'] = function (require, core) {
     }
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['mathmath'] = function (require, core) {
+}({}, amdclean['core_core']);
+amdclean['math_math'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.createVector = function (x, y, z) {
     if (this instanceof p5) {
       return new p5.Vector(this, arguments);
@@ -6203,10 +6394,10 @@ amdclean['mathmath'] = function (require, core) {
     }
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['mathcalculation'] = function (require, core) {
+}({}, amdclean['core_core']);
+amdclean['math_calculation'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.abs = Math.abs;
   p5.prototype.ceil = Math.ceil;
   p5.prototype.constrain = function (n, low, high) {
@@ -6251,10 +6442,10 @@ amdclean['mathcalculation'] = function (require, core) {
   };
   p5.prototype.sqrt = Math.sqrt;
   return p5;
-}({}, amdclean['core']);
-amdclean['mathrandom'] = function (require, core) {
+}({}, amdclean['core_core']);
+amdclean['math_random'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   var seeded = false;
   var lcg = function () {
       var m = 4294967296, a = 1664525, c = 1013904223, seed, z;
@@ -6318,10 +6509,10 @@ amdclean['mathrandom'] = function (require, core) {
     return y1 * s + m;
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['mathnoise'] = function (require, core) {
+}({}, amdclean['core_core']);
+amdclean['math_noise'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   var PERLIN_YWRAPB = 4;
   var PERLIN_YWRAP = 1 << PERLIN_YWRAPB;
   var PERLIN_ZWRAPB = 8;
@@ -6440,12 +6631,12 @@ amdclean['mathnoise'] = function (require, core) {
     }
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['mathtrigonometry'] = function (require, core, polargeometry, constants) {
+}({}, amdclean['core_core']);
+amdclean['math_trigonometry'] = function (require, core_core, math_polargeometry, core_constants) {
   'use strict';
-  var p5 = core;
-  var polarGeometry = polargeometry;
-  var constants = constants;
+  var p5 = core_core;
+  var polarGeometry = math_polargeometry;
+  var constants = core_constants;
   p5.prototype._angleMode = constants.RADIANS;
   p5.prototype.acos = function (ratio) {
     if (this._angleMode === constants.RADIANS) {
@@ -6508,10 +6699,10 @@ amdclean['mathtrigonometry'] = function (require, core, polargeometry, constants
     }
   };
   return p5;
-}({}, amdclean['core'], amdclean['polargeometry'], amdclean['constants']);
-amdclean['renderingrendering'] = function (require, core, constants, p5Graphics2D, p5Graphics3D) {
-  var p5 = core;
-  var constants = constants;
+}({}, amdclean['core_core'], amdclean['math_polargeometry'], amdclean['core_constants']);
+amdclean['core_rendering'] = function (require, core_core, core_constants, core_p5Graphics2D, _3d_p5Graphics3D) {
+  var p5 = core_core;
+  var constants = core_constants;
   p5.prototype.createCanvas = function (w, h, renderer) {
     var r = renderer || constants.P2D;
     var isDefault, c;
@@ -6544,13 +6735,13 @@ amdclean['renderingrendering'] = function (require, core, constants, p5Graphics2
     }
     if (r === constants.WEBGL) {
       if (!this._defaultGraphics) {
-        this._graphics = new p5.Graphics3D(c, this, true);
+        this._setProperty('_graphics', new p5.Graphics3D(c, this, true));
         this._defaultGraphics = this._graphics;
         this._elements.push(this._defaultGraphics);
       }
     } else {
       if (!this._defaultGraphics) {
-        this._graphics = new p5.Graphics2D(c, this, true);
+        this._setProperty('_graphics', new p5.Graphics2D(c, this, true));
         this._defaultGraphics = this._graphics;
         this._elements.push(this._defaultGraphics);
       }
@@ -6626,11 +6817,11 @@ amdclean['renderingrendering'] = function (require, core, constants, p5Graphics2
     }
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants'], amdclean['p5Graphics2D'], amdclean['p5Graphics3D']);
-amdclean['shape2d_primitives'] = function (require, core, constants, helpers) {
+}({}, amdclean['core_core'], amdclean['core_constants'], amdclean['core_p5Graphics2D'], amdclean['_3d_p5Graphics3D']);
+amdclean['core_2d_primitives'] = function (require, core_core, core_constants, core_error_helpers) {
   'use strict';
-  var p5 = core;
-  var constants = constants;
+  var p5 = core_core;
+  var constants = core_constants;
   var EPSILON = 0.00001;
   p5.prototype._createArc = function (radius, startAngle, endAngle) {
     var twoPI = Math.PI * 2;
@@ -6803,10 +6994,10 @@ amdclean['shape2d_primitives'] = function (require, core, constants, helpers) {
     return this;
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants'], amdclean['helpers']);
-amdclean['shape3d_primitives'] = function (require, core) {
+}({}, amdclean['core_core'], amdclean['core_constants'], amdclean['core_error_helpers']);
+amdclean['_3d_3d_primitives'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.Geometry3D = function () {
     this.vertices = [];
     this.faces = [];
@@ -6955,11 +7146,11 @@ amdclean['shape3d_primitives'] = function (require, core) {
     return output;
   }
   return p5;
-}({}, amdclean['core']);
-amdclean['shapeattributes'] = function (require, core, constants) {
+}({}, amdclean['core_core']);
+amdclean['core_attributes'] = function (require, core_core, core_constants) {
   'use strict';
-  var p5 = core;
-  var constants = constants;
+  var p5 = core_core;
+  var constants = core_constants;
   p5.prototype._rectMode = constants.CORNER;
   p5.prototype._ellipseMode = constants.CENTER;
   p5.prototype.ellipseMode = function (m) {
@@ -6999,10 +7190,10 @@ amdclean['shapeattributes'] = function (require, core, constants) {
     return this;
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants']);
-amdclean['shapecurves'] = function (require, core, helpers) {
+}({}, amdclean['core_core'], amdclean['core_constants']);
+amdclean['core_curves'] = function (require, core_core, core_error_helpers) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   var bezierDetail = 20;
   var curveDetail = 20;
   p5.prototype._curveTightness = 0;
@@ -7068,11 +7259,11 @@ amdclean['shapecurves'] = function (require, core, helpers) {
     return a * f1 + b * f2 + c * f3 + d * f4;
   };
   return p5;
-}({}, amdclean['core'], amdclean['helpers']);
-amdclean['shapevertex'] = function (require, core, constants) {
+}({}, amdclean['core_core'], amdclean['core_error_helpers']);
+amdclean['core_vertex'] = function (require, core_core, core_constants) {
   'use strict';
-  var p5 = core;
-  var constants = constants;
+  var p5 = core_core;
+  var constants = core_constants;
   var shapeKind = null;
   var vertices = [];
   var contourVertices = [];
@@ -7202,18 +7393,15 @@ amdclean['shapevertex'] = function (require, core, constants) {
     return this;
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants']);
-amdclean['structure'] = function (require, core) {
+}({}, amdclean['core_core'], amdclean['core_constants']);
+amdclean['core_structure'] = function (require, core_core) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   p5.prototype.exit = function () {
     throw 'exit() not implemented, see remove()';
   };
   p5.prototype.noLoop = function () {
     this._loop = false;
-    if (this._drawInterval) {
-      clearInterval(this._drawInterval);
-    }
   };
   p5.prototype.loop = function () {
     this._loop = true;
@@ -7278,11 +7466,11 @@ amdclean['structure'] = function (require, core) {
     throw 'size() not implemented, see createCanvas()';
   };
   return p5;
-}({}, amdclean['core']);
-amdclean['transform'] = function (require, core, constants) {
+}({}, amdclean['core_core']);
+amdclean['core_transform'] = function (require, core_core, core_constants) {
   'use strict';
-  var p5 = core;
-  var constants = constants;
+  var p5 = core_core;
+  var constants = core_constants;
   p5.prototype.applyMatrix = function (n00, n01, n02, n10, n11, n12) {
     this._graphics.applyMatrix(n00, n01, n02, n10, n11, n12);
     return this;
@@ -7362,11 +7550,11 @@ amdclean['transform'] = function (require, core, constants) {
     return this;
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants']);
-amdclean['typographyattributes'] = function (require, core, constants) {
+}({}, amdclean['core_core'], amdclean['core_constants']);
+amdclean['typography_attributes'] = function (require, core_core, core_constants) {
   'use strict';
-  var p5 = core;
-  var constants = constants;
+  var p5 = core_core;
+  var constants = core_constants;
   p5.prototype._textSize = 12;
   p5.prototype._textLeading = 15;
   p5.prototype._textFont = 'sans-serif';
@@ -7471,11 +7659,11 @@ amdclean['typographyattributes'] = function (require, core, constants) {
     ];
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants']);
-amdclean['typographyloading_displaying'] = function (require, core, constants, helpers) {
+}({}, amdclean['core_core'], amdclean['core_constants']);
+amdclean['typography_loading_displaying'] = function (require, core_core, core_constants, core_error_helpers) {
   'use strict';
-  var p5 = core;
-  var constants = constants;
+  var p5 = core_core;
+  var constants = core_constants;
   p5.prototype.text = function (str, x, y, maxWidth, maxHeight) {
     this._validateParameters('text', arguments, [
       [
@@ -7494,6 +7682,18 @@ amdclean['typographyloading_displaying'] = function (require, core, constants, h
     return !(this._doFill || this._doStroke) ? this : this._graphics.text.apply(this._graphics, arguments);
   };
   p5.prototype.textFont = function (theFont, theSize) {
+    this._validateParameters('textFont', arguments, [
+      ['String'],
+      ['Object'],
+      [
+        'String',
+        'Number'
+      ],
+      [
+        'Object',
+        'Number'
+      ]
+    ]);
     if (arguments.length) {
       if (!theFont) {
         throw Error('null font passed to textFont');
@@ -7508,10 +7708,10 @@ amdclean['typographyloading_displaying'] = function (require, core, constants, h
     return this;
   };
   return p5;
-}({}, amdclean['core'], amdclean['constants'], amdclean['helpers']);
-amdclean['src_app'] = function (require, core, p5Color, p5Element, p5Font, p5Graphics2D, p5Graphics3D, p5Image, p5Vector, p5TableRow, p5Table, colorcreating_reading, colorsetting, constants, dataconversion, dataarray_functions, datastring_functions, environment, imageimage, imageloading_displaying, imagepixels, inputfiles, inputkeyboard, inputacceleration, inputmouse, inputtime_date, inputtouch, mathmath, mathcalculation, mathrandom, mathnoise, mathtrigonometry, renderingrendering, shape2d_primitives, shape3d_primitives, shapeattributes, shapecurves, shapevertex, structure, transform, typographyattributes, typographyloading_displaying, shaders) {
+}({}, amdclean['core_core'], amdclean['core_constants'], amdclean['core_error_helpers']);
+amdclean['app'] = function (require, core_core, color_p5Color, core_p5Element, typography_p5Font, core_p5Graphics2D, _3d_p5Graphics3D, image_p5Image, math_p5Vector, io_p5TableRow, io_p5Table, color_creating_reading, color_setting, core_constants, utilities_conversion, utilities_array_functions, utilities_string_functions, core_environment, image_image, image_loading_displaying, image_pixels, io_files, events_keyboard, events_acceleration, events_mouse, utilities_time_date, events_touch, math_math, math_calculation, math_random, math_noise, math_trigonometry, core_rendering, core_2d_primitives, _3d_3d_primitives, core_attributes, core_curves, core_vertex, core_structure, core_transform, typography_attributes, typography_loading_displaying, _3d_shaders) {
   'use strict';
-  var p5 = core;
+  var p5 = core_core;
   var _globalInit = function () {
     if (!window.PHANTOMJS && !window.mocha) {
       if (window.setup && typeof window.setup === 'function' || window.draw && typeof window.draw === 'function') {
@@ -7525,8 +7725,8 @@ amdclean['src_app'] = function (require, core, p5Color, p5Element, p5Font, p5Gra
     window.addEventListener('load', _globalInit, false);
   }
   return p5;
-}({}, amdclean['core'], amdclean['p5Color'], amdclean['p5Element'], amdclean['p5Font'], amdclean['p5Graphics2D'], amdclean['p5Graphics3D'], amdclean['p5Image'], amdclean['p5Vector'], amdclean['p5TableRow'], amdclean['p5Table'], amdclean['colorcreating_reading'], amdclean['colorsetting'], amdclean['constants'], amdclean['dataconversion'], amdclean['dataarray_functions'], amdclean['datastring_functions'], amdclean['environment'], amdclean['imageimage'], amdclean['imageloading_displaying'], amdclean['imagepixels'], amdclean['inputfiles'], amdclean['inputkeyboard'], amdclean['inputacceleration'], amdclean['inputmouse'], amdclean['inputtime_date'], amdclean['inputtouch'], amdclean['mathmath'], amdclean['mathcalculation'], amdclean['mathrandom'], amdclean['mathnoise'], amdclean['mathtrigonometry'], amdclean['renderingrendering'], amdclean['shape2d_primitives'], amdclean['shape3d_primitives'], amdclean['shapeattributes'], amdclean['shapecurves'], amdclean['shapevertex'], amdclean['structure'], amdclean['transform'], amdclean['typographyattributes'], amdclean['typographyloading_displaying'], amdclean['shaders']);
-return amdclean['src_app'];
+}({}, amdclean['core_core'], amdclean['color_p5Color'], amdclean['core_p5Element'], amdclean['typography_p5Font'], amdclean['core_p5Graphics2D'], amdclean['_3d_p5Graphics3D'], amdclean['image_p5Image'], amdclean['math_p5Vector'], amdclean['io_p5TableRow'], amdclean['io_p5Table'], amdclean['color_creating_reading'], amdclean['color_setting'], amdclean['core_constants'], amdclean['utilities_conversion'], amdclean['utilities_array_functions'], amdclean['utilities_string_functions'], amdclean['core_environment'], amdclean['image_image'], amdclean['image_loading_displaying'], amdclean['image_pixels'], amdclean['io_files'], amdclean['events_keyboard'], amdclean['events_acceleration'], amdclean['events_mouse'], amdclean['utilities_time_date'], amdclean['events_touch'], amdclean['math_math'], amdclean['math_calculation'], amdclean['math_random'], amdclean['math_noise'], amdclean['math_trigonometry'], amdclean['core_rendering'], amdclean['core_2d_primitives'], amdclean['_3d_3d_primitives'], amdclean['core_attributes'], amdclean['core_curves'], amdclean['core_vertex'], amdclean['core_structure'], amdclean['core_transform'], amdclean['typography_attributes'], amdclean['typography_loading_displaying'], amdclean['_3d_shaders']);
+return amdclean['app'];
 }));(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.opentype = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";exports.argument=function(r,t){if(!r)throw new Error(t)},exports.assert=exports.argument;
 
