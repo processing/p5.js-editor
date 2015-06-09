@@ -48,7 +48,8 @@ var appConfig = {
     files: [],
     tabs: [],
     justSaved: false,
-    askReload: false
+    askReload: false,
+    fileTypes: ['txt', 'html', 'css', 'js', 'json', 'scss', 'xml', 'csv', 'less']
   },
 
   computed: {
@@ -406,8 +407,8 @@ var appConfig = {
 
       var file = Files.find(this.files, path);
       if (!file) return false;
-      if (['txt', 'html', 'css', 'js'].indexOf(ext) < 0) {
-        window.alert("Unsupported file type. we can edit '.txt', '.js', '.html' and '.css' files");
+      if (self.fileTypes.indexOf(ext) < 0) {
+        window.alert("Unsupported file type. Types we can edit:\n" + self.fileTypes.toString());
       } else {
         if (file.open) {
           this.title = file.name;
@@ -455,8 +456,16 @@ var appConfig = {
 
     // create a new file and save it in the project path
     newFile: function(basepath) {
-      var title = prompt('File name:');
+      var title = prompt('Choose a file name and type: \nSupported types: ' + this.fileTypes.toString()).replace(/ /g,'');
+      var dotSplit = title.split(".");
+      var re = /(?:\.([^.]+))?$/;
+
       if (!title) return false;
+
+      if (this.fileTypes.indexOf(re.exec(title)[1]) < 0 || (dotSplit.length > 2)){
+        window.alert("unsupported/improper file type selected.\nAutomaticallly adding a .js extension");
+        title = dotSplit[0] + '.js';
+      }
 
       if (typeof basepath === 'undefined') {
         basepath = this.projectPath;
