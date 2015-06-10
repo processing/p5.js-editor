@@ -1,6 +1,6 @@
-<div id="sidebar-container" class = "{{className}}">
+<div id="sidebar-container" class = "{{className}}"  v-on="contextmenu: popupMenu(this, $event)">
 	<div id="sidebar">
-		<div id="filetree" v-on="contextmenu: popupMenu(this, $event)">
+		<div id="filetree">
 			<ul>
 				<li v-repeat="files | orderBy 'name'" v-component="{{type}}"></li>
 			</ul>

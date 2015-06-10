@@ -12,7 +12,7 @@ module.exports = {
   data: {
     sidebarWidth: undefined
   },
-  
+
   computed: {
     className: function() {
       var container = $('#sidebar-container');
@@ -109,9 +109,11 @@ module.exports = {
     openNestedFile: function(path) {
       var self = this;
       var dirname = Path.dirname(path);
-      var f = _.findWhere(this.$root.files, {path: dirname});
+      var f = _.findWhere(this.$root.files, {
+        path: dirname
+      });
       if (f) {
-        this.toggleFolder(f, function(){
+        this.toggleFolder(f, function() {
           self.$root.openFile(path);
         });
       }
@@ -132,43 +134,42 @@ module.exports = {
 };
 
 // to do - onely make this once! don't generate each time
-var popupMenu = function(target, e) {
+var popupMenu = function(file, e) {
   e.preventDefault();
   var self = this;
   var menu = new gui.Menu();
-  if (target.type === "file" || target.type === "folder") {
+  if (file.type === "file" || file.type === "folder") {
     menu.append(new gui.MenuItem({
-    label: "Reveal",
-    click: function() {
-      gui.Shell.showItemInFolder(target.path);
-    }
-  }));
-  menu.append(new gui.MenuItem({
-    label: "Rename",
-    click: function() {
-      self.$root.newFile(file.type == 'folder' ? file.path : Path.dirname(file.path));
-    }
-  }));
-  menu.append(new gui.MenuItem({
-    label: "Delete",
-    click: function() {
-      self.$root.newFolder(file.type == 'folder' ? file.path : Path.dirname(file.path));  
-    }
-  }));
+      label: "Reveal",
+      click: function() {
+        gui.Shell.showItemInFolder(file.path);
+      }
+    }));
+    menu.append(new gui.MenuItem({
+      label: "Rename",
+      click: function() {
+        self.$root.renameFile(file.path);
+      }
+    }));
+    menu.append(new gui.MenuItem({
+      label: "Delete",
+      click: function() {
+        trash([file.path], function(err) {});
+      }
+    }));
   }
-  
 
   menu.append(new gui.MenuItem({
     label: "New file",
     click: function() {
-      self.$root.newFile(target.type=='folder' ? target.path : self.$root.projectPath);
+      self.$root.newFile(file.type == 'folder' ? file.path : self.$root.projectPath);
     }
   }));
 
   menu.append(new gui.MenuItem({
     label: "New folder",
     click: function() {
-      self.$root.newFolder(target.type=='folder' ? target.path : self.$root.projectPath);
+      self.$root.newFolder(file.type == 'folder' ? file.path : self.$root.projectPath);
     }
   }));
   menu.popup(e.clientX, e.clientY);
