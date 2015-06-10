@@ -101,11 +101,14 @@ module.exports = {
         if (self.settings.runInBrowser) {
           gui.Shell.openExternal(url);
         } else {
-          self.outputWindow = self.newWindow(url, {toolbar: true, 'inject-js-start': 'js/debug-console.js'});
+          self.outputWindow = self.newWindow(url, {toolbar: true, 'inject-js-start': 'js/debug-console.js'}, 
+                                             self.outX, self.outY);
           self.outputWindow.on('document-start', function(){
             self.outputWindow.show();
           });
           self.outputWindow.on("close", function(){
+            self.outX = self.outputWindow.x;
+            self.outY = self.outputWindow.y;
             self.running = false;
             self.outputWindow = null;
             this.close(true);

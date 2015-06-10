@@ -49,7 +49,9 @@ var appConfig = {
     tabs: [],
     justSaved: false,
     askReload: false,
-    fileTypes: ['txt', 'html', 'css', 'js', 'json', 'scss', 'xml', 'csv', 'less']
+    fileTypes: ['txt', 'html', 'css', 'js', 'json', 'scss', 'xml', 'csv', 'less'],
+    outX: 50,
+    outY: 50
   },
 
   computed: {
@@ -117,6 +119,7 @@ var appConfig = {
   },
 
   methods: {
+    //runs a function named func in the mode file currently being used
     modeFunction: function(func, args) {
       var mode = this.$options.mode;
       if (typeof mode[func] === 'function') {
@@ -207,11 +210,18 @@ var appConfig = {
     },
 
     // create a new window 50px below current window
-    newWindow: function(url, options) {
+    newWindow: function(url, options, ax, ay) {
       var currentWindow = gui.Window.get();
+      var xin = ax;
+      var yin = ay;
+      if(typeof ax === 'undefined' || typeof ay === 'undefined'){
+        xin = currentWindow.x + 50;
+        yin = currentWindow.y + 50;
+      };
+      
       var win = gui.Window.open(url, _.extend({
-        x: currentWindow.x + 50,
-        y: currentWindow.y + 50,
+        x: xin,
+        y: yin,
         width: 1024,
         height: 768,
         toolbar: false,
