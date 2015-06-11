@@ -109,16 +109,26 @@ function latest () {
 }
 
 gulp.task('p5', function () {
-  var urls = [
-    'https://raw.githubusercontent.com/processing/p5.js/master/lib/p5.js',
-    'https://raw.githubusercontent.com/processing/p5.js/master/lib/addons/p5.sound.js',
-    'https://raw.githubusercontent.com/processing/p5.js/master/lib/addons/p5.dom.js',
-  ];
+  // which files to download
+  var fileNames = ['p5.js', 'p5.dom.js', 'p5.sound.js'];
 
-  urls.forEach(function(url) {
-    download(url)
-      .pipe(gulp.dest("./public/mode_assets/p5/empty_project/libraries/"));
+  // get latest repo data from github api
+  request({
+    url: 'https://api.github.com/repos/processing/p5.js/releases/latest',
+    headers: {
+      'User-Agent' : 'request'
+    }
+  }, function(error, response, body) {
+    var assets = JSON.parse(body).assets;
+    assets.forEach(function(asset) {
+      if (fileNames.indexOf(asset.name) > -1) {
+        var url = asset.browser_download_url;
+        download(url)
+          .pipe(gulp.dest("./public/mode_assets/p5/empty_project/libraries/"));
+      }
+    })
   });
+
 });
 
 gulp.task('release', function(){
