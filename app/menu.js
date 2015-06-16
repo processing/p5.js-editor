@@ -15,43 +15,53 @@ var exampleCategoryMenu = new gui.Menu();
 var openRecent, examples;
 var fs = nodeRequire('fs');
 
-
+/* setup the menubar menus, submenus, functions and shortcuts. Conceptually the
+ * menubar is an array of Menus, each of which is an array of MenuItems.
+ * Menuitems may themselves be a submenu
+ */ 
 module.exports.setup = function(app) {
-  fileMenu.append(new gui.MenuItem({ label: 'New Project', modifiers: 'shift-cmd', key: 'n', click: function(){
-    app.newWindow(app.windowURL);
+  fileMenu.append(new gui.MenuItem({ label: 'New Project', 
+    modifiers: 'shift-cmd', key: 'n', click: function(){
+      app.newWindow(app.windowURL);
   }}));
   
-  fileMenu.append(new gui.MenuItem({ label: 'New File', modifiers: 'cmd', key: 'n', click: function(){
-    app.newFile();
+  fileMenu.append(new gui.MenuItem({ label: 'New File', 
+    modifiers: 'cmd', key: 'n', click: function(){
+      app.newFile();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'New Folder', click: function(){
-    app.newFolder();
+  fileMenu.append(new gui.MenuItem({ label: 'New Folder', 
+    click: function(){
+      app.newFolder();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Open', modifiers: 'cmd', key: 'o', click: function(){
-    $('#openFile').trigger('click');
+  fileMenu.append(new gui.MenuItem({ label: 'Open', 
+    modifiers: 'cmd', key: 'o', click: function(){
+      $('#openFile').trigger('click');
   }}));
 
   openRecent = new gui.MenuItem({label: 'Open Recent'});
   openRecent.submenu = recentFilesMenu;
   fileMenu.append(openRecent);
 
-  fileMenu.append(new gui.MenuItem({ label: 'Close', modifiers: 'cmd', key: 'w', click: function(){
-    app.closeProject();
+  fileMenu.append(new gui.MenuItem({ label: 'Close', 
+    modifiers: 'cmd', key: 'w', click: function(){
+      app.closeProject();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Save', modifiers: 'cmd', key: 's', click: function(){
-    app.saveFile();
+  fileMenu.append(new gui.MenuItem({ label: 'Save', 
+    modifiers: 'cmd', key: 's', click: function(){
+      app.saveFile();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Save File As...', modifiers: 'shift-cmd', key: 's', click: function(){
-    app.saveFileAs(app.currentFile.path);
+  fileMenu.append(new gui.MenuItem({ label: 'Save File As...', 
+    modifiers: 'shift-cmd', key: 's', click: function(){
+      app.saveFileAs(app.currentFile.path);
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Save Project As...', modifiers: 'alt-shift-cmd', key: 's', click: function(){
-    $('#saveProject').trigger('click');
-    
+  fileMenu.append(new gui.MenuItem({ label: 'Save Project As...', 
+    modifiers: 'alt-shift-cmd', key: 's', click: function(){
+      $('#saveProject').trigger('click'); 
   }}));
 
   // add menu option for loading example sketches
@@ -60,6 +70,7 @@ module.exports.setup = function(app) {
   var exampleDir = 'mode_assets/p5/examples';
   // get latest example categories
   var files = fs.readdirSync(exampleDir);
+
   files.forEach(function(category) {
     var sketchMenu = new gui.Menu();
     var categoryLabel = new gui.MenuItem({label: category});
@@ -86,46 +97,85 @@ module.exports.setup = function(app) {
     //app.export();
   //}}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Run', modifiers: 'cmd', key: 'r', click: function(){
-    app.run();
+  fileMenu.append(new gui.MenuItem({ label: 'Run', 
+    modifiers: 'cmd', key: 'r', click: function(){
+      app.run();
   }}));
 
   help.append(new gui.MenuItem({ label: 'Reference', click: function(){
     app.showHelp();
   }}));
 
-  view.append(new gui.MenuItem({ label: 'Reformat', modifiers: 'cmd', key: 't', click: function(){
-    app.$.editor.reformat();
+  view.append(new gui.MenuItem({ label: 'Reformat', 
+      modifiers: 'cmd', key: 't', click: function(){
+        app.$.editor.reformat();
   }}));
 
   view.append(new gui.MenuItem({ type: 'separator' }));
 
-  view.append(new gui.MenuItem({ label: 'Toggle Settings Panel', modifiers: 'cmd', key: ',', click: function(){
-    app.toggleSettingsPane();
+  view.append(new gui.MenuItem({ label: 'Toggle Settings Panel', 
+    modifiers: 'cmd', key: ',', click: function(){
+      app.toggleSettingsPane();
   }}))
 
-  view.append(new gui.MenuItem({ label: 'Toggle Sidebar', modifiers: 'cmd', key: '.', click: function(){
-    app.toggleSidebar();
+  view.append(new gui.MenuItem({ label: 'Toggle Sidebar', 
+    modifiers: 'cmd', key: '.', click: function(){
+      app.toggleSidebar();
   }}))
 
   view.append(new gui.MenuItem({ type: 'separator' }));
 
-  view.append(new gui.MenuItem({ label: 'Increase Font Size', modifiers: 'cmd', key: '=', click: function(){
-    app.changeFontSize(1);
+  view.append(new gui.MenuItem({ label: 'Increase Font Size', 
+    modifiers: 'cmd', key: '=', click: function(){
+      app.changeFontSize(1);
   }}))
 
-  view.append(new gui.MenuItem({ label: 'Decrease Font Size', modifiers: 'cmd', key: '-', click: function(){
-    app.changeFontSize(-1);
+  view.append(new gui.MenuItem({ label: 'Decrease Font Size', 
+    modifiers: 'cmd', key: '-', click: function(){
+      app.changeFontSize(-1);
   }}))
 
   menubar.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}),1);
-  //menubar.insert(new gui.MenuItem({ label: 'Edit', submenu: edit}), 2);
   menubar.insert(new gui.MenuItem({ label: 'View', submenu: view}), 3);
   menubar.append(new gui.MenuItem({ label: 'Help', submenu: help}));
+
+  /* The Edit Menu exists by default, so we obtain the reference to it here and
+   * add tot he pre-existing menu
+   */
+  var edit = menubar.items[2].submenu;
+  edit.append(new gui.MenuItem({ type: 'separator' }));
+
+  // Find and Find and Replace are different because the ace/brace editor has
+  // native shortcuts for these commands. These two MenuItems only react
+  // to being clicked on, so the shortcuts work without interference.
+  var findItem = new gui.MenuItem(
+      { label: 'Find', modifiers: 'cmd', key: 'f', click: function(){
+      }});
+
+  findItem.on('click', function(){
+    app.$.editor.ace.execCommand("find");
+  });
+
+  edit.append(findItem);
+
+
+  var repItem = new gui.MenuItem(
+    { label: 'Find and Replace', 
+      modifiers: 'cmd-alt', key: 'f', click: function(){
+    }});
+
+  repItem.on('click', function(e){
+    app.$.editor.ace.execCommand("replace");
+  });
+
+  edit.append(repItem);
+
   win.menu = menubar;
 
 };
 
+//reset the menubar to the current window's frame of reference. Used whenever
+//the user switches focus between windows
 module.exports.resetMenu = function() {
   win.menu = menubar;
 };
