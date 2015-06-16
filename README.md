@@ -1,6 +1,6 @@
 ## p5.js Editor: a Mac code editor designed for p5.js
 
-The p5.js Editor is a simple coding environment designed for new programmers to get started with p5.js. It's modelled off of the Processing editor, and intended to provide a similar experience.
+The p5.js Editor is a simple coding environment designed for new programmers to get started with p5.js. It's modeled off of the Processing editor, and intended to provide a similar experience.
 
 ![p5.js Editor Screenshot](http://saaaam.s3.amazonaws.com/p5editor2.png)
 
@@ -18,11 +18,11 @@ The p5.js Editor is a simple coding environment designed for new programmers to 
 * Update sketches live
 
 ### Download
-To get started, [download the editor here](https://github.com/antiboredom/jside/releases/latest), and visit [p5js.org](http://p5js.org) for more info on p5.js.
+To get started, [download the editor here](https://github.com/processing/p5.js-editor/releases/latest), and visit [p5js.org](http://p5js.org) for more info on p5.js.
 
 ## Development
 
-If you're interested in contributing to the devlopment of the editor, check out our issues page, or email [Sam Lavigne](mailto:lavigne@saaaam.com).
+If you're interested in contributing to the development of the editor, check out our issues page, or email [Sam Lavigne](mailto:lavigne@saaaam.com).
 
 When you're ready to get started, follow the direction below:
 
@@ -33,7 +33,7 @@ When you're ready to get started, follow the direction below:
 
 ### Setup
 
-1. Clone this repo: `git clone https://github.com/antiboredom/jside.git`
+1. Clone this repo: `git clone https://github.com/processing/p5.js-editor`
 2. Enter the repo directory and install the development modules: `npm
    install`
 3. Install secondary modules: `cd public` and then `npm install`
