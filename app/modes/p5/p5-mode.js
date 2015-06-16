@@ -2,6 +2,7 @@ var wrench = nodeRequire('wrench');
 var Path = nodeRequire('path');
 var os = nodeRequire('os');
 var fs = nodeRequire('fs');
+var request = nodeRequire('request');
 var Files = require('../../files');
 
 
@@ -129,30 +130,32 @@ module.exports = {
   },
 
   update: function(callback) {
-    var pathPrefix = 'mode_assets/p5/empty_project/libraries/';
-    var urlPrefex = 'https://raw.githubusercontent.com/processing/p5.js/master/lib/';
+    var url = 'https://api.github.com/repos/processing/p5.js/releases/latest';
+    var libraryPath = Path.join('mode_assets', 'p5', 'empty_project', 'libraries');
+    var fileNames = ['p5.js', 'p5.dom.js', 'p5.sound.js'];
 
-    var files = [
-      { local: pathPrefix + 'p5.js', remote: urlPrefex + 'p5.js' },
-      { local: pathPrefix + 'p5.sound.js', remote: urlPrefex + 'addons/p5.sound.js' },
-      { local: pathPrefix + 'p5.dom.js', remote: urlPrefex + 'addons/p5.dom.js' }
-    ];
+    request({url: url, headers: {'User-Agent': 'request'}}, function(error, response, data){
+      var assets = JSON.parse(data).assets.filter(function(asset){
+        return fileNames.indexOf(asset.name) > -1;
+      });
+      assets.forEach(checkAsset);
+    });
 
-    var checked = 0;
-
-    files.forEach(function(file) {
-      download(file.remote, file.local, function(data){
-        if (data) {
-          fs.writeFile(file.local, data, function(err){
-            if (err) throw err;
-          });
-        }
-        checked ++;
-        if (checked == files.length && typeof callback !== 'undefined') {
-          callback();
+    function checkAsset(asset){
+      var localPath = Path.join(libraryPath, asset.name);
+      getVersion(localPath, function(version){
+        var remoteVersion = asset.tag;
+        if (remoteVersion != version) {
+          downloadAsset(asset.browser_download_url, localPath);
         }
       });
-    });
+    }
+
+    function downloadAsset(remote, local) {
+      request({url: remote, headers: {'User-Agent': 'request'}}, function(error, response, body){
+        fs.writeFile(local, body);
+      });
+    }
   },
 
   referenceURL: 'http://p5js.org/reference/'
@@ -197,42 +200,13 @@ function startServer(path, app, callback) {
 
 }
 
-function download(url, local, cb) {
-  getLine(local, 0, function(line) {
-    var shouldUpdate = true;
-    var data = '';
-    var lines = [];
-    var request = nodeRequire('https').get(url, function(res) {
-      res.on('data', function(chunk) {
-        data += chunk;
-        lines = data.split('\n');
-        if (lines.length > 1 && line == lines[0]) {
-          shouldUpdate = false;
-          res.destroy();
-        }
-      });
-
-      res.on('end', function() {
-        if (shouldUpdate) {
-          cb(data);
-        } else {
-          cb(null);
-        }
-      })
-    });
-
-    request.on('error', function(e) {
-      console.log("Got error: " + e.message);
-      cb(null);
-    });
-  });
-}
-
-function getLine(filename, lineNo, callback) {
+function getVersion(filename, callback) {
   fs.readFile(filename, function (err, data) {
     if (err) throw err;
 
-    var lines = data.toString('utf-8').split("\n");
-    callback(lines[lineNo]);
+    var line = data.toString('utf-8').split("\n")[0];
+    var version = line.match(/v\d+\.\d+\.\d+/)[0].substring(1);
+    callback(version);
   });
+
 }
