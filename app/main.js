@@ -210,18 +210,12 @@ var appConfig = {
     },
 
     // create a new window 50px below current window
-    newWindow: function(url, options, ax, ay) {
+    newWindow: function(url, options) {
       var currentWindow = gui.Window.get();
-      var xin = ax;
-      var yin = ay;
-      if(typeof ax === 'undefined' || typeof ay === 'undefined'){
-        xin = currentWindow.x + 50;
-        yin = currentWindow.y + 50;
-      };
-      
+
       var win = gui.Window.open(url, _.extend({
-        x: xin,
-        y: yin,
+        x: currentWindow.x + 50,
+        y: currentWindow.y + 50,
         width: 1024,
         height: 768,
         toolbar: false,
