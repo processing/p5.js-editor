@@ -164,15 +164,15 @@ module.exports = {
 
 var running = false;
 var url = '';
+var staticServer = nodeRequire('node-static'), server, io, file;
 
 function startServer(path, app, callback) {
   if (running === false) {
     var portscanner = nodeRequire('portscanner');
     portscanner.findAPortNotInUse(3000, 4000, '127.0.0.1', function(error, port) {
-      var staticServer = nodeRequire('node-static');
-      var server = nodeRequire('http').createServer(handler);
-      var io = nodeRequire('socket.io')(server);
-      var file = new staticServer.Server(path, {cache: false});
+      server = nodeRequire('http').createServer(handler);
+      io = nodeRequire('socket.io')(server);
+      file = new staticServer.Server(path, {cache: false});
 
       server.listen(port, function(){
         url = 'http://localhost:' + port;
@@ -195,6 +195,7 @@ function startServer(path, app, callback) {
 
 
   } else {
+    file = new staticServer.Server(path, {cache: false});
     callback(url);
   }
 
