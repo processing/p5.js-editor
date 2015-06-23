@@ -18,24 +18,24 @@ var fs = nodeRequire('fs');
 /* setup the menubar menus, submenus, functions and shortcuts. Conceptually the
  * menubar is an array of Menus, each of which is an array of MenuItems.
  * Menuitems may themselves be a submenu
- */ 
+ */
 module.exports.setup = function(app) {
-  fileMenu.append(new gui.MenuItem({ label: 'New Project', 
+  fileMenu.append(new gui.MenuItem({ label: 'New Project',
     modifiers: 'shift-cmd', key: 'n', click: function(){
       app.newWindow(app.windowURL);
   }}));
-  
-  fileMenu.append(new gui.MenuItem({ label: 'New File', 
+
+  fileMenu.append(new gui.MenuItem({ label: 'New File',
     modifiers: 'cmd', key: 'n', click: function(){
       app.newFile();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'New Folder', 
+  fileMenu.append(new gui.MenuItem({ label: 'New Folder',
     click: function(){
       app.newFolder();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Open', 
+  fileMenu.append(new gui.MenuItem({ label: 'Open',
     modifiers: 'cmd', key: 'o', click: function(){
       $('#openFile').trigger('click');
   }}));
@@ -44,24 +44,24 @@ module.exports.setup = function(app) {
   openRecent.submenu = recentFilesMenu;
   fileMenu.append(openRecent);
 
-  fileMenu.append(new gui.MenuItem({ label: 'Close', 
+  fileMenu.append(new gui.MenuItem({ label: 'Close',
     modifiers: 'cmd', key: 'w', click: function(){
       app.closeProject();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Save', 
+  fileMenu.append(new gui.MenuItem({ label: 'Save',
     modifiers: 'cmd', key: 's', click: function(){
       app.saveFile();
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Save File As...', 
+  fileMenu.append(new gui.MenuItem({ label: 'Save File As...',
     modifiers: 'shift-cmd', key: 's', click: function(){
       app.saveFileAs(app.currentFile.path);
   }}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Save Project As...', 
+  fileMenu.append(new gui.MenuItem({ label: 'Save Project As...',
     modifiers: 'alt-shift-cmd', key: 's', click: function(){
-      $('#saveProject').trigger('click'); 
+      $('#saveProject').trigger('click');
   }}));
 
   // add menu option for loading example sketches
@@ -97,7 +97,7 @@ module.exports.setup = function(app) {
     //app.export();
   //}}));
 
-  fileMenu.append(new gui.MenuItem({ label: 'Run', 
+  fileMenu.append(new gui.MenuItem({ label: 'Run',
     modifiers: 'cmd', key: 'r', click: function(){
       app.run();
   }}));
@@ -106,31 +106,31 @@ module.exports.setup = function(app) {
     app.showHelp();
   }}));
 
-  view.append(new gui.MenuItem({ label: 'Reformat', 
+  view.append(new gui.MenuItem({ label: 'Reformat',
       modifiers: 'cmd', key: 't', click: function(){
         app.$.editor.reformat();
   }}));
 
   view.append(new gui.MenuItem({ type: 'separator' }));
 
-  view.append(new gui.MenuItem({ label: 'Toggle Settings Panel', 
+  view.append(new gui.MenuItem({ label: 'Toggle Settings Panel',
     modifiers: 'cmd', key: ',', click: function(){
       app.toggleSettingsPane();
   }}))
 
-  view.append(new gui.MenuItem({ label: 'Toggle Sidebar', 
+  view.append(new gui.MenuItem({ label: 'Toggle Sidebar',
     modifiers: 'cmd', key: '.', click: function(){
       app.toggleSidebar();
   }}))
 
   view.append(new gui.MenuItem({ type: 'separator' }));
 
-  view.append(new gui.MenuItem({ label: 'Increase Font Size', 
+  view.append(new gui.MenuItem({ label: 'Increase Font Size',
     modifiers: 'cmd', key: '=', click: function(){
       app.changeFontSize(1);
   }}))
 
-  view.append(new gui.MenuItem({ label: 'Decrease Font Size', 
+  view.append(new gui.MenuItem({ label: 'Decrease Font Size',
     modifiers: 'cmd', key: '-', click: function(){
       app.changeFontSize(-1);
   }}))
@@ -142,7 +142,29 @@ module.exports.setup = function(app) {
   /* The Edit Menu exists by default, so we obtain the reference to it here and
    * add tot he pre-existing menu
    */
+
+  // get the existing edit menu
   var edit = menubar.items[2].submenu;
+
+  // the native undo isn't allowing us to bind a click event on OS X,
+  // current (hacky) solution is to remove the existing one and add a new one
+  edit.remove(edit.items[0]);
+
+  // create the new undo menu item
+  var undo = new gui.MenuItem({
+      label: 'Undo',
+      key: "z"
+  });
+
+  // add event listener
+  undo.on('click', function() {
+    // execute ace editor undo command
+    app.$.editor.ace.execCommand("undo");
+  });
+
+  // insert the new undo at the beginning
+  edit.insert(undo, 0);
+
   edit.append(new gui.MenuItem({ type: 'separator' }));
 
   // Find and Find and Replace are different because the ace/brace editor has
@@ -153,6 +175,7 @@ module.exports.setup = function(app) {
       }});
 
   findItem.on('click', function(){
+    console.log('find');
     app.$.editor.ace.execCommand("find");
   });
 
@@ -160,7 +183,7 @@ module.exports.setup = function(app) {
 
 
   var repItem = new gui.MenuItem(
-    { label: 'Find and Replace', 
+    { label: 'Find and Replace',
       modifiers: 'cmd-alt', key: 'f', click: function(){
     }});
 
