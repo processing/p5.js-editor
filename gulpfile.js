@@ -29,6 +29,7 @@ var latestDir = Path.join(Path.join(builderOptions.buildDir, 'latest'));
 
 var jsPath = ['./app/*.js', './app/**/*.js', './app/**/*.html', './public/index.html'];
 var cssPath = './app/**/*.scss';
+var debugClientPath = './app/debug/client.js';
 
 
 gulp.task('browserify', function() {
@@ -45,6 +46,12 @@ gulp.task('browserify', function() {
     .pipe(gulp.dest('./public/js/'));
 });
 
+gulp.task('injected-js', function(){
+  return gulp.src(['./public/node_modules/socket.io/node_modules/socket.io-client/socket.io.js', debugClientPath])
+    .pipe(concat('debug-console.js'))
+    .pipe(gulp.dest('./public/js/'));
+});
+
 gulp.task('css', function() {
   gulp.src(cssPath)
     .pipe(plumber())
@@ -58,6 +65,7 @@ gulp.task('css', function() {
 gulp.task('watch', function() {
   gulp.watch(jsPath, ['browserify']);
   gulp.watch(cssPath, ['css']);
+  gulp.watch(debugClientPath, ['injected-js']);
 });
 
 function build (cb) {
@@ -197,4 +205,4 @@ gulp.task('getExamples', function(){
 gulp.task('build',  build);
 //gulp.task('build', ['nw-build', 'copy-ffmpeg-build']);
 gulp.task('latest', latest);
-gulp.task('default', ['copy-ffmpeg-default', 'css', 'browserify', 'watch']);
+gulp.task('default', ['copy-ffmpeg-default', 'css', 'browserify', 'injected-js', 'watch']);
