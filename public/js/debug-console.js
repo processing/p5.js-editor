@@ -6202,11 +6202,4 @@ function toArray(list, index) {
     return false;
   };
 
-  function trace() {
-    var stack = Error().stack;
-    var line = stack.split('\n')[3];
-    line = (line.indexOf(' (') >= 0 ? line.split(' (')[1].substring(0, line.length - 1) : line.split('at ')[1]);
-    return line;
-  }
-
 })();
