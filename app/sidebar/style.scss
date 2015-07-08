@@ -13,17 +13,18 @@
     -webkit-user-select: none;
     visibility: hidden;
     position: relative;
-    width: 10px;  
+    width: 10px;
     margin-top: 120px;
-    margin-bottom: 30px;
     flex: 1;
     overflow-y: auto;
   }
 
   #sidebar-container.expanded{
+    display: flex;
+    flex-direction: column;
     width:160px;
     visibility: visible;
-    min-width: 40px; 
+    min-width: 130px;
   }
 
 
@@ -78,7 +79,7 @@
         margin: 0;
         padding: 0;
         position: relative;
-       
+
         div {
           padding: 3px;
           padding-left: 64px;
