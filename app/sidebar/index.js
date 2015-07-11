@@ -17,12 +17,14 @@ module.exports = {
     className: function() {
       var container = $('#sidebar-container');
       if (!this.$root.settings.showSidebar) {
+        $('#showSidebarLabel').html( $('#showSidebarLabel').data('hide') );
         container.css({
           width: this.sidebarWidth
         });
         ace.resize();
         return "expanded";
       } else {
+        $('#showSidebarLabel').html( $('#showSidebarLabel').data('show') );
         this.sidebarWidth = container.width();
         container.css({
           width: 10
