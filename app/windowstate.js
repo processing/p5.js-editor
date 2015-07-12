@@ -4,35 +4,36 @@ module.exports.load = function(callback) {
   var windows = localStorage.windows ? JSON.parse(localStorage.windows) : [];
   localStorage.windows = JSON.stringify([]);
 
-  if (windows.length > 0) {
-    var openedWindows = 0;
-    windows.forEach(function(w){
-      if (w.path && fs.existsSync(w.path)) {
-        var win = gui.Window.open('index.html',{
-          x: w.x,
-          y: w.y,
-          width: w.width,
-          height: w.height,
-          toolbar: false,
-          focus: true,
-          show: false
-        });
-        win.on('document-start', function(){
-          win.window.PATH = w.path;
-          win.window.FILEPATH = w.filePath;
-          win.window.UNSAVED = w.temp;
-          openedWindows ++;
+  var windowsToOpen = windows.filter(function(w){
+    return w.path && fs.existsSync(w.path);
+  });
 
-          if (openedWindows === windows.length) {
-            callback(false);
-          }
-        });
-      }
+  if (windowsToOpen.length > 0) {
+    var openedWindows = 0;
+    windowsToOpen.forEach(function(w){
+      var win = gui.Window.open('index.html',{
+        x: w.x,
+        y: w.y,
+        width: w.width,
+        height: w.height,
+        toolbar: false,
+        focus: true,
+        show: false
+      });
+      win.on('document-start', function(){
+        win.window.PATH = w.path;
+        win.window.FILEPATH = w.filePath;
+        win.window.UNSAVED = w.temp;
+        openedWindows ++;
+        if (openedWindows === windows.length) {
+          callback(false);
+        }
+      });
     });
+
   } else {
     callback(true);
   }
-
 };
 
 module.exports.save = function(app, win) {
