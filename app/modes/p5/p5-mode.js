@@ -134,6 +134,8 @@ module.exports = {
   stop: function() {
     if (this.outputWindow) {
       this.outputWindow.close();
+    } else {
+      this.running = false;
     }
   },
 
