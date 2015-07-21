@@ -106,6 +106,13 @@ module.exports.setup = function(app) {
     app.showHelp();
   }}));
 
+  view.append(new gui.MenuItem({ label: 'Show Sketch Folder',
+      modifiers: 'cmd', key: 'k', click: function(){
+        gui.Shell.showItemInFolder(app.projectPath);
+  }}));
+
+  view.append(new gui.MenuItem({ type: 'separator' }));
+
   view.append(new gui.MenuItem({ label: 'Reformat',
       modifiers: 'cmd', key: 't', click: function(){
         app.$.editor.reformat();
