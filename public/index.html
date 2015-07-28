@@ -25,6 +25,9 @@
       //save the gui as a global
       var gui = window.require('nw.gui');
 
+      //platform
+      var isWin = /^win/.test(process.platform);
+
       //preserve node keywords
       var nodeRequire = require;
       var nodeProcess = process;

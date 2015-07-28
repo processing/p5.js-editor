@@ -4,7 +4,9 @@ var _ = require('underscore');
 var Files = require('./files');
 
 var menubar = new gui.Menu({ type: 'menubar' });
-menubar.createMacBuiltin("p5");
+if (!isWin) {
+  menubar.createMacBuiltin("p5");
+}
 var fileMenu = new gui.Menu();
 var help = new gui.Menu();
 //var edit = new gui.Menu();
@@ -67,7 +69,7 @@ module.exports.setup = function(app) {
   // add menu option for loading example sketches
   examples = new gui.MenuItem({label: 'Examples'});
   // create submenu
-  var exampleDir = 'mode_assets/p5/examples';
+  var exampleDir = Path.join('mode_assets', 'p5', 'examples');
   // get latest example categories
   var files = fs.readdirSync(exampleDir);
 
@@ -92,10 +94,6 @@ module.exports.setup = function(app) {
   fileMenu.append(examples);
 
   fileMenu.append(new gui.MenuItem({ type: 'separator' }));
-
-  //fileMenu.append(new gui.MenuItem({ label: 'Export \t\t\t\u2318E', click: function(){
-    //app.export();
-  //}}));
 
   fileMenu.append(new gui.MenuItem({ label: 'Run',
     modifiers: 'cmd', key: 'r', click: function(){
@@ -142,63 +140,64 @@ module.exports.setup = function(app) {
       app.changeFontSize(-1);
   }}))
 
-  menubar.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}),1);
-  menubar.insert(new gui.MenuItem({ label: 'View', submenu: view}), 3);
+  menubar.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}));
+  menubar.insert(new gui.MenuItem({ label: 'View', submenu: view}));
   menubar.append(new gui.MenuItem({ label: 'Help', submenu: help}));
 
   /* The Edit Menu exists by default, so we obtain the reference to it here and
    * add tot he pre-existing menu
    */
 
-  // get the existing edit menu
-  var edit = menubar.items[2].submenu;
+  if (!isWin) {
+    // get the existing edit menu
+    var edit = menubar.items[2].submenu;
 
-  // the native undo isn't allowing us to bind a click event on OS X,
-  // current (hacky) solution is to remove the existing one and add a new one
-  edit.remove(edit.items[0]);
+    // the native undo isn't allowing us to bind a click event on OS X,
+    // current (hacky) solution is to remove the existing one and add a new one
+    edit.remove(edit.items[0]);
 
-  // create the new undo menu item
-  var undo = new gui.MenuItem({
-      label: 'Undo',
-      key: "z"
-  });
+    // create the new undo menu item
+    var undo = new gui.MenuItem({
+        label: 'Undo',
+        key: "z"
+    });
 
-  // add event listener
-  undo.on('click', function() {
-    // execute ace editor undo command
-    app.$.editor.ace.execCommand("undo");
-  });
+    // add event listener
+    undo.on('click', function() {
+      // execute ace editor undo command
+      app.$.editor.ace.execCommand("undo");
+    });
 
-  // insert the new undo at the beginning
-  edit.insert(undo, 0);
+    // insert the new undo at the beginning
+    edit.insert(undo, 0);
 
-  edit.append(new gui.MenuItem({ type: 'separator' }));
+    edit.append(new gui.MenuItem({ type: 'separator' }));
 
-  // Find and Find and Replace are different because the ace/brace editor has
-  // native shortcuts for these commands. These two MenuItems only react
-  // to being clicked on, so the shortcuts work without interference.
-  var findItem = new gui.MenuItem(
-      { label: 'Find', modifiers: 'cmd', key: 'f', click: function(){
+    // Find and Find and Replace are different because the ace/brace editor has
+    // native shortcuts for these commands. These two MenuItems only react
+    // to being clicked on, so the shortcuts work without interference.
+    var findItem = new gui.MenuItem(
+        { label: 'Find', modifiers: 'cmd', key: 'f', click: function(){
+        }});
+
+    findItem.on('click', function(){
+      console.log('find');
+      app.$.editor.ace.execCommand("find");
+    });
+
+    edit.append(findItem);
+
+    var repItem = new gui.MenuItem(
+      { label: 'Find and Replace',
+        modifiers: 'cmd-alt', key: 'f', click: function(){
       }});
 
-  findItem.on('click', function(){
-    console.log('find');
-    app.$.editor.ace.execCommand("find");
-  });
+    repItem.on('click', function(e){
+      app.$.editor.ace.execCommand("replace");
+    });
 
-  edit.append(findItem);
-
-
-  var repItem = new gui.MenuItem(
-    { label: 'Find and Replace',
-      modifiers: 'cmd-alt', key: 'f', click: function(){
-    }});
-
-  repItem.on('click', function(e){
-    app.$.editor.ace.execCommand("replace");
-  });
-
-  edit.append(repItem);
+    edit.append(repItem);
+  }
 
   win.menu = menubar;
 
