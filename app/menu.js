@@ -214,6 +214,7 @@ module.exports.setup = function(app) {
     fileMenu.append(new gui.MenuItem({ label: 'Run',
       modifiers: 'cmd', key: 'r', click: function(){
         app.run();
+        
     }}));
 
     view.append(new gui.MenuItem({ label: 'Show Sketch Folder',

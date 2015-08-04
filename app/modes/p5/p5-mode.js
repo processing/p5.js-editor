@@ -95,6 +95,10 @@ module.exports = {
         gui.Shell.openExternal(url);
       } else {
         this.outputWindow.reloadIgnoringCache();
+        if(isWin){
+          self.outputWindow.hide();
+          self.outputWindow.show();
+        }
       }
     } else {
       // gui.App.clearCache();
