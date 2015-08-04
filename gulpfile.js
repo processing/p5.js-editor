@@ -20,8 +20,9 @@ var builderOptions = {
   buildType: 'versioned',
   files: [ './public/**'],
   buildDir: './dist',
-  platforms: ['osx64'],
-  macIcns: './icons/p5js.icns'
+  platforms: ['osx64', 'win64', 'win32'],
+  macIcns: './icons/p5js.icns',
+  winIco: './icons/p5js.ico'
 };
 
 var binaryDir = Path.join(builderOptions.buildDir, info.name + " - v" + info.version, 'osx64');
