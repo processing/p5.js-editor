@@ -123,8 +123,9 @@ function latest () {
   console.log('Compressing...');
 
   builderOptions.platforms.forEach(function(p){
+    var output = 'p5-' + (p.indexOf('win') > -1 ? 'win' : 'mac') + '.zip';
     gulp.src(binaryDir + '/' + p +'/**').
-      pipe(zip('p5.zip')).
+      pipe(zip(output)).
       pipe(gulp.dest(latestDir)).
       on('end', function(){
         console.log('Build compressed');
