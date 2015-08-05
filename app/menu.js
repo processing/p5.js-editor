@@ -24,22 +24,26 @@ var fs = nodeRequire('fs');
 module.exports.setup = function(app) {
   if (isWin) {
     //Setup menus for windows  
-    fileMenu.append(new gui.MenuItem({ label: 'New Project',
+    fileMenu.append(new gui.MenuItem({ 
+      label: 'New Project                          Ctrl+Shift+N',
       modifiers: 'shift-ctrl', key: 'n', click: function(){
         app.newWindow(app.windowURL);
     }}));
 
-    fileMenu.append(new gui.MenuItem({ label: 'New File',
+    fileMenu.append(new gui.MenuItem({ 
+      label: 'New File                                           Ctrl+N',
       modifiers: 'ctrl', key: 'n', click: function(){
         app.newFile();
     }}));
 
-    fileMenu.append(new gui.MenuItem({ label: 'New Folder',
+    fileMenu.append(new gui.MenuItem({ 
+      label: 'New Folder',
       click: function(){
         app.newFolder();
     }}));
 
-    fileMenu.append(new gui.MenuItem({ label: 'Open',
+    fileMenu.append(new gui.MenuItem({ 
+      label: 'Open                                                 Ctrl+O',
       modifiers: 'ctrl', key: 'o', click: function(){
         $('#openFile').trigger('click');
     }}));
@@ -48,22 +52,26 @@ module.exports.setup = function(app) {
     module.exports.updateRecentFiles(app);
     fileMenu.append(openRecent);
 
-    fileMenu.append(new gui.MenuItem({ label: 'Close',
+    fileMenu.append(new gui.MenuItem({ 
+      label: 'Close                                                Ctrl+W',
       modifiers: 'ctrl', key: 'w', click: function(){
         app.closeProject();
     }}));
 
-    fileMenu.append(new gui.MenuItem({ label: 'Save',
+    fileMenu.append(new gui.MenuItem({ 
+      label: 'Save                                                   Ctrl+S',
       modifiers: 'ctrl', key: 's', click: function(){
         app.saveFile();
     }}));
 
-    fileMenu.append(new gui.MenuItem({ label: 'Save File As...',
+    fileMenu.append(new gui.MenuItem({ 
+      label: 'Save File As...                         Ctrl+Shift+S',
       modifiers: 'shift-ctrl', key: 's', click: function(){
         app.saveFileAs(app.currentFile.path);
     }}));
 
-    fileMenu.append(new gui.MenuItem({ label: 'Save Project As...',
+    fileMenu.append(new gui.MenuItem({ 
+      label: 'Save Project As...           Ctrl+Alt+Shift+S',
       modifiers: 'alt-shift-ctrl', key: 's', click: function(){
         $('#saveProject').trigger('click');
     }}));
@@ -97,43 +105,50 @@ module.exports.setup = function(app) {
 
     fileMenu.append(new gui.MenuItem({ type: 'separator' }));
 
-    fileMenu.append(new gui.MenuItem({ label: 'Run',
+    fileMenu.append(new gui.MenuItem({ 
+      label: 'Run                           Ctrl+R',
       modifiers: 'ctrl', key: 'r', click: function(){
         app.run();
     }}));
 
-    view.append(new gui.MenuItem({ label: 'Show Sketch Folder',
+    view.append(new gui.MenuItem({ 
+      label: 'Show Sketch Folder             Ctrl+K',
         modifiers: 'ctrl', key: 'k', click: function(){
           gui.Shell.showItemInFolder(app.projectPath);
     }}));
 
     view.append(new gui.MenuItem({ type: 'separator' }));
 
-    view.append(new gui.MenuItem({ label: 'Reformat',
+    view.append(new gui.MenuItem({ 
+      label: 'Reformat                               Ctrl+T',
         modifiers: 'ctrl', key: 't', click: function(){
           app.$.editor.reformat();
     }}));
 
     view.append(new gui.MenuItem({ type: 'separator' }));
 
-    view.append(new gui.MenuItem({ label: 'Toggle Settings Panel',
+    view.append(new gui.MenuItem({ 
+      label: 'Toggle Settings Panel           Ctrl+,',
       modifiers: 'ctrl', key: ',', click: function(){
         app.toggleSettingsPane();
     }}))
 
-    view.append(new gui.MenuItem({ label: 'Toggle Sidebar',
+    view.append(new gui.MenuItem({ 
+      label: 'Toggle Sidebar                       Ctrl+.',
       modifiers: 'ctrl', key: '.', click: function(){
         app.toggleSidebar();
     }}))
 
     view.append(new gui.MenuItem({ type: 'separator' }));
 
-    view.append(new gui.MenuItem({ label: 'Increase Font Size',
+    view.append(new gui.MenuItem({ 
+      label: 'Increase Font Size                 Ctrl+=',
       modifiers: 'ctrl', key: '=', click: function(){
         app.changeFontSize(1);
     }}))
 
-    view.append(new gui.MenuItem({ label: 'Decrease Font Size',
+    view.append(new gui.MenuItem({ 
+      label: 'Decrease Font Size                Ctrl+-',
       modifiers: 'ctrl', key: '-', click: function(){
         app.changeFontSize(-1);
     }}))
@@ -265,11 +280,15 @@ module.exports.setup = function(app) {
   /* The Edit Menu exists by default, so we obtain the reference to it here and
    * add tot he pre-existing menu
    */
+  // Many of these menuItems are different because the ace/brace editor has
+  // native shortcuts for these commands. Their respective menuItmes only react
+  // to being clicked on, so the shortcuts work without interference.
   if (isWin) {
     var edit = new gui.Menu();
 
     var undo = new gui.MenuItem(
-        { label: 'Undo', modifiers: 'ctrl', key: 'z', click: function(){
+        { label: 'Undo                                       Ctrl+Z', 
+          modifiers: 'ctrl', key: 'z', click: function(){
         }});
     undo.on('click', function(){
       app.$.editor.ace.execCommand("undo");
@@ -277,7 +296,8 @@ module.exports.setup = function(app) {
     edit.append(undo);
 
     var redo = new gui.MenuItem(
-        { label: 'Redo', modifiers: 'shift-ctrl', key: 'z', click: function(){
+        { label: 'Redo                             Ctrl+Shift+Z', 
+          modifiers: 'shift-ctrl', key: 'z', click: function(){
         }});
     redo.on('click', function(){
       app.$.editor.ace.execCommand("redo");
@@ -287,7 +307,8 @@ module.exports.setup = function(app) {
     edit.append(new gui.MenuItem({ type: 'separator' }));
 
     var cut = new gui.MenuItem(
-        { label: 'Cut', modifiers: 'ctrl', key: 'x', click: function(){
+        { label: 'Cut                                          Ctrl+X', 
+          modifiers: 'ctrl', key: 'x', click: function(){
         }});
     cut.on('click', function(){
       document.execCommand("cut");
@@ -295,7 +316,8 @@ module.exports.setup = function(app) {
     edit.append(cut);
 
     var copy = new gui.MenuItem(
-        { label: 'Copy', modifiers: 'ctrl', key: 'c', click: function(){
+        { label: 'Copy                                       Ctrl+C', 
+          modifiers: 'ctrl', key: 'c', click: function(){
         }});
     copy.on('click', function(){
       document.execCommand("copy");
@@ -303,7 +325,8 @@ module.exports.setup = function(app) {
     edit.append(copy);
 
     var paste = new gui.MenuItem(
-        { label: 'Paste', modifiers: 'ctrl', key: 'v', click: function(){
+        { label: 'Paste                                       Ctrl+V', 
+          modifiers: 'ctrl', key: 'v', click: function(){
         }});
     paste.on('click', function(){
       document.execCommand("paste");
@@ -311,7 +334,8 @@ module.exports.setup = function(app) {
     edit.append(paste);
 
     var del = new gui.MenuItem(
-        { label: 'Delete', modifiers: 'ctrl', key: 'd', click: function(){
+        { label: 'Delete                                     Ctrl+D', 
+          modifiers: 'ctrl', key: 'd', click: function(){
         }});
     del.on('click', function(){
       app.$.editor.ace.execCommand("del");
@@ -319,7 +343,8 @@ module.exports.setup = function(app) {
     edit.append(del);
 
     var selAll  = new gui.MenuItem(
-        { label: 'Select All', modifiers: 'ctrl', key: 'a', click: function(){
+        { label: 'Select All                                Ctrl+A', 
+          modifiers: 'ctrl', key: 'a', click: function(){
         }});
     selAll.on('click', function(){
       app.$.editor.ace.execCommand("selectall");
@@ -328,11 +353,9 @@ module.exports.setup = function(app) {
 
     edit.append(new gui.MenuItem({ type: 'separator' }));
 
-    // Find and Find and Replace are different because the ace/brace editor has
-    // native shortcuts for these commands. These two MenuItems only react
-    // to being clicked on, so the shortcuts work without interference.
     var findItem = new gui.MenuItem(
-        { label: 'Find', modifiers: 'cmd', key: 'f', click: function(){
+        { label: 'Find                                         Ctrl+F', 
+        modifiers: 'ctrl', key: 'f', click: function(){
         }});
     findItem.on('click', function(){
       app.$.editor.ace.execCommand("find");
@@ -340,8 +363,8 @@ module.exports.setup = function(app) {
     edit.append(findItem);
 
     var repItem = new gui.MenuItem(
-      { label: 'Find and Replace',
-        modifiers: 'cmd-alt', key: 'f', click: function(){
+      { label: 'Find and Replace           Ctrl+Alt+F',
+        modifiers: 'ctrl-alt', key: 'f', click: function(){
       }});
     repItem.on('click', function(e){
       app.$.editor.ace.execCommand("replace");
