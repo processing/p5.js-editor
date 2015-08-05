@@ -45,7 +45,7 @@ module.exports.setup = function(app) {
     }}));
 
     openRecent = new gui.MenuItem({label: 'Open Recent'});
-    openRecent.submenu = recentFilesMenu;
+    module.exports.updateRecentFiles(app);
     fileMenu.append(openRecent);
 
     fileMenu.append(new gui.MenuItem({ label: 'Close',
