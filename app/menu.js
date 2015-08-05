@@ -273,8 +273,14 @@ module.exports.setup = function(app) {
     app.showHelp();
   }}));
 
-  menubar.append(new gui.MenuItem({ label: 'File', submenu: fileMenu}));
-  menubar.append(new gui.MenuItem({ label: 'View', submenu: view}));
+  if (isWin) {
+    menubar.append(new gui.MenuItem({ label: 'File', submenu: fileMenu}));
+    menubar.append(new gui.MenuItem({ label: 'View', submenu: view}));
+  } else {
+    menubar.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}),1);
+    menubar.insert(new gui.MenuItem({ label: 'View', submenu: view}), 3);
+  }
+
   menubar.append(new gui.MenuItem({ label: 'Help', submenu: help}));
 
   /* The Edit Menu exists by default, so we obtain the reference to it here and
