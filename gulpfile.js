@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var NwBuilder = require('node-webkit-builder');
+var NwBuilder = require('nw-builder');
 var plumber = require('gulp-plumber');
 var sass = require('gulp-sass');
 var rename = require('gulp-rename');
@@ -24,7 +24,25 @@ var builderOptions = {
   buildDir: './dist',
   platforms: ['osx64', 'win64'],
   macIcns: './icons/p5js.icns',
-  winIco: './icons/p5js.ico'
+  winIco: './icons/p5js.ico',
+  macPlist: {
+    'CFBundleDocumentTypes':[
+      {
+        'CFBundleTypeName': 'js',
+        'CFBundleTypeIconFile': 'p5js.icons',
+        'LSItemContentTypes': ['com.netscape.javascript-source']
+      },
+      {
+        'CFBundleTypeName': 'html',
+        'CFBundleTypeIconFile': 'p5js.icons',
+        'LSItemContentTypes': ['public.html']
+      },
+      {
+        'CFBundleTypeName': 'css',
+        'CFBundleTypeIconFile': 'p5js.icons',
+      }
+    ]
+  }
 };
 
 var binaryDir = Path.join(builderOptions.buildDir, info.name + " - v" + info.version);
