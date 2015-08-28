@@ -6,6 +6,11 @@ var request = nodeRequire('request');
 var Files = require('../../files');
 
 
+var canvasWidth;
+var canvasHeight;
+var prevCanvasWidth;
+var prevCanvasHeight;
+
 module.exports = {
   newProject: function() {
     //copy the empty project folder to a temporary directory
@@ -106,28 +111,52 @@ module.exports = {
         if (self.settings.runInBrowser) {
           gui.Shell.openExternal(url);
         } else {
-          self.outputWindow = self.newWindow(url, {
-            toolbar: true,
-            'inject-js-start': 'js/debug-console.js',
-            x: self.outX,
-            y: self.outY,
-            width: self.outW,
-            height: self.outH
-          });
-          self.outputWindow.on('document-start', function(){
-            self.outputWindow.show();
-          });
-          self.outputWindow.on("close", function(){
-            self.outX = self.outputWindow.x;
-            self.outY = self.outputWindow.y;
-            self.outW = self.outputWindow.width;
-            self.outH = self.outputWindow.height;
-            self.running = false;
-            self.outputWindow = null;
-            this.close(true);
-          });
-          self.outputWindow.on('focus', function(){
-            self.resetMenu();
+          fs.readFile(Path.join(self.projectPath, 'sketch.js'), function(err, data){
+            var matches = (""+data).match(/createCanvas\((.*),(.*)\)/);
+            canvasWidth = matches && matches[1] ? +matches[1] : 400;
+            canvasHeight = matches && matches[2] ? +matches[2] : 400;
+
+            if (!self.outW) self.outW = canvasWidth;
+            if (!self.outH) self.outH = canvasHeight;
+
+            if (canvasWidth != prevCanvasWidth || canvasHeight != prevCanvasHeight) {
+              self.outW = canvasWidth;
+              self.outH = canvasHeight;
+            }
+            
+            self.outputWindow = self.newWindow(url, {
+              toolbar: true,
+              'inject-js-start': 'js/debug-console.js',
+              x: self.outX,
+              y: self.outY,
+              width: self.outW,
+              height: self.outH
+            });
+
+            console.log(self.outputWindow);
+
+            prevCanvasWidth = canvasWidth;
+            prevCanvasHeight = canvasHeight;
+
+            self.outputWindow.on('document-start', function(){
+              self.outputWindow.show();
+            });
+
+            self.outputWindow.on("close", function(){
+              self.outX = self.outputWindow.x;
+              self.outY = self.outputWindow.y;
+              self.outW = self.outputWindow.width;
+
+              // the "-55" appears to fix the growing window issue,
+              // & resulting gasslighting of myself
+              self.outH = self.outputWindow.height - 55;
+              self.running = false;
+              self.outputWindow = null;
+              this.close(true);
+            });
+            self.outputWindow.on('focus', function(){
+              self.resetMenu();
+            });
           });
         }
         self.running = true;
