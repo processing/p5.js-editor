@@ -66,6 +66,7 @@ var appConfig = {
   },
 
   ready: function() {
+    windowstate.incrementWindows();
     this.modeFunction('update');
     updater.check();
     keybindings.setup(this);
@@ -168,6 +169,11 @@ var appConfig = {
           // save window state if the user quit the program
           if (closeEvent === 'quit') {
             windowstate.save(self, win);
+          }
+
+          windowstate.decrementWindows();
+          if (windowstate.totalWindows() === 0) {
+            gui.App.quit();
           }
 
           // close this window

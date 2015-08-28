@@ -1,0 +1,47 @@
+<html>
+
+<script type="text/javascript">
+  
+var gui = require('nw.gui');
+
+if (gui.App.argv.length > 0) {
+  var win = gui.Window.open('index.html',{
+    x: 50,
+    y: 50,
+    width: 1024,
+    height: 768,
+    toolbar: false,
+    focus: true,
+    show: false
+  });
+  win.on('document-start', function(){
+    win.window.PATH = gui.App.argv[0]; 
+  });
+} else {
+  var win = gui.Window.open('index.html',{
+    x: 50,
+    y: 50,
+    width: 1024,
+    height: 768,
+    toolbar: false,
+    focus: true,
+    show: false
+  });
+}
+
+gui.App.on('open', function(cmdline) {
+  var win = gui.Window.open('index.html',{
+    x: 50,
+    y: 50,
+    width: 1024,
+    height: 768,
+    toolbar: false,
+    focus: true,
+    show: false
+  });
+  win.on('document-start', function(){
+    win.window.PATH = cmdline;
+  });
+});
+</script>
+</html>

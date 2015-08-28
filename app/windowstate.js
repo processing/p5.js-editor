@@ -50,3 +50,21 @@ module.exports.save = function(app, win) {
   windows.push(state);
   localStorage.windows = JSON.stringify(windows);
 };
+
+
+
+module.exports.totalWindows = function() {
+  if (!localStorage.openWindows) localStorage.openWindows = 0;
+  return +localStorage.openWindows;
+};
+
+
+module.exports.incrementWindows = function() {
+  if (!localStorage.openWindows || +localStorage.openWindows < 0) localStorage.openWindows = 0;
+  localStorage.openWindows ++;
+};
+
+module.exports.decrementWindows = function() {
+  if (!localStorage.openWindows || +localStorage.openWindows < 1) localStorage.openWindows = 1;
+  localStorage.openWindows --;
+};
