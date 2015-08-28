@@ -15,7 +15,7 @@ module.exports.load = function(callback) {
         x: w.x,
         y: w.y,
         width: w.width,
-        height: w.height,
+        height: w.height-55,
         toolbar: false,
         focus: true,
         show: false
