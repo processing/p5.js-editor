@@ -4,6 +4,8 @@
   
 var gui = require('nw.gui');
 
+localStorage.openWindows = 0;
+
 if (gui.App.argv.length > 0) {
   var win = gui.Window.open('index.html',{
     x: 50,
