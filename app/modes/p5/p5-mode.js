@@ -119,11 +119,11 @@ module.exports = {
             if (!self.outW) self.outW = canvasWidth;
             if (!self.outH) self.outH = canvasHeight;
 
-            if (canvasWidth != prevCanvasWidth || canvasHeight != prevCanvasHeight) {
+            if ((canvasWidth != prevCanvasWidth || canvasHeight != prevCanvasHeight) && !self.resizedOutputWindow) {
               self.outW = canvasWidth;
               self.outH = canvasHeight;
             }
-            
+
             self.outputWindow = self.newWindow(url, {
               toolbar: true,
               'inject-js-start': 'js/debug-console.js',
@@ -132,8 +132,6 @@ module.exports = {
               width: self.outW,
               height: self.outH
             });
-
-            console.log(self.outputWindow);
 
             prevCanvasWidth = canvasWidth;
             prevCanvasHeight = canvasHeight;
@@ -154,8 +152,13 @@ module.exports = {
               self.outputWindow = null;
               this.close(true);
             });
+
             self.outputWindow.on('focus', function(){
               self.resetMenu();
+            });
+
+            self.outputWindow.on('resize', function() {
+              self.resizedOutputWindow = true;
             });
           });
         }
