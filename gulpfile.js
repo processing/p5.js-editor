@@ -40,6 +40,12 @@ var builderOptions = {
       {
         'CFBundleTypeName': 'css',
         'CFBundleTypeIconFile': 'p5js.icons',
+      },
+      {
+        'CFBundleTypeName': 'Folder',
+        'CFBundleTypeOSTypes': [
+          'fold'
+        ]
       }
     ]
   }

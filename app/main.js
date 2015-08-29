@@ -189,9 +189,14 @@ var appConfig = {
           self.askReload = false;
           var shouldRefresh = confirm(self.currentFile.path + ' was edited on the disk. Reload? You will lose any changes.');
           if (shouldRefresh) {
-              //self.openProject(self.currentFile.path);
-              //gui.Window.get().close(true);
-            window.location = 'index.html';
+
+            var win = self.newWindow(self.windowURL);
+            windowstate.decrementWindows();
+
+            win.on('document-start', function(){
+              win.window.PATH = self.currentFile.path;
+              gui.Window.get().close(true);
+            });
           }
         }
       });
@@ -566,11 +571,4 @@ var appConfig = {
 
 };
 
-
-windowstate.load(function(createNewProject){
-  if (createNewProject) {
-    var app = new Vue(appConfig);
-  } else {
-    gui.Window.get().close(true);
-  }
-});
+var app = new Vue(appConfig);
