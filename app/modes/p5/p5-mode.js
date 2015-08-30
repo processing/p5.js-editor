@@ -84,10 +84,20 @@ module.exports = {
 
     this.$broadcast('save-project-as', path);
 
-    this.projectPath = path;
-    //this.$broadcast('open-project', path);
-    this.temp = false;
+    // change the html title tag
+    var indexPath = Path.join(path, 'index.html');
+    var projectTitle = Path.basename(path);
+    var oldProjectTitle = Path.basename(this.projectPath);
 
+    fs.readFile(indexPath, 'utf8', function(err, data){
+      if (!err) {
+        data = data.replace('<title>' + oldProjectTitle + '</title>', '<title>' + projectTitle + '</title>');
+        fs.writeFile(indexPath, data);
+      }
+    });
+
+    this.projectPath = path;
+    this.temp = false;
     this.watch(path);
   },
 
