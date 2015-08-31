@@ -1,7 +1,7 @@
 /*
  * @name Video Pixels
  * @frame 320,240
- * @description <p>Load a video, manipulate it's pixels and draw to canvas.
+ * @description <p>Load a video, manipulate its pixels and draw to canvas.
  * <p><em><span class="small"> To run this example locally, you will need the
  * <a href="http://p5js.org/reference/#/libraries/p5.dom">p5.dom library</a>
  * at least one video file, and a running <a href="https://github.com/processing/p5.js/wiki/Local-server">local server</a>.</span></em></p>

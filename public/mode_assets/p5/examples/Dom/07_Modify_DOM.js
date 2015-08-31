@@ -29,7 +29,7 @@ function setup() {
   // This line grabs the paragraph just created, but it would 
   // also grab any other elements with class 'text' in the HTML
   // page.
-  var texts = getElements('text');
+  var texts = selectAll('.text');
 
   for (var i=0; i<texts.length; i++) {
     var paragraph = texts[i].html();
