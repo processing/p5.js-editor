@@ -52,3 +52,17 @@ Below you'll find documentation for the different libraries we're using
 * [nw.js](https://github.com/nwjs/nw.js/wiki)
 * [browserify](http://browserify.org/)
 * [gulp.js](http://gulpjs.com/)
+
+### Building
+
+Just run the gulp task: 
+`gulp build`
+
+This will build Mac and Windows versions of the editor, and place them in `dist/`. Please note that due to an issue with file path lengths (to be fixed, evidently in the next version of npm), Mac users may run into an issue building the Windows version. To fix this install and run `flatten-packages`:
+
+```
+npm install -g flatten-packages
+cd public
+flatten-packages
+```
+And then run `gulp build` from the root directory of the project.
