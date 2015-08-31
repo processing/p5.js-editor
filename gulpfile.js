@@ -120,7 +120,7 @@ function copyFfmpegBuild() {
        {overwrite: true}));
 
   console.log('copying ffmpegsumo.dll to ./dist');
-  gulp.src('./lib/ffmpegsumo.so')
+  gulp.src('./lib/ffmpegsumo.dll')
     .pipe(gulp.dest(binaryDir + '/win64',
        {overwrite: true}));
 }
