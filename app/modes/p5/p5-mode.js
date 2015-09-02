@@ -104,6 +104,7 @@ module.exports = {
   run: function() {
     var self = this;
     this.saveAll();
+    gui.App.clearCache();
 
     if (this.outputWindow) {
       if (this.settings.runInBrowser) {
@@ -116,7 +117,6 @@ module.exports = {
         }
       }
     } else {
-      // gui.App.clearCache();
       startServer(this.projectPath, this, function(url) {
         if (self.settings.runInBrowser) {
           gui.Shell.openExternal(url);
@@ -140,7 +140,8 @@ module.exports = {
               x: self.outX,
               y: self.outY,
               width: self.outW,
-              height: self.outH
+              height: self.outH,
+              "page-cache": false
             });
 
             prevCanvasWidth = canvasWidth;
