@@ -1,4 +1,4 @@
-/*! p5.js v0.4.8 August 18, 2015 */
+/*! p5.js v0.4.9 August 31, 2015 */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.p5 = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 
 },{}],2:[function(_dereq_,module,exports){
@@ -10054,7 +10054,8 @@ p5.prototype.line = function() {
 /**
  * Draws a point, a coordinate in space at the dimension of one pixel.
  * The first parameter is the horizontal value for the point, the second
- * value is the vertical value for the point.
+ * value is the vertical value for the point. The color of the point is
+ * determined by the current stroke.
  *
  * @method point
  * @param  {Number} x the x-coordinate
@@ -10987,8 +10988,8 @@ var p5 = function(sketch, node, sync) {
   this._userNode = node;
   this._curElement = null;
   this._elements = [];
+  this._requestAnimId = 0;
   this._preloadCount = 0;
-  this._updateInterval = 0;
   this._isGlobal = false;
   this._loop = true;
   this._styles = [];
@@ -11050,7 +11051,6 @@ var p5 = function(sketch, node, sync) {
     );
 
     var userPreload = this.preload || window.preload; // look for "preload"
-    var context = this._isGlobal ? window : this;
     if (userPreload) {
 
       // Setup loading screen
@@ -11065,14 +11065,18 @@ var p5 = function(sketch, node, sync) {
         var node = this._userNode || document.body;
         node.appendChild(loadingScreen);
       }
-
-      var methods = this._preloadMethods;
-      Object.keys(methods).forEach(function(f) {
-        context[f] = function() {
-          var argsArray = Array.prototype.slice.call(arguments);
-          return context._preload(f, methods[f], argsArray);
-        };
-      });
+      // var methods = this._preloadMethods;
+      for (var method in this._preloadMethods){
+        // default to p5 if no object defined
+        this._preloadMethods[method] = this._preloadMethods[method] || p5;
+        var obj = this._preloadMethods[method];
+        //it's p5, check if it's global or instance
+        if (obj === p5.prototype || obj === p5){
+          obj = this._isGlobal ? window : this;
+        }
+        this._registeredPreloadMethods[method] = obj[method];
+        obj[method] = this._wrapPreload(obj, method);
+      }
 
       userPreload();
     } else {
@@ -11082,24 +11086,35 @@ var p5 = function(sketch, node, sync) {
     }
   }.bind(this);
 
-  this._preload = function (func, obj, args) {
+  this._decrementPreload = function(){
+    var context = this._isGlobal ? window : this;
+    context._setProperty('_preloadCount', context._preloadCount - 1);
+    if (context._preloadCount === 0) {
+      var loadingScreen = document.getElementById(context._loadingScreenId);
+      if (loadingScreen) {
+        loadingScreen.parentNode.removeChild(loadingScreen);
+      }
+      context._setup();
+      context._runFrames();
+      context._draw();
+    }
+  };
+
+  this._wrapPreload = function(obj, fnName){
+    return function(){
+      //increment counter
+      this._incrementPreload();
+      //call original function
+      var args = Array.prototype.slice.call(arguments);
+      args.push(this._decrementPreload.bind(this));
+      return this._registeredPreloadMethods[fnName].apply(obj, args);
+    }.bind(this);
+  };
+
+  this._incrementPreload = function(){
     var context = this._isGlobal ? window : this;
     context._setProperty('_preloadCount', context._preloadCount + 1);
-    var preloadCallback = function (resp) {
-      context._setProperty('_preloadCount', context._preloadCount - 1);
-      if (context._preloadCount === 0) {
-        var loadingScreen = document.getElementById(context._loadingScreenId);
-        if (loadingScreen) {
-          loadingScreen.parentNode.removeChild(loadingScreen);
-        }
-        context._setup();
-        context._runFrames();
-        context._draw();
-      }
-    };
-    args.push(preloadCallback);
-    return obj[func].apply(context, args);
-  }.bind(this);
+  };
 
   this._setup = function() {
 
@@ -11107,7 +11122,6 @@ var p5 = function(sketch, node, sync) {
     var context = this._isGlobal ? window : this;
     if (typeof context.preload === 'function') {
       for (var f in this._preloadMethods) {
-        //var o = this._preloadMethods[f];
         context[f] = this._preloadMethods[f][f];
       }
     }
@@ -11162,7 +11176,7 @@ var p5 = function(sketch, node, sync) {
     // get notified the next time the browser gives us
     // an opportunity to draw.
     if (this._loop) {
-      window.requestAnimationFrame(this._draw);
+      this._requestAnimId = window.requestAnimationFrame(this._draw);
     }
   }.bind(this);
 
@@ -11202,8 +11216,8 @@ var p5 = function(sketch, node, sync) {
 
       // stop draw
       this._loop = false;
-      if (this._updateInterval) {
-        clearTimeout(this._updateInterval);
+      if (this._requestAnimId) {
+        window.cancelAnimationFrame(this._requestAnimId);
       }
 
       // unregister events sketch-wide
@@ -11335,10 +11349,12 @@ p5.prototype._preloadMethods = {
 
 p5.prototype._registeredMethods = { pre: [], post: [], remove: [] };
 
-p5.prototype.registerPreloadMethod = function(f, o) {
-  o = o || p5;
-  if (!p5.prototype._preloadMethods.hasOwnProperty(f)) {
-    p5.prototype._preloadMethods[f] = o;
+p5.prototype._registeredPreloadMethods = {};
+
+p5.prototype.registerPreloadMethod = function(fnString, obj) {
+  // obj = obj || p5.prototype;
+  if (!p5.prototype._preloadMethods.hasOwnProperty(fnString)) {
+    p5.prototype._preloadMethods[fnString] = obj;
   }
 };
 
@@ -11370,12 +11386,15 @@ var curveDetail = 20;
 p5.prototype._curveTightness = 0;
 
 /**
- * Draws a Bezier curve on the screen. These curves are defined by a series
- * of anchor and control points. The first two parameters specify the first
- * anchor point and the last two parameters specify the other anchor point.
- * The middle parameters specify the control points which define the shape
- * of the curve. Bezier curves were developed by French engineer Pierre
- * Bezier.
+ * Draws a cubic Bezier curve on the screen. These curves are defined by a
+ * series of anchor and control points. The first two parameters specify
+ * the first anchor point and the last two parameters specify the other
+ * anchor point, which become the first and last points on the curve. The
+ * middle parameters specify the two control points which define the shape
+ * of the curve. Approximately speaking, control points "pull" the curve
+ * towards them.<br /><br />Bezier curves were developed by French
+ * automotive engineer Pierre Bezier, and are commonly used in computer
+ * graphics to define gently sloping curves. See also curve().
  *
  * @method bezier
  * @param  {Number} x1 x-coordinate for the first anchor point
@@ -11436,11 +11455,10 @@ p5.prototype.bezierDetail = function(d) {
 };
 
 /**
- * Calculate a point on the Bezier Curve
- *
- * Evaluates the Bezier at point t for points a, b, c, d.
- * The parameter t varies between 0 and 1, a and d are points
+ * Evaluates the Bezier at position t for points a, b, c, d.
+ * The parameters a and d are the first and last points
  * on the curve, and b and c are the control points.
+ * The final parameter t varies between 0 and 1.
  * This can be done once with the x coordinates and a second time
  * with the y coordinates to get the location of a bezier curve at t.
  *
@@ -11450,18 +11468,20 @@ p5.prototype.bezierDetail = function(d) {
  * @param {Number} c coordinate of second control point
  * @param {Number} d coordinate of second point on the curve
  * @param {Number} t value between 0 and 1
- * @return {Number} the value of the Bezier at point t
+ * @return {Number} the value of the Bezier at position t
  * @example
  * <div>
  * <code>
  * noFill();
- * bezier(85, 20, 10, 10, 90, 90, 15, 80);
+ * x1 = 85, x2 = 10, x3 = 90, x4 = 15;
+ * y1 = 20, y2 = 10, y3 = 90, y4 = 80;
+ * bezier(x1, y1, x2, y2, x3, y3, x4, y4);
  * fill(255);
  * steps = 10;
  * for (i = 0; i <= steps; i++) {
  *   t = i / steps;
- *   x = bezierPoint(85, 10, 90, 15, t);
- *   y = bezierPoint(20, 10, 90, 80, t);
+ *   x = bezierPoint(x1, x2, x3, x4, t);
+ *   y = bezierPoint(y1, y2, y3, y4, t);
  *   ellipse(x, y, 5, 5);
  * }
  * </code>
@@ -11476,11 +11496,10 @@ p5.prototype.bezierPoint = function(a, b, c, d, t) {
 };
 
 /**
- * Calculates the tangent of a point on a Bezier curve
- *
- * Evaluates the tangent at point t for points a, b, c, d.
- * The parameter t varies between 0 and 1, a and d are points
- * on the curve, and b and c are the control points
+ * Evaluates the tangent to the Bezier at position t for points a, b, c, d.
+ * The parameters a and d are the first and last points
+ * on the curve, and b and c are the control points.
+ * The final parameter t varies between 0 and 1.
  *
  * @method bezierTangent
  * @param {Number} a coordinate of first point on the curve
@@ -11488,7 +11507,7 @@ p5.prototype.bezierPoint = function(a, b, c, d, t) {
  * @param {Number} c coordinate of second control point
  * @param {Number} d coordinate of second point on the curve
  * @param {Number} t value between 0 and 1
- * @return {Number} the tangent at point t
+ * @return {Number} the tangent at position t
  * @example
  * <div>
  * <code>
@@ -11548,11 +11567,12 @@ p5.prototype.bezierTangent = function(a, b, c, d, t) {
 };
 
 /**
- * Draws a curved line on the screen. The first and second parameters specify
- * the beginning control point and the last two parameters specify the ending
- * control point. The middle parameters specify the start and stop of the
- * curve. Longer curves can be created by putting a series of curve()
- * functions together or using curveVertex(). An additional function called
+ * Draws a curved line on the screen between two points, given as the
+ * middle four parameters. The first two parameters are a control point, as
+ * if the curve came from this point even though it's not drawn. The last
+ * two parameters similarly describe the other control point. <br /><br />
+ * Longer curves can be created by putting a series of curve() functions
+ * together or using curveVertex(). An additional function called
  * curveTightness() provides control for the visual quality of the curve.
  * The curve() function is an implementation of Catmull-Rom splines.
  *
@@ -11576,6 +11596,20 @@ p5.prototype.bezierTangent = function(a, b, c, d, t) {
  * curve(5, 26, 73, 24, 73, 61, 15, 65);
  * stroke(255, 102, 0);
  * curve(73, 24, 73, 61, 15, 65, 15, 65);
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * // Define the curve points as JavaScript objects
+ * p1 = {x: 5, y: 26}, p2 = {x: 73, y: 24}
+ * p3 = {x: 73, y: 61}, p4 = {x: 15, y: 65}
+ * noFill();
+ * stroke(255, 102, 0);
+ * curve(p1.x, p1.y, p1.x, p1.y, p2.x, p2.y)
+ * stroke(0);
+ * curve(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y)
+ * stroke(255, 102, 0);
+ * curve(p2.x, p2.y, p3.x, p3.y, p4.x, p4.y, p4.x, p4.y)
  * </code>
  * </div>
  */
@@ -11658,9 +11692,7 @@ p5.prototype.curveTightness = function (t) {
 };
 
 /**
- * Calculate a point on the Curve
- *
- * Evaluates the Bezier at point t for points a, b, c, d.
+ * Evaluates the curve at position t for points a, b, c, d.
  * The parameter t varies between 0 and 1, a and d are points
  * on the curve, and b and c are the control points.
  * This can be done once with the x coordinates and a second time
@@ -11672,7 +11704,7 @@ p5.prototype.curveTightness = function (t) {
  * @param {Number} c coordinate of second control point
  * @param {Number} d coordinate of second point on the curve
  * @param {Number} t value between 0 and 1
- * @return {Number} bezier value at point t
+ * @return {Number} bezier value at position t
  * @example
  * <div>
  * <code>
@@ -11694,7 +11726,7 @@ p5.prototype.curveTightness = function (t) {
  * </code>
  * </div>
  */
-p5.prototype.curvePoint = function(a, b,c, d, t) {
+p5.prototype.curvePoint = function(a, b, c, d, t) {
   var t3 = t*t*t,
     t2 = t*t,
     f1 = -0.5 * t3 + t2 - 0.5 * t,
@@ -11705,11 +11737,9 @@ p5.prototype.curvePoint = function(a, b,c, d, t) {
 };
 
 /**
- * Calculates the tangent of a point on a curve
- *
- * Evaluates the tangent at point t for points a, b, c, d.
- * The parameter t varies between 0 and 1, a and d are points
- * on the curve, and b and c are the control points
+ * Evaluates the tangent to the curve at position t for points a, b, c, d.
+ * The parameter t varies between 0 and 1, a and d are points on the curve,
+ * and b and c are the control points
  *
  * @method curveTangent
  * @param {Number} a coordinate of first point on the curve
@@ -11717,7 +11747,7 @@ p5.prototype.curvePoint = function(a, b,c, d, t) {
  * @param {Number} c coordinate of second control point
  * @param {Number} d coordinate of second point on the curve
  * @param {Number} t value between 0 and 1
- * @return {Number} the tangent at point t
+ * @return {Number} the tangent at position t
  * @example
  * <div>
  * <code>
@@ -12451,13 +12481,13 @@ p5.prototype._validateParameters = function(func, args, types) {
     message = 'You wrote ' + func + '(';
     // Concat an appropriate number of placeholders for call
     if (args.length > 0) {
-      message += symbol + (','+symbol).repeat(args.length-1);
+      message += symbol + Array(args.length).join(',' + symbol);
     }
     message += '). ' + func + ' was expecting ' + types[tindex].length +
       ' parameters. Try ' + func + '(';
     // Concat an appropriate number of placeholders for definition
     if (types[tindex].length > 0) {
-      message += symbol + (','+symbol).repeat(types[tindex].length-1);
+      message += symbol + Array(types[tindex].length).join(',' + symbol);
     }
     message += ').';
     // If multiple definitions
@@ -12805,6 +12835,21 @@ p5.Element.prototype.mouseMoved = function (fxn) {
  */
 p5.Element.prototype.mouseOver = function (fxn) {
   attachListener('mouseover', fxn, this);
+  return this;
+};
+
+
+/**
+ * The .changed() function is called when the value of an element is changed.
+ * This can be used to attach an element specific event listener.
+ *
+ * @method changed
+ * @param  {Function} fxn function to be fired when mouse is
+ *                    moved over the element.
+ * @return {p5.Element}
+ */
+p5.Element.prototype.changed = function (fxn) {
+  attachListener('change', fxn, this);
   return this;
 };
 
@@ -14569,6 +14614,9 @@ p5.prototype.createCanvas = function(w, h, renderer) {
   }
   this._graphics.resize(w, h);
   this._graphics._applyDefaults();
+  if (isDefault) { // only push once
+    this._elements.push(this._graphics);
+  }
   return this._graphics;
 };
 
@@ -23053,23 +23101,11 @@ var PERLIN_SIZE = 4095;
 var perlin_octaves = 4; // default to medium smooth
 var perlin_amp_falloff = 0.5; // 50% reduction/octave
 
-// [toxi 031112]
-// Maybe we should have a lookup table for speed
+var scaled_cosine = function(i) {
+  return 0.5*(1.0-Math.cos(i*Math.PI));
+};
 
-var SINCOS_PRECISION = 0.5;
-var SINCOS_LENGTH = Math.floor(360 / SINCOS_PRECISION);
-var sinLUT = new Array(SINCOS_LENGTH);
-var cosLUT = new Array(SINCOS_LENGTH);
-var DEG_TO_RAD = Math.PI/180.0;
-for (var i = 0; i < SINCOS_LENGTH; i++) {
-  sinLUT[i] = Math.sin(i * DEG_TO_RAD * SINCOS_PRECISION);
-  cosLUT[i] = Math.cos(i * DEG_TO_RAD * SINCOS_PRECISION);
-}
-
-var perlin_PI = SINCOS_LENGTH;
-perlin_PI >>= 1;
-
-var perlin;
+var perlin; // will be initialized lazily by noise() or noiseSeed()
 
 
 /**
@@ -23081,23 +23117,23 @@ var perlin;
  * shapes, terrains etc.<br /><br /> The main difference to the
  * <b>random()</b> function is that Perlin noise is defined in an infinite
  * n-dimensional space where each pair of coordinates corresponds to a
- * fixed semi-random value (fixed only for the lifespan of the program).
- * The resulting value will always be between 0.0 and 1.0. p5.js can
- * compute 1D, 2D and 3D noise, depending on the number of coordinates
- * given. The noise value can be animated by moving through the noise space
- * as demonstrated in the example above. The 2nd and 3rd dimension can also
- * be interpreted as time.<br /><br />The actual noise is structured
- * similar to an audio signal, in respect to the function's use of
- * frequencies. Similar to the concept of harmonics in physics, perlin
- * noise is computed over several octaves which are added together for the
- * final result. <br /><br />Another way to adjust the character of the
- * resulting sequence is the scale of the input coordinates. As the
- * function works within an infinite space the value of the coordinates
- * doesn't matter as such, only the distance between successive coordinates
- * does (eg. when using <b>noise()</b> within a loop). As a general rule
- * the smaller the difference between coordinates, the smoother the
- * resulting noise sequence will be. Steps of 0.005-0.03 work best for most
- * applications, but this will differ depending on use.
+ * fixed semi-random value (fixed only for the lifespan of the program; see
+ * the noiseSeed() function). p5.js can compute 1D, 2D and 3D noise,
+ * depending on the number of coordinates given. The resulting value will
+ * always be between 0.0 and 1.0. The noise value can be animated by moving
+ * through the noise space as demonstrated in the example above. The 2nd
+ * and 3rd dimension can also be interpreted as time.<br /><br />The actual
+ * noise is structured similar to an audio signal, in respect to the
+ * function's use of frequencies. Similar to the concept of harmonics in
+ * physics, perlin noise is computed over several octaves which are added
+ * together for the final result. <br /><br />Another way to adjust the
+ * character of the resulting sequence is the scale of the input
+ * coordinates. As the function works within an infinite space the value of
+ * the coordinates doesn't matter as such, only the distance between
+ * successive coordinates does (eg. when using <b>noise()</b> within a
+ * loop). As a general rule the smaller the difference between coordinates,
+ * the smoother the resulting noise sequence will be. Steps of 0.005-0.03
+ * work best for most applications, but this will differ depending on use.
  *
  *
  * @method noise
@@ -23133,16 +23169,10 @@ var perlin;
  * </div>
  */
 p5.prototype.noise = function(x,y,z) {
-  // is this legit?
   y = y || 0;
   z = z || 0;
 
   if (perlin == null) {
-    // need to deal with seeding?
-    //if (perlinRandom == null) {
-    //  perlinRandom = new Random();
-    //}
-
     perlin = new Array(PERLIN_SIZE + 1);
     for (var i = 0; i < PERLIN_SIZE + 1; i++) {
       perlin[i] = Math.random();
@@ -23164,17 +23194,11 @@ p5.prototype.noise = function(x,y,z) {
 
   var n1,n2,n3;
 
-  // Is this right do just have this here?
-  var noise_fsc = function(i) {
-    // using cosine lookup table
-    return 0.5*(1.0-cosLUT[Math.floor(i*perlin_PI)%SINCOS_LENGTH]);
-  };
-
   for (var o=0; o<perlin_octaves; o++) {
     var of=xi+(yi<<PERLIN_YWRAPB)+(zi<<PERLIN_ZWRAPB);
 
-    rxf= noise_fsc(xf);
-    ryf= noise_fsc(yf);
+    rxf = scaled_cosine(xf);
+    ryf = scaled_cosine(yf);
 
     n1  = perlin[of&PERLIN_SIZE];
     n1 += rxf*(perlin[(of+1)&PERLIN_SIZE]-n1);
@@ -23189,7 +23213,7 @@ p5.prototype.noise = function(x,y,z) {
     n3 += rxf*(perlin[(of+PERLIN_YWRAP+1)&PERLIN_SIZE]-n3);
     n2 += ryf*(n3-n2);
 
-    n1 += noise_fsc(zf)*(n2-n1);
+    n1 += scaled_cosine(zf)*(n2-n1);
 
     r += n1*ampl;
     ampl *= perlin_amp_falloff;
@@ -23207,12 +23231,6 @@ p5.prototype.noise = function(x,y,z) {
   return r;
 };
 
-
-
-// [toxi 040903]
-// make perlin noise quality user controlled to allow
-// for different levels of detail. lower values will produce
-// smoother results as higher octaves are suppressed
 
 /**
  *
