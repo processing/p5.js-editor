@@ -16,7 +16,7 @@ module.exports = {
   computed: {
     className: function() {
       var container = $('#sidebar-container');
-      if (!this.$root.settings.showSidebar) {
+      if (this.$root.settings.showSidebar) {
         $('#showSidebarLabel').html( $('#showSidebarLabel').data('hide') );
         container.css({
           width: this.sidebarWidth
