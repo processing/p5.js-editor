@@ -102,13 +102,20 @@ module.exports = {
         "indent_size": this.$root.settings.tabSize,
         "indent_with_tabs": this.$root.settings.tabType === 'tabs',
       };
+
+      var pos = this.ace.getCursorPosition();
+      var scrollPos = this.ace.getSession().getScrollTop();
+
       if (ext == '.js') {
-        this.ace.setValue(beautify(content, opts));
+        this.ace.setValue(beautify(content, opts), -1);
       } else if (ext == '.css') {
-        this.ace.setValue(beautify_css(content, opts));
+        this.ace.setValue(beautify_css(content, opts), -1);
       } else if (ext == '.html') {
-        this.ace.setValue(beautify_html(content, opts));
+        this.ace.setValue(beautify_html(content, opts), -1);
       }
+
+      this.ace.moveCursorToPosition(pos);
+      this.ace.getSession().setScrollTop(scrollPos);
     },
 
     updateSettings: function(settings) {
