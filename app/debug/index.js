@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var AutoLinker = require('autolinker');
 
 module.exports = {
 
@@ -68,8 +69,26 @@ module.exports = {
           });
         }
       }
-    }
+    },
 
+    debugOut: function(data) {
+      var msg = data.msg;
+      var style = data.style;
+      var line = data.num;
+      var type = data.type;
+      if (typeof msg === 'object') msg = JSON.stringify(msg);
+      else msg = '' + msg;
+      if (msg === 'Uncaught ReferenceError: require is not defined') return false;
+      if (style) {
+        msg = msg.replace(/%c/g, '');
+        msg = msg.replace('[', '');
+        msg = msg.replace(']', '');
+      }
+      msg = AutoLinker.link(msg);
+      // console.log(data);
+      $('#debug').append('<div class="'+type+'" style="'+(style ? style : '')+'">' + (line ? line + ': ' : '') + msg + '</div>');
+      $('#debug').scrollTop($('#debug')[0].scrollHeight);
+    }
   },
 
   ready: function() {
@@ -77,6 +96,14 @@ module.exports = {
     this.$on('settings-changed', this.checkSize);
     var container = $('#debug-container');
     this.debugWidth = container.width();
+    var self = this;
+
+    window.addEventListener('message', function(event) {
+      var data = JSON.parse(event.data);
+      if (data.console) {
+        self.debugOut(data.console);
+      }
+    }, false);
   }
 
-}
+};

@@ -74,7 +74,7 @@ gulp.task('browserify', function() {
 });
 
 gulp.task('injected-js', function(){
-  return gulp.src(['./public/node_modules/socket.io/node_modules/socket.io-client/socket.io.js', debugClientPath])
+  return gulp.src([debugClientPath])
     .pipe(concat('debug-console.js'))
     .pipe(gulp.dest('./public/js/'));
 });
