@@ -64,15 +64,15 @@ module.exports.setup = function(app) {
         app.saveFile();
     }}));
 
-    fileMenu.append(new gui.MenuItem({ 
-      label: 'Save File As...                         Ctrl+Shift+S',
-      modifiers: 'shift-ctrl', key: 's', click: function(){
-        app.saveFileAs(app.currentFile.path);
-    }}));
+    // fileMenu.append(new gui.MenuItem({ 
+    //   label: 'Save File As...                         Ctrl+Shift+S',
+    //   modifiers: 'shift-ctrl', key: 's', click: function(){
+    //     app.saveFileAs(app.currentFile.path);
+    // }}));
 
     fileMenu.append(new gui.MenuItem({ 
-      label: 'Save Project As...           Ctrl+Alt+Shift+S',
-      modifiers: 'alt-shift-ctrl', key: 's', click: function(){
+      label: 'Save As...           Ctrl+Shift+S',
+      modifiers: 'shift-ctrl', key: 's', click: function(){
         $('#saveProject').trigger('click');
     }}));
 
@@ -187,13 +187,13 @@ module.exports.setup = function(app) {
         app.saveFile();
     }}));
 
-    fileMenu.append(new gui.MenuItem({ label: 'Save File As...',
-      modifiers: 'shift-cmd', key: 's', click: function(){
-        app.saveFileAs(app.currentFile.path);
-    }}));
+    // fileMenu.append(new gui.MenuItem({ label: 'Save File As...',
+    //   modifiers: 'shift-cmd', key: 's', click: function(){
+    //     app.saveFileAs(app.currentFile.path);
+    // }}));
 
-    fileMenu.append(new gui.MenuItem({ label: 'Save Project As...',
-      modifiers: 'alt-shift-cmd', key: 's', click: function(){
+    fileMenu.append(new gui.MenuItem({ label: 'Save As...',
+      modifiers: 'shift-cmd', key: 's', click: function(){
         $('#saveProject').trigger('click');
     }}));
 
