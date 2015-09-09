@@ -66,7 +66,7 @@ var appConfig = {
 
   ready: function() {
     windowstate.incrementWindows();
-    this.modeFunction('update');
+    // this.modeFunction('update');
     updater.check();
     keybindings.setup(this);
     menu.setup(this);
