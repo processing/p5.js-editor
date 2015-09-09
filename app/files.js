@@ -15,6 +15,7 @@ var Files = {
       type: 'file',
       open: false,
       contents: undefined,
+      lastSavedContents: undefined,
       originalContents: undefined
     };
     return _.extend(fileObject, options);

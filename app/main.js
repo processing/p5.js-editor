@@ -9,7 +9,6 @@ var rimdir = nodeRequire('rimraf');
 var Vue = require('vue');
 var $ = require('jquery');
 var _ = require('underscore');
-var AutoLinker = require('autolinker');
 var keybindings = require('./keybindings');
 var Files = require('./files');
 var menu = require('./menu');
@@ -156,7 +155,7 @@ var appConfig = {
       win.on('close', function(closeEvent){
         // check to see if there are unsaved files
         var shouldClose = true;
-        if (_.any(self.files, function(f) {return f.contents != f.originalContents})) {
+        if (_.any(self.files, function(f) { return f.contents != f.lastSavedContents; })) {
           shouldClose = confirm('You have unsaved files. Quit and lose changes?');
         }
         if (shouldClose) {
@@ -329,9 +328,9 @@ var appConfig = {
     // save all open files
     saveAll: function() {
       _.where(this.files, {type: 'file', open: true}).forEach(function(file) {
-        if (file.originalContents != file.contents) {
+        if (file.lastSavedContents != file.contents) {
           fs.writeFileSync(file.path, file.contents, "utf8");
-          file.originalContents = file.contents;
+          file.lastSavedContents = file.contents;
         }
       });
       menu.updateRecentFiles(this, this.projectPath);
@@ -410,7 +409,7 @@ var appConfig = {
       self.justSaved = true;
 
       fs.writeFileSync(this.currentFile.path, this.currentFile.contents, "utf8");
-      this.currentFile.originalContents = this.currentFile.contents;
+      this.currentFile.lastSavedContents = this.currentFile.contents;
 
     },
 
@@ -432,7 +431,7 @@ var appConfig = {
         } else {
           fs.readFile(path, 'utf8', function(err, fileContents) {
             if (err) throw err;
-            file.contents = file.originalContents = fileContents;
+            file.contents = file.originalContents = file.lastSavedContents = fileContents;
             file.open = true;
             self.title = file.name;
             self.currentFile = file;
@@ -457,12 +456,12 @@ var appConfig = {
         }
         var shouldClose = true;
         var win = gui.Window.get();
-        if (file.contents != file.originalContents){
+        if (file.contents != file.lastSavedContents){
           shouldClose = confirm('You have unsaved changes. Close file and lose changes?');
         }
         if (shouldClose) {
           file.open = false;
-          file.contents = file.originalContents; 
+          file.contents = file.lastSavedContents; 
           this.$broadcast('close-file', file);
           return true;
         }
@@ -518,24 +517,6 @@ var appConfig = {
       fs.rename(path, Path.join(Path.dirname(path), newName));
     },
 
-    debugOut: function(data) {
-      var msg = data.msg;
-      var style = data.style;
-      var line = data.num;
-      var type = data.type;
-      if (typeof msg === 'object') msg = JSON.stringify(msg);
-      else msg = '' + msg;
-      if (msg === 'Uncaught ReferenceError: require is not defined') return false;
-      if (style) {
-        msg = msg.replace(/%c/g, '');
-        msg = msg.replace('[', '');
-        msg = msg.replace(']', '');
-      }
-      msg = AutoLinker.link(msg);
-      // console.log(data);
-      $('#debug').append('<div class="'+type+'" style="'+(style ? style : '')+'">' + (line ? line + ': ' : '') + msg + '</div>');
-      $('#debug').scrollTop($('#debug')[0].scrollHeight);
-    },
 
     run: function() {
       $('#debug').html('');
