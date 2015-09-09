@@ -193,25 +193,35 @@ module.exports = {
     var fileNames = ['p5.js', 'p5.dom.js', 'p5.sound.js'];
 
     request({url: url, headers: {'User-Agent': 'request'}}, function(error, response, data){
+      if (error) return;
+
+      // filter assets to only include the filenames we want
       var assets = JSON.parse(data).assets.filter(function(asset){
         return fileNames.indexOf(asset.name) > -1;
       });
-      assets.forEach(checkAsset);
-    });
 
-    function checkAsset(asset){
-      var localPath = Path.join(libraryPath, asset.name);
-      getVersion(localPath, function(version){
-        var remoteVersion = asset.tag;
-        if (remoteVersion != version) {
-          downloadAsset(asset.browser_download_url, localPath);
+      // if remoteVersion != localVersion, download new version of each asset
+      var remoteVersion = JSON.parse(data).tag_name;
+      var localPathToP5 = Path.join(libraryPath, 'p5.js');
+
+      var localVersionTag = getVersion(localPathToP5, function(localVersion) {
+        if (remoteVersion != localVersion || !localVersion) {
+          assets.forEach(function(asset) {
+            var localPathToAsset = Path.join(libraryPath, asset.name);
+            downloadAsset(asset.browser_download_url, localPathToAsset);
+          });
         }
       });
-    }
+
+    });
 
     function downloadAsset(remote, local) {
       request({url: remote, headers: {'User-Agent': 'request'}}, function(error, response, body){
-        fs.writeFile(local, body);
+        if (error) return;
+
+        if (body.split('\n')[0].indexOf('/*! p5.') > -1) {
+          fs.writeFile(local, body);
+        }
       });
     }
   },
@@ -257,8 +267,14 @@ function getVersion(filename, callback) {
     if (err) throw err;
 
     var line = data.toString('utf-8').split("\n")[0];
-    var version = line.match(/v\d+\.\d+\.\d+/)[0].substring(1);
+    var version;
+    try {
+      version = line.match(/v\d+\.\d+\.\d+/)[0].substring(1);
+    } catch(e) {
+      version = null;
+    }
     callback(version);
+
   });
 
 }

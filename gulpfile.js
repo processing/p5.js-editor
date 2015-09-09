@@ -169,6 +169,7 @@ gulp.task('p5', function () {
       'User-Agent' : 'request'
     }
   }, function(error, response, body) {
+    if (error) return;
     var assets = JSON.parse(body).assets;
     assets.forEach(function(asset) {
       if (fileNames.indexOf(asset.name) > -1) {
