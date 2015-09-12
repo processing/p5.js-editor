@@ -44,6 +44,7 @@ module.exports = {
     this.ace = window.ace = ace.edit('editor');
     this.ace.setTheme('ace/theme/tomorrow');
     this.ace.setReadOnly(true);
+    // this.ace.$worker.send("changeOptions", [{asi: false}]);
 
     this.customizeCommands();
   },
@@ -58,8 +59,6 @@ module.exports = {
         doc.on('change', function() {
           var file = Files.find(self.$root.files, fileObject.path);
           if (file) file.contents = doc.getValue();
-                    
-
         });
 
         var session = {
