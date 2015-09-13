@@ -68,6 +68,12 @@ module.exports = {
   },
 
   saveAs: function(path) {
+    if (!path) return false;
+
+    if (path.indexOf(this.projectPath) > -1) {
+      alert("Unable to save project inside another project");
+      return false;
+    }
     //save all files
     this.saveAll();
 
