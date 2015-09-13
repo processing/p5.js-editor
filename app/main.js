@@ -171,7 +171,7 @@ var appConfig = {
           }
 
           windowstate.decrementWindows();
-          if (windowstate.totalWindows() === 0) {
+          if (windowstate.totalWindows() < 1) {
             gui.App.quit();
           }
 
