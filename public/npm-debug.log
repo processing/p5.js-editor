@@ -1,0 +1,796 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 warn package.json p5@0.5.2 No description
+5 warn package.json p5@0.5.2 No repository field.
+6 warn package.json p5@0.5.2 No README data
+7 verbose readDependencies using package.json deps
+8 verbose install where, deps [ '/Users/lmccart/Documents/p5/p5.js-editor/public',
+8 verbose install   [ 'wrench',
+8 verbose install     'trash',
+8 verbose install     'chokidar',
+8 verbose install     'node-static',
+8 verbose install     'portscanner',
+8 verbose install     'semver',
+8 verbose install     'rimraf',
+8 verbose install     'request' ] ]
+9 info preinstall p5@0.5.2
+10 verbose readDependencies using package.json deps
+11 verbose cache add [ 'wrench@~1.5.8', null ]
+12 verbose cache add name=undefined spec="wrench@~1.5.8" args=["wrench@~1.5.8",null]
+13 verbose parsed url { protocol: null,
+13 verbose parsed url   slashes: null,
+13 verbose parsed url   auth: null,
+13 verbose parsed url   host: null,
+13 verbose parsed url   port: null,
+13 verbose parsed url   hostname: null,
+13 verbose parsed url   hash: null,
+13 verbose parsed url   search: null,
+13 verbose parsed url   query: null,
+13 verbose parsed url   pathname: 'wrench@~1.5.8',
+13 verbose parsed url   path: 'wrench@~1.5.8',
+13 verbose parsed url   href: 'wrench@~1.5.8' }
+14 verbose cache add [ 'trash@~0.1.2', null ]
+15 verbose cache add name=undefined spec="trash@~0.1.2" args=["trash@~0.1.2",null]
+16 verbose parsed url { protocol: null,
+16 verbose parsed url   slashes: null,
+16 verbose parsed url   auth: null,
+16 verbose parsed url   host: null,
+16 verbose parsed url   port: null,
+16 verbose parsed url   hostname: null,
+16 verbose parsed url   hash: null,
+16 verbose parsed url   search: null,
+16 verbose parsed url   query: null,
+16 verbose parsed url   pathname: 'trash@~0.1.2',
+16 verbose parsed url   path: 'trash@~0.1.2',
+16 verbose parsed url   href: 'trash@~0.1.2' }
+17 verbose cache add [ 'chokidar@1.0.5', null ]
+18 verbose cache add name=undefined spec="chokidar@1.0.5" args=["chokidar@1.0.5",null]
+19 verbose parsed url { protocol: null,
+19 verbose parsed url   slashes: null,
+19 verbose parsed url   auth: null,
+19 verbose parsed url   host: null,
+19 verbose parsed url   port: null,
+19 verbose parsed url   hostname: null,
+19 verbose parsed url   hash: null,
+19 verbose parsed url   search: null,
+19 verbose parsed url   query: null,
+19 verbose parsed url   pathname: 'chokidar@1.0.5',
+19 verbose parsed url   path: 'chokidar@1.0.5',
+19 verbose parsed url   href: 'chokidar@1.0.5' }
+20 verbose cache add [ 'node-static@0.7.6', null ]
+21 verbose cache add name=undefined spec="node-static@0.7.6" args=["node-static@0.7.6",null]
+22 verbose parsed url { protocol: null,
+22 verbose parsed url   slashes: null,
+22 verbose parsed url   auth: null,
+22 verbose parsed url   host: null,
+22 verbose parsed url   port: null,
+22 verbose parsed url   hostname: null,
+22 verbose parsed url   hash: null,
+22 verbose parsed url   search: null,
+22 verbose parsed url   query: null,
+22 verbose parsed url   pathname: 'node-static@0.7.6',
+22 verbose parsed url   path: 'node-static@0.7.6',
+22 verbose parsed url   href: 'node-static@0.7.6' }
+23 verbose cache add name="wrench" spec="~1.5.8" args=["wrench","~1.5.8"]
+24 verbose parsed url { protocol: null,
+24 verbose parsed url   slashes: null,
+24 verbose parsed url   auth: null,
+24 verbose parsed url   host: null,
+24 verbose parsed url   port: null,
+24 verbose parsed url   hostname: null,
+24 verbose parsed url   hash: null,
+24 verbose parsed url   search: null,
+24 verbose parsed url   query: null,
+24 verbose parsed url   pathname: '~1.5.8',
+24 verbose parsed url   path: '~1.5.8',
+24 verbose parsed url   href: '~1.5.8' }
+25 verbose addNamed [ 'wrench', '~1.5.8' ]
+26 verbose addNamed [ null, '>=1.5.8-0 <1.6.0-0' ]
+27 verbose cache add name="trash" spec="~0.1.2" args=["trash","~0.1.2"]
+28 verbose parsed url { protocol: null,
+28 verbose parsed url   slashes: null,
+28 verbose parsed url   auth: null,
+28 verbose parsed url   host: null,
+28 verbose parsed url   port: null,
+28 verbose parsed url   hostname: null,
+28 verbose parsed url   hash: null,
+28 verbose parsed url   search: null,
+28 verbose parsed url   query: null,
+28 verbose parsed url   pathname: '~0.1.2',
+28 verbose parsed url   path: '~0.1.2',
+28 verbose parsed url   href: '~0.1.2' }
+29 verbose addNamed [ 'trash', '~0.1.2' ]
+30 verbose addNamed [ null, '>=0.1.2-0 <0.2.0-0' ]
+31 verbose cache add name="chokidar" spec="1.0.5" args=["chokidar","1.0.5"]
+32 verbose parsed url { protocol: null,
+32 verbose parsed url   slashes: null,
+32 verbose parsed url   auth: null,
+32 verbose parsed url   host: null,
+32 verbose parsed url   port: null,
+32 verbose parsed url   hostname: null,
+32 verbose parsed url   hash: null,
+32 verbose parsed url   search: null,
+32 verbose parsed url   query: null,
+32 verbose parsed url   pathname: '1.0.5',
+32 verbose parsed url   path: '1.0.5',
+32 verbose parsed url   href: '1.0.5' }
+33 verbose addNamed [ 'chokidar', '1.0.5' ]
+34 verbose addNamed [ '1.0.5', '1.0.5' ]
+35 verbose cache add [ 'portscanner@1.0.0', null ]
+36 verbose cache add name=undefined spec="portscanner@1.0.0" args=["portscanner@1.0.0",null]
+37 verbose parsed url { protocol: null,
+37 verbose parsed url   slashes: null,
+37 verbose parsed url   auth: null,
+37 verbose parsed url   host: null,
+37 verbose parsed url   port: null,
+37 verbose parsed url   hostname: null,
+37 verbose parsed url   hash: null,
+37 verbose parsed url   search: null,
+37 verbose parsed url   query: null,
+37 verbose parsed url   pathname: 'portscanner@1.0.0',
+37 verbose parsed url   path: 'portscanner@1.0.0',
+37 verbose parsed url   href: 'portscanner@1.0.0' }
+38 verbose cache add name="node-static" spec="0.7.6" args=["node-static","0.7.6"]
+39 verbose parsed url { protocol: null,
+39 verbose parsed url   slashes: null,
+39 verbose parsed url   auth: null,
+39 verbose parsed url   host: null,
+39 verbose parsed url   port: null,
+39 verbose parsed url   hostname: null,
+39 verbose parsed url   hash: null,
+39 verbose parsed url   search: null,
+39 verbose parsed url   query: null,
+39 verbose parsed url   pathname: '0.7.6',
+39 verbose parsed url   path: '0.7.6',
+39 verbose parsed url   href: '0.7.6' }
+40 verbose addNamed [ 'node-static', '0.7.6' ]
+41 verbose addNamed [ '0.7.6', '0.7.6' ]
+42 silly lockFile 703597c2-wrench-1-5-8 wrench@~1.5.8
+43 verbose lock wrench@~1.5.8 /Users/lmccart/.npm/703597c2-wrench-1-5-8.lock
+44 silly lockFile dbceed0b-trash-0-1-2 trash@~0.1.2
+45 verbose lock trash@~0.1.2 /Users/lmccart/.npm/dbceed0b-trash-0-1-2.lock
+46 silly lockFile d40dfdb4-chokidar-1-0-5 chokidar@1.0.5
+47 verbose lock chokidar@1.0.5 /Users/lmccart/.npm/d40dfdb4-chokidar-1-0-5.lock
+48 silly lockFile 04f479d4-node-static-0-7-6 node-static@0.7.6
+49 verbose lock node-static@0.7.6 /Users/lmccart/.npm/04f479d4-node-static-0-7-6.lock
+50 verbose cache add [ 'semver@~3.0.1', null ]
+51 verbose cache add name=undefined spec="semver@~3.0.1" args=["semver@~3.0.1",null]
+52 verbose parsed url { protocol: null,
+52 verbose parsed url   slashes: null,
+52 verbose parsed url   auth: null,
+52 verbose parsed url   host: null,
+52 verbose parsed url   port: null,
+52 verbose parsed url   hostname: null,
+52 verbose parsed url   hash: null,
+52 verbose parsed url   search: null,
+52 verbose parsed url   query: null,
+52 verbose parsed url   pathname: 'semver@~3.0.1',
+52 verbose parsed url   path: 'semver@~3.0.1',
+52 verbose parsed url   href: 'semver@~3.0.1' }
+53 verbose cache add name="portscanner" spec="1.0.0" args=["portscanner","1.0.0"]
+54 verbose parsed url { protocol: null,
+54 verbose parsed url   slashes: null,
+54 verbose parsed url   auth: null,
+54 verbose parsed url   host: null,
+54 verbose parsed url   port: null,
+54 verbose parsed url   hostname: null,
+54 verbose parsed url   hash: null,
+54 verbose parsed url   search: null,
+54 verbose parsed url   query: null,
+54 verbose parsed url   pathname: '1.0.0',
+54 verbose parsed url   path: '1.0.0',
+54 verbose parsed url   href: '1.0.0' }
+55 verbose addNamed [ 'portscanner', '1.0.0' ]
+56 verbose addNamed [ '1.0.0', '1.0.0' ]
+57 silly lockFile 3fadcf78-portscanner-1-0-0 portscanner@1.0.0
+58 verbose lock portscanner@1.0.0 /Users/lmccart/.npm/3fadcf78-portscanner-1-0-0.lock
+59 verbose cache add [ 'rimraf@^2.3.4', null ]
+60 verbose cache add name=undefined spec="rimraf@^2.3.4" args=["rimraf@^2.3.4",null]
+61 verbose parsed url { protocol: null,
+61 verbose parsed url   slashes: null,
+61 verbose parsed url   auth: null,
+61 verbose parsed url   host: null,
+61 verbose parsed url   port: null,
+61 verbose parsed url   hostname: null,
+61 verbose parsed url   hash: null,
+61 verbose parsed url   search: null,
+61 verbose parsed url   query: null,
+61 verbose parsed url   pathname: 'rimraf@^2.3.4',
+61 verbose parsed url   path: 'rimraf@^2.3.4',
+61 verbose parsed url   href: 'rimraf@^2.3.4' }
+62 verbose cache add name="semver" spec="~3.0.1" args=["semver","~3.0.1"]
+63 verbose parsed url { protocol: null,
+63 verbose parsed url   slashes: null,
+63 verbose parsed url   auth: null,
+63 verbose parsed url   host: null,
+63 verbose parsed url   port: null,
+63 verbose parsed url   hostname: null,
+63 verbose parsed url   hash: null,
+63 verbose parsed url   search: null,
+63 verbose parsed url   query: null,
+63 verbose parsed url   pathname: '~3.0.1',
+63 verbose parsed url   path: '~3.0.1',
+63 verbose parsed url   href: '~3.0.1' }
+64 verbose addNamed [ 'semver', '~3.0.1' ]
+65 verbose addNamed [ null, '>=3.0.1-0 <3.1.0-0' ]
+66 silly lockFile 51c04490-semver-3-0-1 semver@~3.0.1
+67 verbose lock semver@~3.0.1 /Users/lmccart/.npm/51c04490-semver-3-0-1.lock
+68 silly addNameRange { name: 'wrench', range: '>=1.5.8-0 <1.6.0-0', hasData: false }
+69 silly addNameRange { name: 'trash', range: '>=0.1.2-0 <0.2.0-0', hasData: false }
+70 verbose cache add [ 'request@^2.58.0', null ]
+71 verbose cache add name=undefined spec="request@^2.58.0" args=["request@^2.58.0",null]
+72 verbose parsed url { protocol: null,
+72 verbose parsed url   slashes: null,
+72 verbose parsed url   auth: null,
+72 verbose parsed url   host: null,
+72 verbose parsed url   port: null,
+72 verbose parsed url   hostname: null,
+72 verbose parsed url   hash: null,
+72 verbose parsed url   search: null,
+72 verbose parsed url   query: null,
+72 verbose parsed url   pathname: 'request@^2.58.0',
+72 verbose parsed url   path: 'request@^2.58.0',
+72 verbose parsed url   href: 'request@^2.58.0' }
+73 verbose cache add name="rimraf" spec="^2.3.4" args=["rimraf","^2.3.4"]
+74 verbose parsed url { protocol: null,
+74 verbose parsed url   slashes: null,
+74 verbose parsed url   auth: null,
+74 verbose parsed url   host: null,
+74 verbose parsed url   port: null,
+74 verbose parsed url   hostname: null,
+74 verbose parsed url   hash: null,
+74 verbose parsed url   search: null,
+74 verbose parsed url   query: null,
+74 verbose parsed url   pathname: '^2.3.4',
+74 verbose parsed url   path: '^2.3.4',
+74 verbose parsed url   href: '^2.3.4' }
+75 verbose addNamed [ 'rimraf', '^2.3.4' ]
+76 verbose addNamed [ null, '>=2.3.4-0 <3.0.0-0' ]
+77 silly lockFile 078e511a-rimraf-2-3-4 rimraf@^2.3.4
+78 verbose lock rimraf@^2.3.4 /Users/lmccart/.npm/078e511a-rimraf-2-3-4.lock
+79 verbose cache add name="request" spec="^2.58.0" args=["request","^2.58.0"]
+80 verbose parsed url { protocol: null,
+80 verbose parsed url   slashes: null,
+80 verbose parsed url   auth: null,
+80 verbose parsed url   host: null,
+80 verbose parsed url   port: null,
+80 verbose parsed url   hostname: null,
+80 verbose parsed url   hash: null,
+80 verbose parsed url   search: null,
+80 verbose parsed url   query: null,
+80 verbose parsed url   pathname: '^2.58.0',
+80 verbose parsed url   path: '^2.58.0',
+80 verbose parsed url   href: '^2.58.0' }
+81 verbose addNamed [ 'request', '^2.58.0' ]
+82 verbose addNamed [ null, '>=2.58.0-0 <3.0.0-0' ]
+83 silly lockFile c60e8e87-request-2-58-0 request@^2.58.0
+84 verbose lock request@^2.58.0 /Users/lmccart/.npm/c60e8e87-request-2-58-0.lock
+85 silly addNameRange { name: 'semver', range: '>=3.0.1-0 <3.1.0-0', hasData: false }
+86 silly addNameRange { name: 'rimraf', range: '>=2.3.4-0 <3.0.0-0', hasData: false }
+87 silly addNameRange { name: 'request', range: '>=2.58.0-0 <3.0.0-0', hasData: false }
+88 verbose request where is /trash
+89 verbose request registry https://registry.npmjs.org/
+90 verbose request id 45c5912f6fddcdce
+91 verbose url raw /trash
+92 verbose url resolving [ 'https://registry.npmjs.org/', './trash' ]
+93 verbose url resolved https://registry.npmjs.org/trash
+94 verbose request where is https://registry.npmjs.org/trash
+95 info trying registry request attempt 1 at 16:37:06
+96 verbose etag "6DRYA4GHCTKZ2ABOCOEWICW8P"
+97 http GET https://registry.npmjs.org/trash
+98 verbose request where is /wrench
+99 verbose request registry https://registry.npmjs.org/
+100 verbose url raw /wrench
+101 verbose url resolving [ 'https://registry.npmjs.org/', './wrench' ]
+102 verbose url resolved https://registry.npmjs.org/wrench
+103 verbose request where is https://registry.npmjs.org/wrench
+104 info trying registry request attempt 1 at 16:37:06
+105 verbose etag "BXURSRUR1G16DH3BO47FWRDJZ"
+106 http GET https://registry.npmjs.org/wrench
+107 verbose request where is /chokidar
+108 verbose request registry https://registry.npmjs.org/
+109 verbose url raw /chokidar
+110 verbose url resolving [ 'https://registry.npmjs.org/', './chokidar' ]
+111 verbose url resolved https://registry.npmjs.org/chokidar
+112 verbose request where is https://registry.npmjs.org/chokidar
+113 info trying registry request attempt 1 at 16:37:06
+114 verbose etag "41M8FY2LO1MECRQKHYPDOWXBG"
+115 http GET https://registry.npmjs.org/chokidar
+116 verbose request where is /semver
+117 verbose request registry https://registry.npmjs.org/
+118 verbose url raw /semver
+119 verbose url resolving [ 'https://registry.npmjs.org/', './semver' ]
+120 verbose url resolved https://registry.npmjs.org/semver
+121 verbose request where is https://registry.npmjs.org/semver
+122 info trying registry request attempt 1 at 16:37:06
+123 verbose etag "5S6E5Z5U63FCJT5RLLRJ9TYMI"
+124 http GET https://registry.npmjs.org/semver
+125 verbose request where is /portscanner
+126 verbose request registry https://registry.npmjs.org/
+127 verbose url raw /portscanner
+128 verbose url resolving [ 'https://registry.npmjs.org/', './portscanner' ]
+129 verbose url resolved https://registry.npmjs.org/portscanner
+130 verbose request where is https://registry.npmjs.org/portscanner
+131 info trying registry request attempt 1 at 16:37:06
+132 verbose etag "CFGS1BX143AZ51A4AJSLTR2L9"
+133 http GET https://registry.npmjs.org/portscanner
+134 verbose request where is /node-static
+135 verbose request registry https://registry.npmjs.org/
+136 verbose url raw /node-static
+137 verbose url resolving [ 'https://registry.npmjs.org/', './node-static' ]
+138 verbose url resolved https://registry.npmjs.org/node-static
+139 verbose request where is https://registry.npmjs.org/node-static
+140 info trying registry request attempt 1 at 16:37:06
+141 verbose etag "6CIN053Y4D6JI3CIC17GOR2GI"
+142 http GET https://registry.npmjs.org/node-static
+143 verbose request where is /rimraf
+144 verbose request registry https://registry.npmjs.org/
+145 verbose url raw /rimraf
+146 verbose url resolving [ 'https://registry.npmjs.org/', './rimraf' ]
+147 verbose url resolved https://registry.npmjs.org/rimraf
+148 verbose request where is https://registry.npmjs.org/rimraf
+149 info trying registry request attempt 1 at 16:37:06
+150 verbose etag "5TKB5BW48DR9T7X5JGD1DZWSZ"
+151 http GET https://registry.npmjs.org/rimraf
+152 verbose request where is /request
+153 verbose request registry https://registry.npmjs.org/
+154 verbose url raw /request
+155 verbose url resolving [ 'https://registry.npmjs.org/', './request' ]
+156 verbose url resolved https://registry.npmjs.org/request
+157 verbose request where is https://registry.npmjs.org/request
+158 info trying registry request attempt 1 at 16:37:06
+159 verbose etag "203PX6J7ONIBBG4ER3G9RKGI4"
+160 http GET https://registry.npmjs.org/request
+161 http 304 https://registry.npmjs.org/semver
+162 silly registry.get cb [ 304,
+162 silly registry.get   { date: 'Mon, 14 Sep 2015 20:37:06 GMT',
+162 silly registry.get     via: '1.1 varnish',
+162 silly registry.get     'cache-control': 'max-age=60',
+162 silly registry.get     etag: '"5S6E5Z5U63FCJT5RLLRJ9TYMI"',
+162 silly registry.get     age: '51',
+162 silly registry.get     connection: 'keep-alive',
+162 silly registry.get     'x-served-by': 'cache-iad2140-IAD',
+162 silly registry.get     'x-cache': 'HIT',
+162 silly registry.get     'x-cache-hits': '4',
+162 silly registry.get     'x-timer': 'S1442263026.861736,VS0,VE0',
+162 silly registry.get     vary: 'Accept' } ]
+163 verbose etag https://registry.npmjs.org/semver from cache
+164 silly addNameRange number 2 { name: 'semver', range: '>=3.0.1-0 <3.1.0-0', hasData: true }
+165 silly addNameRange versions [ 'semver',
+165 silly addNameRange   [ '1.0.0',
+165 silly addNameRange     '1.0.1',
+165 silly addNameRange     '1.0.2',
+165 silly addNameRange     '1.0.3',
+165 silly addNameRange     '1.0.4',
+165 silly addNameRange     '1.0.5',
+165 silly addNameRange     '1.0.6',
+165 silly addNameRange     '1.0.7',
+165 silly addNameRange     '1.0.8',
+165 silly addNameRange     '1.0.9',
+165 silly addNameRange     '1.0.10',
+165 silly addNameRange     '1.0.11',
+165 silly addNameRange     '1.0.12',
+165 silly addNameRange     '1.0.13',
+165 silly addNameRange     '1.0.14',
+165 silly addNameRange     '1.1.0',
+165 silly addNameRange     '1.1.1',
+165 silly addNameRange     '1.1.2',
+165 silly addNameRange     '1.1.3',
+165 silly addNameRange     '1.1.4',
+165 silly addNameRange     '2.0.0-alpha',
+165 silly addNameRange     '2.0.0-beta',
+165 silly addNameRange     '2.0.1',
+165 silly addNameRange     '2.0.2',
+165 silly addNameRange     '2.0.3',
+165 silly addNameRange     '2.0.4',
+165 silly addNameRange     '2.0.5',
+165 silly addNameRange     '2.0.6',
+165 silly addNameRange     '2.0.7',
+165 silly addNameRange     '2.0.8',
+165 silly addNameRange     '2.0.9',
+165 silly addNameRange     '2.0.10',
+165 silly addNameRange     '2.0.11',
+165 silly addNameRange     '2.1.0',
+165 silly addNameRange     '2.2.0',
+165 silly addNameRange     '2.2.1',
+165 silly addNameRange     '2.3.0',
+165 silly addNameRange     '2.3.1',
+165 silly addNameRange     '2.3.2',
+165 silly addNameRange     '3.0.0',
+165 silly addNameRange     '3.0.1',
+165 silly addNameRange     '4.0.0',
+165 silly addNameRange     '4.0.2',
+165 silly addNameRange     '4.0.3',
+165 silly addNameRange     '4.1.0',
+165 silly addNameRange     '4.1.1',
+165 silly addNameRange     '4.2.0',
+165 silly addNameRange     '4.2.1',
+165 silly addNameRange     '4.2.2',
+165 silly addNameRange     '4.3.0',
+165 silly addNameRange     '4.3.1',
+165 silly addNameRange     '4.3.2',
+165 silly addNameRange     '4.3.3',
+165 silly addNameRange     '4.3.4',
+165 silly addNameRange     '4.3.5',
+165 silly addNameRange     '4.3.6',
+165 silly addNameRange     '5.0.0',
+165 silly addNameRange     '5.0.1',
+165 silly addNameRange     '5.0.2',
+165 silly addNameRange     '5.0.3' ] ]
+166 verbose addNamed [ 'semver', '3.0.1' ]
+167 verbose addNamed [ '3.0.1', '3.0.1' ]
+168 silly lockFile b55423e7-semver-3-0-1 semver@3.0.1
+169 verbose lock semver@3.0.1 /Users/lmccart/.npm/b55423e7-semver-3-0-1.lock
+170 silly lockFile b55423e7-semver-3-0-1 semver@3.0.1
+171 silly lockFile b55423e7-semver-3-0-1 semver@3.0.1
+172 silly lockFile 51c04490-semver-3-0-1 semver@~3.0.1
+173 silly lockFile 51c04490-semver-3-0-1 semver@~3.0.1
+174 http 200 https://registry.npmjs.org/node-static
+175 silly registry.get cb [ 200,
+175 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+175 silly registry.get     etag: '"72RAXNJASO8T3P4GN8C2VDLVF"',
+175 silly registry.get     'content-type': 'application/json',
+175 silly registry.get     'cache-control': 'max-age=60',
+175 silly registry.get     'content-length': '33411',
+175 silly registry.get     'accept-ranges': 'bytes',
+175 silly registry.get     date: 'Mon, 14 Sep 2015 20:37:06 GMT',
+175 silly registry.get     via: '1.1 varnish',
+175 silly registry.get     age: '29',
+175 silly registry.get     connection: 'keep-alive',
+175 silly registry.get     'x-served-by': 'cache-iad2140-IAD',
+175 silly registry.get     'x-cache': 'HIT',
+175 silly registry.get     'x-cache-hits': '1',
+175 silly registry.get     'x-timer': 'S1442263026.906593,VS0,VE0',
+175 silly registry.get     vary: 'Accept' } ]
+176 silly lockFile cf0da5be-ode-static-node-static-0-7-6-tgz https://registry.npmjs.org/node-static/-/node-static-0.7.6.tgz
+177 verbose lock https://registry.npmjs.org/node-static/-/node-static-0.7.6.tgz /Users/lmccart/.npm/cf0da5be-ode-static-node-static-0-7-6-tgz.lock
+178 verbose addRemoteTarball [ 'https://registry.npmjs.org/node-static/-/node-static-0.7.6.tgz',
+178 verbose addRemoteTarball   'ac032e40de6881fb5e4dadeed6e1d07d37268380' ]
+179 info retry fetch attempt 1 at 16:37:06
+180 verbose fetch to= /var/folders/dr/cjgrc05s651ftw2nn350c7d40000gn/T/npm-73159-3Xom2u6o/registry.npmjs.org/node-static/-/node-static-0.7.6.tgz
+181 http GET https://registry.npmjs.org/node-static/-/node-static-0.7.6.tgz
+182 http 200 https://registry.npmjs.org/chokidar
+183 silly registry.get cb [ 200,
+183 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+183 silly registry.get     etag: '"K7R7414LHKFFFM7LEZDEEWRL"',
+183 silly registry.get     'content-type': 'application/json',
+183 silly registry.get     'cache-control': 'max-age=60',
+183 silly registry.get     'content-length': '87522',
+183 silly registry.get     'accept-ranges': 'bytes',
+183 silly registry.get     date: 'Mon, 14 Sep 2015 20:37:06 GMT',
+183 silly registry.get     via: '1.1 varnish',
+183 silly registry.get     age: '15',
+183 silly registry.get     connection: 'keep-alive',
+183 silly registry.get     'x-served-by': 'cache-iad2140-IAD',
+183 silly registry.get     'x-cache': 'HIT',
+183 silly registry.get     'x-cache-hits': '1',
+183 silly registry.get     'x-timer': 'S1442263026.851428,VS0,VE0',
+183 silly registry.get     vary: 'Accept' } ]
+184 silly lockFile a7aeeb62--org-chokidar-chokidar-1-0-5-tgz https://registry.npmjs.org/chokidar/-/chokidar-1.0.5.tgz
+185 verbose lock https://registry.npmjs.org/chokidar/-/chokidar-1.0.5.tgz /Users/lmccart/.npm/a7aeeb62--org-chokidar-chokidar-1-0-5-tgz.lock
+186 verbose addRemoteTarball [ 'https://registry.npmjs.org/chokidar/-/chokidar-1.0.5.tgz',
+186 verbose addRemoteTarball   'f29278a36e174365da56ccad488ecacce4893494' ]
+187 info retry fetch attempt 1 at 16:37:06
+188 verbose fetch to= /var/folders/dr/cjgrc05s651ftw2nn350c7d40000gn/T/npm-73159-3Xom2u6o/registry.npmjs.org/chokidar/-/chokidar-1.0.5.tgz
+189 http GET https://registry.npmjs.org/chokidar/-/chokidar-1.0.5.tgz
+190 http 200 https://registry.npmjs.org/wrench
+191 silly registry.get cb [ 200,
+191 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+191 silly registry.get     etag: '"BV7EXA20UL218ESRJE3OUUVDA"',
+191 silly registry.get     'content-type': 'application/json',
+191 silly registry.get     'cache-control': 'max-age=60',
+191 silly registry.get     'content-length': '32568',
+191 silly registry.get     'accept-ranges': 'bytes',
+191 silly registry.get     date: 'Mon, 14 Sep 2015 20:37:06 GMT',
+191 silly registry.get     via: '1.1 varnish',
+191 silly registry.get     age: '0',
+191 silly registry.get     connection: 'keep-alive',
+191 silly registry.get     'x-served-by': 'cache-iad2149-IAD',
+191 silly registry.get     'x-cache': 'HIT',
+191 silly registry.get     'x-cache-hits': '1',
+191 silly registry.get     'x-timer': 'S1442263026.860763,VS0,VE91',
+191 silly registry.get     vary: 'Accept' } ]
+192 silly addNameRange number 2 { name: 'wrench', range: '>=1.5.8-0 <1.6.0-0', hasData: true }
+193 silly addNameRange versions [ 'wrench',
+193 silly addNameRange   [ '0.1.0',
+193 silly addNameRange     '1.0.0',
+193 silly addNameRange     '1.1.0',
+193 silly addNameRange     '1.2.0',
+193 silly addNameRange     '1.3.0',
+193 silly addNameRange     '1.3.1',
+193 silly addNameRange     '1.3.2',
+193 silly addNameRange     '1.3.3',
+193 silly addNameRange     '1.3.4',
+193 silly addNameRange     '1.3.5',
+193 silly addNameRange     '1.3.6',
+193 silly addNameRange     '1.3.7',
+193 silly addNameRange     '1.3.8',
+193 silly addNameRange     '1.3.9',
+193 silly addNameRange     '1.4.0',
+193 silly addNameRange     '1.4.1',
+193 silly addNameRange     '1.4.2',
+193 silly addNameRange     '1.4.3',
+193 silly addNameRange     '1.4.4',
+193 silly addNameRange     '1.5.0',
+193 silly addNameRange     '1.5.1',
+193 silly addNameRange     '1.5.3',
+193 silly addNameRange     '1.5.4',
+193 silly addNameRange     '1.5.5',
+193 silly addNameRange     '1.5.6',
+193 silly addNameRange     '1.5.7',
+193 silly addNameRange     '1.5.8' ] ]
+194 verbose addNamed [ 'wrench', '1.5.8' ]
+195 verbose addNamed [ '1.5.8', '1.5.8' ]
+196 silly lockFile aec81672-wrench-1-5-8 wrench@1.5.8
+197 verbose lock wrench@1.5.8 /Users/lmccart/.npm/aec81672-wrench-1-5-8.lock
+198 silly lockFile aec81672-wrench-1-5-8 wrench@1.5.8
+199 silly lockFile aec81672-wrench-1-5-8 wrench@1.5.8
+200 silly lockFile 703597c2-wrench-1-5-8 wrench@~1.5.8
+201 silly lockFile 703597c2-wrench-1-5-8 wrench@~1.5.8
+202 http 200 https://registry.npmjs.org/trash
+203 silly registry.get cb [ 200,
+203 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+203 silly registry.get     etag: '"4YEPKL2ZVSSOL2Z0PXLV538YX"',
+203 silly registry.get     'content-type': 'application/json',
+203 silly registry.get     'cache-control': 'max-age=60',
+203 silly registry.get     'content-length': '23512',
+203 silly registry.get     'accept-ranges': 'bytes',
+203 silly registry.get     date: 'Mon, 14 Sep 2015 20:37:06 GMT',
+203 silly registry.get     via: '1.1 varnish',
+203 silly registry.get     age: '0',
+203 silly registry.get     connection: 'keep-alive',
+203 silly registry.get     'x-served-by': 'cache-iad2126-IAD',
+203 silly registry.get     'x-cache': 'MISS',
+203 silly registry.get     'x-cache-hits': '0',
+203 silly registry.get     'x-timer': 'S1442263026.870271,VS0,VE88',
+203 silly registry.get     vary: 'Accept' } ]
+204 http 304 https://registry.npmjs.org/rimraf
+205 silly registry.get cb [ 304,
+205 silly registry.get   { date: 'Mon, 14 Sep 2015 20:37:06 GMT',
+205 silly registry.get     via: '1.1 varnish',
+205 silly registry.get     'cache-control': 'max-age=60',
+205 silly registry.get     etag: '"5TKB5BW48DR9T7X5JGD1DZWSZ"',
+205 silly registry.get     age: '50',
+205 silly registry.get     connection: 'keep-alive',
+205 silly registry.get     'x-served-by': 'cache-iad2140-IAD',
+205 silly registry.get     'x-cache': 'HIT',
+205 silly registry.get     'x-cache-hits': '6',
+205 silly registry.get     'x-timer': 'S1442263026.981948,VS0,VE0',
+205 silly registry.get     vary: 'Accept' } ]
+206 verbose etag https://registry.npmjs.org/rimraf from cache
+207 silly addNameRange number 2 { name: 'trash', range: '>=0.1.2-0 <0.2.0-0', hasData: true }
+208 silly addNameRange versions [ 'trash',
+208 silly addNameRange   [ '0.1.0',
+208 silly addNameRange     '0.1.1',
+208 silly addNameRange     '0.1.2',
+208 silly addNameRange     '1.0.0',
+208 silly addNameRange     '1.1.0',
+208 silly addNameRange     '1.1.1',
+208 silly addNameRange     '1.1.2',
+208 silly addNameRange     '1.1.3',
+208 silly addNameRange     '1.2.0',
+208 silly addNameRange     '1.3.0',
+208 silly addNameRange     '1.3.1',
+208 silly addNameRange     '1.4.0',
+208 silly addNameRange     '1.4.1',
+208 silly addNameRange     '2.0.0' ] ]
+209 verbose addNamed [ 'trash', '0.1.2' ]
+210 verbose addNamed [ '0.1.2', '0.1.2' ]
+211 silly lockFile cc2d34d1-trash-0-1-2 trash@0.1.2
+212 verbose lock trash@0.1.2 /Users/lmccart/.npm/cc2d34d1-trash-0-1-2.lock
+213 silly addNameRange number 2 { name: 'rimraf', range: '>=2.3.4-0 <3.0.0-0', hasData: true }
+214 silly addNameRange versions [ 'rimraf',
+214 silly addNameRange   [ '1.0.0',
+214 silly addNameRange     '1.0.1',
+214 silly addNameRange     '1.0.2',
+214 silly addNameRange     '1.0.4',
+214 silly addNameRange     '1.0.5',
+214 silly addNameRange     '1.0.6',
+214 silly addNameRange     '1.0.7',
+214 silly addNameRange     '1.0.8',
+214 silly addNameRange     '1.0.9',
+214 silly addNameRange     '2.0.0',
+214 silly addNameRange     '2.0.1',
+214 silly addNameRange     '2.0.2',
+214 silly addNameRange     '2.0.3',
+214 silly addNameRange     '2.1.0',
+214 silly addNameRange     '2.1.1',
+214 silly addNameRange     '2.1.2',
+214 silly addNameRange     '2.1.3',
+214 silly addNameRange     '2.1.4',
+214 silly addNameRange     '2.2.0',
+214 silly addNameRange     '2.2.1',
+214 silly addNameRange     '2.2.2',
+214 silly addNameRange     '2.2.3',
+214 silly addNameRange     '2.2.4',
+214 silly addNameRange     '2.2.5',
+214 silly addNameRange     '2.2.6',
+214 silly addNameRange     '2.2.8',
+214 silly addNameRange     '2.3.0',
+214 silly addNameRange     '2.3.1',
+214 silly addNameRange     '2.3.2',
+214 silly addNameRange     '2.3.3',
+214 silly addNameRange     '2.3.4',
+214 silly addNameRange     '2.4.0',
+214 silly addNameRange     '2.4.1',
+214 silly addNameRange     '2.4.2',
+214 silly addNameRange     '2.4.3' ] ]
+215 verbose addNamed [ 'rimraf', '2.4.3' ]
+216 verbose addNamed [ '2.4.3', '2.4.3' ]
+217 silly lockFile f4050c0f-rimraf-2-4-3 rimraf@2.4.3
+218 verbose lock rimraf@2.4.3 /Users/lmccart/.npm/f4050c0f-rimraf-2-4-3.lock
+219 silly lockFile f4050c0f-rimraf-2-4-3 rimraf@2.4.3
+220 silly lockFile f4050c0f-rimraf-2-4-3 rimraf@2.4.3
+221 silly lockFile 078e511a-rimraf-2-3-4 rimraf@^2.3.4
+222 silly lockFile 078e511a-rimraf-2-3-4 rimraf@^2.3.4
+223 silly lockFile cc2d34d1-trash-0-1-2 trash@0.1.2
+224 silly lockFile cc2d34d1-trash-0-1-2 trash@0.1.2
+225 silly lockFile dbceed0b-trash-0-1-2 trash@~0.1.2
+226 silly lockFile dbceed0b-trash-0-1-2 trash@~0.1.2
+227 http 304 https://registry.npmjs.org/portscanner
+228 silly registry.get cb [ 304,
+228 silly registry.get   { date: 'Mon, 14 Sep 2015 20:37:06 GMT',
+228 silly registry.get     via: '1.1 varnish',
+228 silly registry.get     'cache-control': 'max-age=60',
+228 silly registry.get     etag: '"CFGS1BX143AZ51A4AJSLTR2L9"',
+228 silly registry.get     age: '0',
+228 silly registry.get     connection: 'keep-alive',
+228 silly registry.get     'x-served-by': 'cache-iad2123-IAD',
+228 silly registry.get     'x-cache': 'HIT',
+228 silly registry.get     'x-cache-hits': '1',
+228 silly registry.get     'x-timer': 'S1442263026.977208,VS0,VE14',
+228 silly registry.get     vary: 'Accept' } ]
+229 verbose etag https://registry.npmjs.org/portscanner from cache
+230 http 304 https://registry.npmjs.org/request
+231 silly registry.get cb [ 304,
+231 silly registry.get   { date: 'Mon, 14 Sep 2015 20:37:07 GMT',
+231 silly registry.get     via: '1.1 varnish',
+231 silly registry.get     'cache-control': 'max-age=60',
+231 silly registry.get     etag: '"203PX6J7ONIBBG4ER3G9RKGI4"',
+231 silly registry.get     age: '30',
+231 silly registry.get     connection: 'keep-alive',
+231 silly registry.get     'x-served-by': 'cache-iad2140-IAD',
+231 silly registry.get     'x-cache': 'HIT',
+231 silly registry.get     'x-cache-hits': '2',
+231 silly registry.get     'x-timer': 'S1442263027.001488,VS0,VE0',
+231 silly registry.get     vary: 'Accept' } ]
+232 verbose etag https://registry.npmjs.org/request from cache
+233 silly lockFile 3fadcf78-portscanner-1-0-0 portscanner@1.0.0
+234 silly lockFile 3fadcf78-portscanner-1-0-0 portscanner@1.0.0
+235 silly addNameRange number 2 { name: 'request', range: '>=2.58.0-0 <3.0.0-0', hasData: true }
+236 silly addNameRange versions [ 'request',
+236 silly addNameRange   [ '0.10.0',
+236 silly addNameRange     '0.8.3',
+236 silly addNameRange     '0.9.0',
+236 silly addNameRange     '0.9.1',
+236 silly addNameRange     '0.9.5',
+236 silly addNameRange     '1.0.0',
+236 silly addNameRange     '1.1.0',
+236 silly addNameRange     '1.1.1',
+236 silly addNameRange     '1.2.0',
+236 silly addNameRange     '1.9.0',
+236 silly addNameRange     '1.9.1',
+236 silly addNameRange     '1.9.2',
+236 silly addNameRange     '1.9.3',
+236 silly addNameRange     '1.9.5',
+236 silly addNameRange     '1.9.7',
+236 silly addNameRange     '1.9.8',
+236 silly addNameRange     '1.9.9',
+236 silly addNameRange     '2.0.0',
+236 silly addNameRange     '2.0.1',
+236 silly addNameRange     '2.0.2',
+236 silly addNameRange     '2.0.3',
+236 silly addNameRange     '2.0.4',
+236 silly addNameRange     '2.0.5',
+236 silly addNameRange     '2.1.0',
+236 silly addNameRange     '2.1.1',
+236 silly addNameRange     '2.2.0',
+236 silly addNameRange     '2.2.5',
+236 silly addNameRange     '2.2.6',
+236 silly addNameRange     '2.2.9',
+236 silly addNameRange     '2.9.0',
+236 silly addNameRange     '2.9.1',
+236 silly addNameRange     '2.9.2',
+236 silly addNameRange     '2.9.3',
+236 silly addNameRange     '2.9.100',
+236 silly addNameRange     '2.9.150',
+236 silly addNameRange     '2.9.151',
+236 silly addNameRange     '2.9.152',
+236 silly addNameRange     '2.9.153',
+236 silly addNameRange     '2.9.200',
+236 silly addNameRange     '2.9.201',
+236 silly addNameRange     '2.9.202',
+236 silly addNameRange     '2.9.203',
+236 silly addNameRange     '2.10.0',
+236 silly addNameRange     '2.11.0',
+236 silly addNameRange     '2.11.1',
+236 silly addNameRange     '2.11.2',
+236 silly addNameRange     '2.11.3',
+236 silly addNameRange     '2.11.4',
+236 silly addNameRange     '2.12.0',
+236 silly addNameRange     '2.14.0',
+236 silly addNameRange     '2.16.0',
+236 silly addNameRange     '2.16.2',
+236 silly addNameRange     '2.16.4',
+236 silly addNameRange     '2.16.6',
+236 silly addNameRange     '2.18.0',
+236 silly addNameRange     '2.19.0',
+236 silly addNameRange     '2.20.0',
+236 silly addNameRange     '2.21.0',
+236 silly addNameRange     '2.22.0',
+236 silly addNameRange     '2.23.0',
+236 silly addNameRange     '2.24.0',
+236 silly addNameRange     '2.25.0',
+236 silly addNameRange     '2.26.0',
+236 silly addNameRange     '2.27.0',
+236 silly addNameRange     '2.28.0',
+236 silly addNameRange     '2.29.0',
+236 silly addNameRange     '2.30.0',
+236 silly addNameRange     '2.31.0',
+236 silly addNameRange     '2.32.0',
+236 silly addNameRange     '2.33.0',
+236 silly addNameRange     '2.34.0',
+236 silly addNameRange     '2.35.0',
+236 silly addNameRange     '2.36.0',
+236 silly addNameRange     '2.37.0',
+236 silly addNameRange     '2.38.0',
+236 silly addNameRange     '2.39.0',
+236 silly addNameRange     '2.40.0',
+236 silly addNameRange     '2.41.0',
+236 silly addNameRange     '2.42.0',
+236 silly addNameRange     '2.43.0',
+236 silly addNameRange     '2.44.0',
+236 silly addNameRange     '2.45.0',
+236 silly addNameRange     '2.46.0',
+236 silly addNameRange     '2.47.0',
+236 silly addNameRange     '2.48.0',
+236 silly addNameRange     '2.49.0',
+236 silly addNameRange     '2.50.0',
+236 silly addNameRange     '2.51.0',
+236 silly addNameRange     '2.52.0',
+236 silly addNameRange     '2.53.0',
+236 silly addNameRange     '2.54.0',
+236 silly addNameRange     '2.55.0',
+236 silly addNameRange     '2.56.0',
+236 silly addNameRange     '2.57.0',
+236 silly addNameRange     '2.58.0',
+236 silly addNameRange     '2.59.0',
+236 silly addNameRange     '2.60.0',
+236 silly addNameRange     '2.61.0' ] ]
+237 verbose addNamed [ 'request', '2.61.0' ]
+238 verbose addNamed [ '2.61.0', '2.61.0' ]
+239 silly lockFile ae0c7aa9-request-2-61-0 request@2.61.0
+240 verbose lock request@2.61.0 /Users/lmccart/.npm/ae0c7aa9-request-2-61-0.lock
+241 silly lockFile ae0c7aa9-request-2-61-0 request@2.61.0
+242 silly lockFile ae0c7aa9-request-2-61-0 request@2.61.0
+243 silly lockFile c60e8e87-request-2-58-0 request@^2.58.0
+244 silly lockFile c60e8e87-request-2-58-0 request@^2.58.0
+245 http 200 https://registry.npmjs.org/chokidar/-/chokidar-1.0.5.tgz
+246 http 200 https://registry.npmjs.org/node-static/-/node-static-0.7.6.tgz
+247 silly lockFile a7aeeb62--org-chokidar-chokidar-1-0-5-tgz https://registry.npmjs.org/chokidar/-/chokidar-1.0.5.tgz
+248 silly lockFile a7aeeb62--org-chokidar-chokidar-1-0-5-tgz https://registry.npmjs.org/chokidar/-/chokidar-1.0.5.tgz
+249 silly lockFile d40dfdb4-chokidar-1-0-5 chokidar@1.0.5
+250 silly lockFile d40dfdb4-chokidar-1-0-5 chokidar@1.0.5
+251 silly lockFile cf0da5be-ode-static-node-static-0-7-6-tgz https://registry.npmjs.org/node-static/-/node-static-0.7.6.tgz
+252 silly lockFile cf0da5be-ode-static-node-static-0-7-6-tgz https://registry.npmjs.org/node-static/-/node-static-0.7.6.tgz
+253 silly lockFile 04f479d4-node-static-0-7-6 node-static@0.7.6
+254 silly lockFile 04f479d4-node-static-0-7-6 node-static@0.7.6
+255 error Error: EACCES, mkdir '/Users/lmccart/.npm/chokidar/1.0.5'
+255 error  { [Error: EACCES, mkdir '/Users/lmccart/.npm/chokidar/1.0.5']
+255 error   errno: 3,
+255 error   code: 'EACCES',
+255 error   path: '/Users/lmccart/.npm/chokidar/1.0.5',
+255 error   parent: 'p5' }
+256 error Please try running this command again as root/Administrator.
+257 error System Darwin 14.4.0
+258 error command "node" "/usr/local/bin/npm" "install"
+259 error cwd /Users/lmccart/Documents/p5/p5.js-editor/public
+260 error node -v v0.10.33
+261 error npm -v 1.4.28
+262 error path /Users/lmccart/.npm/chokidar/1.0.5
+263 error code EACCES
+264 error errno 3
+265 error stack Error: EACCES, mkdir '/Users/lmccart/.npm/chokidar/1.0.5'
+266 verbose exit [ 3, true ]
