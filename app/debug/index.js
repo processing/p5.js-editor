@@ -1,5 +1,7 @@
 var $ = require('jquery');
 var AutoLinker = require('autolinker');
+var Path = nodeRequire('path');
+var fs = nodeRequire('fs');
 
 module.exports = {
 
@@ -102,6 +104,19 @@ module.exports = {
       var data = JSON.parse(event.data);
       if (data.console) {
         self.debugOut(data.console);
+      }
+      if (data.downloadFile) {
+        var raw = data.downloadFile[0].split(",")[1];
+        var filename = Path.resolve(self.$root.projectPath, data.downloadFile[1]);
+        var ext = data.downloadFile[2];
+
+        fs.writeFile(filename, raw, 'base64', function(err) {
+          if(err) {
+            console.log(err);
+          } else {
+            console.log("The file was saved!");
+          }
+        });
       }
     }, false);
   }
