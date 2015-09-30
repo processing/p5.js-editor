@@ -34,5 +34,18 @@
     return false;
   };
 
+  function downloadFile() {
+    window.opener.postMessage(JSON.stringify({ downloadFile: arguments }), 'file://');
+  }
+
+  var booted = false;
+  var interval = setInterval(function() {
+    if (typeof p5 !== 'undefined' && !booted) {
+      p5.prototype.downloadFile = downloadFile;
+      booted = true;
+      clearInterval(interval);
+    }
+  }, 10);
+
 })();
 
