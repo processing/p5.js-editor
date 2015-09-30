@@ -29,8 +29,10 @@
 
 #debug-drag {
   background-color: rgba(153, 153, 153, 0.5);
-  width: 20px;
+  height: 20px !important;
   cursor: col-resize;
+  color: #b1b1b1;
+  font-size: 12px;
 }
 
 body.horizontal {

@@ -25,6 +25,10 @@ div#editor-container {
   background: #fdfdfd;
 }
 
+.ace_active-line {
+  background: rgba(207, 207, 207, 0.2);
+}
+
 .ace_gutter {
   color: #b5b5b5 !important;
   background: rgba(153, 153, 153, 0.1) !important;
@@ -50,6 +54,61 @@ div#editor-container {
   background-color: #FF6347 !important;
   color: #ffffff !important;
 }
+
+
+.ace_function,
+.ace_p5_function {
+    color: #DC3787 !important; /* not p5 pink, but related */
+}
+
+.ace_p5_variable {
+    color: #00A1D3 !important; /* not p5 blue, but related */
+}
+
+/* property, tag, boolean,
+   number, function-name, constant,
+   symbol */
+.ace_numeric,
+.ace_tag {
+    color: #333333 !important;
+}
+
+/* atrule, attr-value, keyword,
+   class-name */
+.ace_type,
+.ace_class,
+.ace_attribute-name {
+    color: #704F21 !important; /* darker brown */
+}
+
+/* selector, attr-name,
+function, builtin */
+.ace_keyword,
+.ace_support {
+  color: #B48318 !important;
+}
+
+/* comment, block-comment, prolog,
+   doctype, cdata */
+.ace_comment {
+    color: #A0A0A0 !important; /* light gray */
+}
+
+/* operator, entity, url,
+variable */
+.ace_string {
+  color: #a67f59 !important; /* og coy a67f59 a light brown */
+}
+
+.ace_operator {
+    color: #333 !important;
+}
+
+/* regex, important */
+.ace_regexp {
+  color: #e90 !important; /* og coy e90 orange */
+}
+
 
 
 body.horizontal {
