@@ -20,14 +20,15 @@ div#editor-container {
 }
 
 #editor {
-  font: 14px inconsolata;
-  border-radius: 7px;
+  font: 16px inconsolata;
   flex: 1;
+  background: #fdfdfd;
 }
 
-.ace-gutter {
-    color: #58585b;
-    min-width:52px !important;;
+.ace_gutter {
+  color: #b5b5b5 !important;
+  background: rgba(153, 153, 153, 0.1) !important;
+  width: 53px !important;
 }
 
 .ace_gutter-cell {

@@ -7,6 +7,7 @@
 #side-container {
   flex-direction: column;
   display: flex;
+  font-size: 12px;
 }
 
   #sidebar-container {
@@ -85,7 +86,7 @@
           padding-left: 64px;
           margin-left:10px;
           cursor: pointer;
-          color: $dark-gray;
+          color: #b5b5b5;
           min-width: 60px;
         }
 
