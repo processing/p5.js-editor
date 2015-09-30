@@ -1,16 +1,16 @@
 @font-face {
-	font-family: karla;
-	src: url('../fonts/karla/Karla-Regular.ttf');
+  font-family: inconsolata;
+  src: url('../fonts/Inconsolata.otf');
 }
 
 @font-face {
-	font-family: karla-bold;
-	src: url('../fonts/karla/Karla-Bold.ttf');
+  font-family: montserrat-bold;
+  src: url('../fonts/Montserrat-Bold.ttf');
 }
 
 @font-face {
-	font-family: source-code;
-	src: url('../fonts/Source_Code_Pro/SourceCodePro-Regular.ttf');
+  font-family: montserrat;
+  src: url('../fonts/Montserrat-Regular.ttf');
 }
 
 body, html {
@@ -19,7 +19,7 @@ body, html {
   height: 100%;
   margin: 0;
   padding: 0;
-  font: 14px karla, sans-serif;
+  font: 14px montserrat, sans-serif;
 }
 
 body {
