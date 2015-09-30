@@ -240,8 +240,14 @@ var running = false;
 var url = '';
 var staticServer = nodeRequire('node-static'), server, file;
 
+var p5serial = nodeRequire('p5.serialserver');
+
 function startServer(path, app, callback) {
   if (running === false) {
+    if (!nodeGlobal.serialRunning) {
+      p5serial.start();
+      nodeGlobal.serialRunning = true;
+    }
     var portscanner = nodeRequire('portscanner');
     portscanner.findAPortNotInUse(3000, 4000, '127.0.0.1', function(error, port) {
       server = nodeRequire('http').createServer(handler);
