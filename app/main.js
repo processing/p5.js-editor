@@ -299,10 +299,13 @@ var appConfig = {
       }).on('unlinkDir', function(path) {
         Files.removeFromTree(path, self.files);
       }).on('change', function(path) {
-        if (self.justSaved) {
-          self.justSaved = false; 
-        } else {
-          if (!self.temp) self.askReload = true;
+        if (Files.find(self.files, path).open === true) {
+          if (self.justSaved) {
+            self.justSaved = false; 
+          } else {
+            console.log(path);
+            if (!self.temp) self.askReload = true;
+          }
         }
       });
     },
