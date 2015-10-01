@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   min-width: 100px;
+  padding-top: 21px !important;
 }
 
 div#editor-container {
@@ -29,30 +30,32 @@ div#editor-container {
   background: rgba(207, 207, 207, 0.2);
 }
 
+
+
 .ace_gutter {
   color: #b5b5b5 !important;
   background: rgba(153, 153, 153, 0.1) !important;
   width: 53px !important;
 }
 
+.ace_gutter-layer {
+  width: 53px !important;
+}
+
+
 .ace_gutter-cell {
   background-image: none !important;
   background-position: 2px center !important;
-  padding-right: 15px !important;;
+  padding-right: 15px !important;
 }
 
-.ace_info {
-  background-color: #D7E5F5 !important;
-}
 
 .ace_warning {
-  background-color: #FFD700 !important;
-  color: #ffffff !important;
+  background-color: rgba(255, 190, 5, 0.3) !important;
 }
 
 .ace_error {
-  background-color: #FF6347 !important;
-  color: #ffffff !important;
+  background-color: rgba(255, 95, 81, 0.3) !important;
 }
 
 
