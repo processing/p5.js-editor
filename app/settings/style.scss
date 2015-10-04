@@ -1,22 +1,21 @@
 #settingsContainer {
   position: absolute;
-  background-color: #959595;
+  background-color: #f4f4f4;
   top: 10px;
   right: 10px;
   z-index: 999;
-  box-shadow: 0px 0px 6px #999;
+  box-shadow: 0px 12px 12px rgba(0, 0, 0, 0.16);
   color: #fff;
 }
 
 #settingsPane {
-  // width: 178px;
   width: 100%;
-  font-family: montserrat;
-  // -webkit-box-shadow: 0px 8px 17px -2px #58585b;
+  font-family: montserrat-bold;
 
   #titleBar {
-    background-color: #58585b;
     padding: 5px 12px 1px;
+    font-size: 21px;
+    color: rgba(51, 51, 51, 0.87);
   }
 
   #optionsZone {
@@ -26,6 +25,11 @@
       clear: both;
       padding-bottom: 14px;
     }
+  }
+
+  .section {
+    border-bottom: dashed 1px #b5b5b5;
+    margin-bottom: 10px;
   }
 
   .hiddenRadio {
