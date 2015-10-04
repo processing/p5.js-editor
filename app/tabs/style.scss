@@ -11,7 +11,7 @@
 
 #play {
   background: none;
-  background-image: url('../images/play-gray.svg');
+  background-image: url('../images/play-button.svg');
   border: 0;
   width: 33px;
   height: 34px;
@@ -23,14 +23,14 @@
   float: left;
   margin-top: 8px;
   &:hover {
-    background-image: url('../images/play-green.svg');
+    opacity: 0.6;
   }
 
   &.running {
-    background-image: url('../images/stop-gray.svg');
+    background-image: url('../images/stop-button.svg');
 
     &:hover {
-      background-image: url('../images/stop-red.svg');
+      opacity: 0.6;
     }
   }
 }  
@@ -135,6 +135,8 @@
   }
   a.delete{
     color: #aaa;
+    float: right;
+    padding-right: 12px;
   }
   .selected a{
     color: #333333;
