@@ -10,10 +10,12 @@
 
 #settingsPane {
   width: 100%;
-  font-family: montserrat-bold;
+  font-family: montserrat;
+  font-size: 16px;
 
   #titleBar {
     padding: 5px 12px 1px;
+    font-family: montserrat-bold;
     font-size: 21px;
     color: rgba(51, 51, 51, 0.87);
   }
@@ -27,9 +29,39 @@
     }
   }
 
+  .label {
+    color: #333333;
+    font-size: 16px;
+  }
+
   .section {
     border-bottom: dashed 1px #b5b5b5;
     margin-bottom: 10px;
+  }
+
+  input[type="text"] {
+    width: 44px;
+    height: 40px;
+    border: 1px solid rgba(153, 153, 153, 0.4);
+    color: #333333;
+    background-color: #f4f4f4;
+    font-size: 16px;
+    font-family: inconsolata;
+    text-align: center;
+  }
+
+  .adjustButton {
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+  }
+
+  .adjustButton:hover {
+    opacity: 0.6;
+  }
+
+  input:focus {
+    outline: 0;
   }
 
   .hiddenRadio {
@@ -47,17 +79,6 @@
       }
     }
 
-    label {
-      display: block;
-    }
-
-    label.left {
-      float: left;
-    }
-
-    label.right {
-      float: right;
-    }
   }
 
   #selectable {
@@ -110,18 +131,6 @@
     width: 30px;
     float: left;
     position: relative;
-  }
-
-  #textAdjust {
-    width: 30px;
-    float: left;
-    position: relative;
-    top: 5px;
-    left: 3px;
-  }
-
-  #textAdjustInput {
-    width: 105px;
   }
 
   #indentation {
@@ -229,7 +238,6 @@
 
   .indentSelection {
     color: #828384;
-    background-color: #adacac;
     display: inline-block;
     border-radius: 4px;
     padding: 4px;
@@ -240,49 +248,4 @@
     transition: all 0.3s ease;
   }
 
-  .highlight{
-    background-color: #e1dedc;
-    display: inline-block;
-    border-radius: 4px;
-    padding: 4px;
-    float: right;
-    width: 105px;
-    text-align: center;
-  }
-
-  h2 {
-    font-size: 16px;
-    margin-top: 0;
-    font-weight: normal;
-    -webkit-margin-after: 2px;
-  }
-
-  p {
-    font-size: 13px;
-    color: #58585b;
-  }
-
-  label {
-    color: #58585b;
-    font-size: 13px;
-    position: relative;
-    top: 5px;
-  }
-
-  input[type="text"] {
-    width: 25px;
-    float: right;
-    border-radius: 5px;
-    border: none;
-    background-color: #e1dedc;
-    padding: 4px;
-    outline: none;
-    color: #58585b;
-    font-family: montserrat;
-    font-size: 13px;
-  }
-
-  input#tabSize {
-    margin-left: 0.3em;
-  }
 }
