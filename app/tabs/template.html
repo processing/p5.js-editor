@@ -1,11 +1,9 @@
   <div id ="button_header">
-   <button class="button" id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
+   <img src="images/play-button.svg" class="button" id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()">
   <h1 id="project-name" v-text="projectName"></h1>
     <div id="toolbar">
       <div id="actions">
-        <button id="settings" title="Preferences" v-on="click: $root.toggleSettingsPane()">
-          <img class="button" src="images/settings-button.svg">
-        </button>
+        <img id="settings" class="button" title="Preferences" src="images/settings-button.svg" v-on="click: $root.toggleSettingsPane()">
       </div>
     </div>
   </div>

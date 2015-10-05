@@ -13,19 +13,22 @@
   background: none;
   background-image: url('../images/play-button.svg');
   border: 0;
-  width: 33px;
-  height: 34px;
-  padding: 7px;
+  width: 44px;
+  height: 44px;
   font-size: 25px;
   display: inline;
   outline: 0; 
   float: left;
-  margin-top: 8px;
 
   &.running {
     background-image: url('../images/stop-button.svg');
   }
 }  
+
+#settings {
+  width: 44px;
+  height: 44px;
+}
 
 
 
@@ -52,25 +55,7 @@
 }
 
 #actions {
-  button {
-    border: 0;
-    cursor: pointer;
-    background: none;
-    margin: 0;
-    padding: 0;
-    margin-right: 15px;
-    outline: 0;
-  }
-
-  button, button img {
-    width: 32px;
-  }
-
   
-  button img:hover {
-    opacity: 0.6;
-  }
-
   #add, #export {
     float: left;
   }
