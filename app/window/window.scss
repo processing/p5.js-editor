@@ -47,3 +47,12 @@ body {
 ::-webkit-scrollbar {
     width: 16px;
 }
+
+
+.button {
+  cursor: pointer;
+}
+
+.button:hover {
+  opacity: 0.6;
+}

@@ -1,25 +1,23 @@
 <div id="settingsPane">
   <div id="titleBar">
     <p>Preferences</p>
-    <div id="close" v-on="click: $root.toggleSettingsPane()">
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="x" x="0" y="0" viewBox="111.98 169.64 388.04 407.06" enable-background="new 111.982048 169.6423035 388.0419922 407.0557861" xml:space="preserve"><path d="M326.08 360.51L392.7 293.88c6.42-6.42 6.42-16.81 0-23.23 -6.42-6.42-16.81-6.42-23.23 0l-66.63 66.63 -66.63-66.63c-6.42-6.42-16.81-6.42-23.23 0s-6.42 16.81 0 23.23l66.63 66.63 -66.63 66.63c-6.42 6.42-6.42 16.81 0 23.23 3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81l66.63-66.63 66.63 66.63c3.21 3.21 7.41 4.81 11.61 4.81 4.2 0 8.41-1.6 11.61-4.81 6.42-6.42 6.42-16.81 0-23.23L326.08 360.51z" ></svg>
-    </div>
+    <img id="close" class="button" src="images/close-button.svg" v-on="click: $root.toggleSettingsPane()">
   </div>
   <div id="optionsZone">
     <!-- Text size -->
     <div class="section">
       <p class="label">Text size</p>
-      <img class="adjustButton" src="images/minus-button.svg">
+      <img class="adjustButton button" src="images/minus-button.svg">
       <input id="textAdjustInput" type="text" v-model="fontSize" size=3>
-      <img class="adjustButton" src="images/plus-button.svg">
+      <img class="adjustButton button" src="images/plus-button.svg">
     </div>
 
     <!-- Indentation amount -->
     <div id="indentation" class="section">
       <p class="label">Indentation amount</p>
-      <img class="adjustButton" src="images/minus-button.svg">
+      <img class="adjustButton button" src="images/minus-button.svg">
       <input id="tabSize" type="text"  v-model="tabSizeDisplay" size=3 v-on="change: updateTabSize">
-      <img class="adjustButton" src="images/plus-button.svg">
+      <img class="adjustButton button" src="images/plus-button.svg">
     </div>
 
     <div id="indentOptions" class="section hiddenRadio">
