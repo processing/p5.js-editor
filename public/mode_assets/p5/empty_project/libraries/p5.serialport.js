@@ -58,6 +58,8 @@
     
     this.emitQueue = [];
 
+    this.serialportList = [];
+
     if (typeof _hostname === 'string') {
       this.hostname = _hostname;
     } else {
@@ -74,6 +76,7 @@
 
     try {
       this.socket = new WebSocket("ws://" + this.hostname + ":" + this.serverport);
+      console.log(("ws://" + this.hostname + ":" + this.serverport));
     } catch (err) {
       //console.log(err + "\n" + "Is the p5.serialserver running?");
       if (typeof self.errorCallback !== "undefined") {
@@ -82,6 +85,7 @@
     }
 
     this.socket.onopen = function(event) {
+      console.log('opened socket');
       serialConnected = true;
 
       if (typeof self.connectedCallback !== "undefined") {
@@ -90,6 +94,7 @@
       
       if (self.emitQueue.length > 0) {
         for (var i = 0; i < self.emitQueue.length; i ++){
+          //console.log("queue: " + self.emitQueue[i]);
           self.emit(self.emitQueue[i]);
         }
         self.emitQueue = [];
@@ -143,6 +148,9 @@
             self.rawDataCallback(messageObject.data);
           }
         } else if (messageObject.method === 'list') {
+          
+          self.serialportList = messageObject.data;
+
           if (typeof self.listCallback !== "undefined") {
             self.listCallback(messageObject.data);
           }
@@ -198,6 +206,7 @@
   };
 
   // list() - list serial ports available to the server
+  // synchronously returns cached list, asynchronously returns updated list via callback
   p5.SerialPort.prototype.list = function(cb) {
     if (typeof cb === 'function') {
       this.listCallback = cb;
@@ -206,6 +215,8 @@
       method: 'list',
       data: {}
     });
+
+    return this.serialportList;
   };
 
   p5.SerialPort.prototype.open = function(_serialport, _serialoptions, cb) {
@@ -236,14 +247,34 @@
 
   p5.SerialPort.prototype.write = function(data) {
     //Writes bytes, chars, ints, bytes[], Strings to the serial port
+    var toWrite = null;
+    if (typeof data == "number") {
+      // This is the only one I am treating differently, the rest of the clauses are meaningless
+      toWrite = [data];
+    } else if (typeof data == "string") {
+      toWrite = data;
+    } else if (Array.isArray(data)) {
+      toWrite = data;
+    } else {
+      toWrite = data;
+    }
 
     this.emit({
       method: 'write',
-      data: data
+      data: toWrite
     });
     //this.socket.send({method:'writeByte',data:data});  ? 
     //this.socket.send({method:'writeString',data:data})  ?
   };
+
+  /* Not Yet Implemented
+  p5.SerialPort.prototype.writeLine = function(data) {
+    this.emit({
+      method: 'writeln',
+      data: data;
+    });
+  }
+  */
 
   p5.SerialPort.prototype.read = function() {
     //Returns a number between 0 and 255 for the next byte that's waiting in the buffer. Returns -1 if there is no byte, although this should be avoided by first cheacking available() to see if data is available.
@@ -283,6 +314,7 @@
   };
 
   p5.SerialPort.prototype.readBytesUntil = function(charToFind) {
+    console.log("Looking for: " + charToFind.charCodeAt(0));
     //Reads from the port into a buffer of bytes up to and including a particular character. If the character isn't in the buffer, 'null' is returned. The version with without the byteBuffer parameter returns a byte array of all data up to and including the interesting byte. This is not efficient, but is easy to use. The version with the byteBuffer parameter is more memory and time efficient. It grabs the data in the buffer and puts it into the byte array passed in and returns an int value for the number of bytes read. If the byte buffer is not large enough, -1 is returned and an error is printed to the message area. If nothing is in the buffer, 0 is returned.
     var index = this.serialBuffer.indexOf(charToFind.charCodeAt(0));
     if (index !== -1) {
@@ -332,6 +364,11 @@
     return returnString;
   };
 
+  // readStringUntil("\r\n");
+  p5.SerialPort.prototype.readLine = function() {
+    return this.readStringUntil("\r\n");
+  }; 
+
   // TODO
   //p5.SerialPort.prototype.bufferUntil
   //p5.SerialPort.prototype.buffer
@@ -378,6 +415,36 @@
   };
 
   // Register callback methods from sketch
+
+  p5.SerialPort.prototype.onData = function(_callback) {
+    this.on('data',_callback);
+  };
+
+  p5.SerialPort.prototype.onOpen = function(_callback) {
+    this.on('open',_callback);
+  };
+
+  p5.SerialPort.prototype.onClose = function(_callback) {
+    this.on('close',_callback);
+  };
+
+  p5.SerialPort.prototype.onError = function(_callback) {
+    this.on('error',_callback);
+  };
+
+  p5.SerialPort.prototype.onList = function(_callback) {
+    this.on('list',_callback);
+  };
+
+  p5.SerialPort.prototype.onConnected = function(_callback) {
+    this.on('connected',_callback);
+  };
+
+  p5.SerialPort.prototype.onRawData = function(_callback) {
+    this.on('rawdata',_callback);
+  };
+
+  // Version 2
   p5.SerialPort.prototype.on = function(_event, _callback) {
     if (_event == 'open') {
       this.openCallback = _callback;

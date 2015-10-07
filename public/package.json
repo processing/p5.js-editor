@@ -1,6 +1,6 @@
 {
   "name": "p5",
-  "version": "0.5.2",
+  "version": "0.5.5",
   "main": "boot.html",
   "window": {
     "title": "Untitled",
@@ -16,7 +16,7 @@
   "dependencies": {
     "chokidar": "1.0.5",
     "node-static": "0.7.6",
-    "p5.serialserver": "0.0.5",
+    "p5.serialserver": "0.0.10",
     "portscanner": "1.0.0",
     "rimraf": "^2.3.4",
     "semver": "~3.0.1",
