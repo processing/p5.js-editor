@@ -2,6 +2,7 @@
 
   var original = window.console;
   window.console = {};
+  window._isNodeWebkit = true;
 
   ["log", "warn", "error"].forEach(function(func) {
     window.console[func] = function(msg) {

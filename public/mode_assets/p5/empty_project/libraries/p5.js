@@ -1,4 +1,4 @@
-/*! p5.js v0.4.13 September 20, 2015 */
+/*! p5.js v0.4.16 October 12, 2015 */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.p5 = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 
 },{}],2:[function(_dereq_,module,exports){
@@ -5521,9 +5521,9 @@ exports.sizeOf = sizeOf;
 
 },{}],28:[function(_dereq_,module,exports){
 /**
- * module Shape
- * submodule 3D Primitives
- * for p5
+ * @module Shape
+ * @submodule 3D Primitives
+ * @for p5
  * @requires core
  * @requires p5.Geometry3D
  */
@@ -5534,23 +5534,22 @@ var p5 = _dereq_('../core/core');
 _dereq_('./p5.Geometry3D');
 
 /**
- * draw a plane with given a width and height
- * method plane
+ * Draw a plane with given a width and height
+ * @method plane
  * @param  {Number} width      width of the plane
  * @param  {Number} height     height of the plane
- * @return {p5}
+ * @return {p5}                the p5 object
  * @example
  * <div>
  * <code>
- * //draw a spining plane with width 100 and height 100
+ * //draw a plane with width 200 and height 200
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
  *
  * function draw(){
- *   background(255);
- *   rotateY(frameCount * 0.02);
- *   plane(100, 100);
+ *   background(200);
+ *   plane(200, 200);
  * }
  * </code>
  * </div>
@@ -5590,24 +5589,24 @@ p5.prototype.plane = function(width, height){
 };
 
 /**
- * draw a sphere with given raduis
- * method sphere
+ * Draw a sphere with given raduis
+ * @method sphere
  * @param  {Number} radius            radius of circle
  * @param  {Number} [detail]          optional: number of segments,
  *                                    the more segments the smoother geometry
  *                                    default is 24
- * @return {p5}
+ * @return {p5}                       the p5 object
  * @example
  * <div>
  * <code>
- * // draw a sphere with radius 100
+ * // draw a sphere with radius 200
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
  *
  * function draw(){
- *   background(255);
- *   sphere(100);
+ *   background(200);
+ *   sphere(200);
  * }
  * </code>
  * </div>
@@ -5647,25 +5646,27 @@ p5.prototype.sphere = function(radius, detail){
 };
 
 /**
- * draw a cylinder with given radius and height
- * method  cylinder
+ * Draw a cylinder with given radius and height
+ * @method  cylinder
  * @param  {Number} radius            radius of the surface
  * @param  {Number} height            height of the cylinder
  * @param  {Number} [detail]          optional: number of segments,
  *                                    the more segments the smoother geometry
  *                                    default is 24
- * @return {p5}
+ * @return {p5}                       the p5 object
  * @example
  * <div>
  * <code>
- * //draw a spining sylinder with radius 100 and height 100
+ * //draw a spining sylinder with radius 200 and height 200
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
+ *
  * function draw(){
- *   background(255);
- *   rotateX(frameCount * 0.02);
- *   cylinder(100, 100);
+ *   background(200);
+ *   rotateX(frameCount * 0.01);
+ *   rotateZ(frameCount * 0.01);
+ *   cylinder(200, 200);
  * }
  * </code>
  * </div>
@@ -5738,25 +5739,27 @@ p5.prototype.cylinder = function(radius, height, detail){
 
 
 /**
- * draw a cone with given radius and height
- * method cone
+ * Draw a cone with given radius and height
+ * @method cone
  * @param  {Number} radius            radius of the bottom surface
  * @param  {Number} height            height of the cone
  * @param  {Number} [detail]          optional: number of segments,
  *                                    the more segments the smoother geometry
  *                                    default is 24
- * @return {p5}
+ * @return {p5}                       the p5 object
  * @example
  * <div>
  * <code>
- * //draw a spining cone with radius 100 and height 100
+ * //draw a spining cone with radius 200 and height 200
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
+ *
  * function draw(){
- *   background(255);
- *   rotateX(frameCount * 0.02);
- *   cone(100, 200);
+ *   background(200);
+ *   rotateX(frameCount * 0.01);
+ *   rotateZ(frameCount * 0.01);
+ *   cone(200, 200);
  * }
  * </code>
  * </div>
@@ -5809,27 +5812,27 @@ p5.prototype.cone = function(radius, height, detail){
 
 
 /**
- * draw a torus with given radius and tube radius
- * method torus
+ * Draw a torus with given radius and tube radius
+ * @method torus
  * @param  {Number} radius            radius of the whole ring
  * @param  {Number} tubeRadius        radius of the tube
  * @param  {Number} [detail]          optional: number of segments,
  *                                    the more segments the smoother geometry
  *                                    default is 24
- * @return {p5}
+ * @return {p5}                       the p5 object
  * @example
  * <div>
  * <code>
- * //draw a spining torus with radius 100 and tube radius 20
+ * //draw a spining torus with radius 200 and tube radius 60
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
  *
  * function draw(){
- *   background(255);
- *   rotateX(frameCount * 0.02);
- *   rotateY(frameCount * 0.02);
- *   torus(100, 20);
+ *   background(200);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   torus(200, 60);
  * }
  * </code>
  * </div>
@@ -5870,25 +5873,25 @@ p5.prototype.torus = function(radius, tubeRadius, detail){
 };
 
 /**
- * draw a box with given width, height and depth
- * method  box
+ * Draw a box with given width, height and depth
+ * @method  box
  * @param  {Number} width  width of the box
  * @param  {Number} height height of the box
  * @param  {Number} depth  depth of the box
- * @return {p5}
+ * @return {p5}            the p5 object
  * @example
  * <div>
  * <code>
- * //draw a spining box with width, height and depth 100
+ * //draw a spining box with width, height and depth 200
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
  *
  * function draw(){
- *   background(255);
- *   rotateX(frameCount * 0.02);
- *   rotateY(frameCount * 0.02);
- *   box(100, 100, 100);
+ *   background(200);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   box(200, 200, 200);
  * }
  * </code>
  * </div>
@@ -5971,12 +5974,11 @@ p5.prototype.box = function(width, height, depth){
 };
 
 module.exports = p5;
-
 },{"../core/core":48,"./p5.Geometry3D":34}],29:[function(_dereq_,module,exports){
 /**
- * module Lights, Camera
- * submodule Camera
- * for p5
+ * @module Lights, Camera
+ * @submodule Camera
+ * @for p5
  * @requires core
  */
 
@@ -5985,29 +5987,34 @@ module.exports = p5;
 var p5 = _dereq_('../core/core');
 
 /**
- * sets camera position
- * method camera
+ * Sets camera position
+ * @method camera
  * @param  {Number} x  camera postion value on x axis
  * @param  {Number} y  camera postion value on y axis
  * @param  {Number} z  camera postion value on z axis
- * @return {p5}
+ * @return {p5}        the p5 object
  * @example
  * <div>
  * <code>
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
  * function draw(){
- *  camera(0, 0, 800);
- *  sphere(100);
+ *  //move the camera away from the plane by a sin wave
+ *  camera(0, 0, sin(frameCount * 0.01) * 100);
+ *  plane(120, 120);
  * }
  * </code>
  * </div>
  */
 p5.prototype.camera = function(x, y, z){
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   this._validateParameters(
     'camera',
-    arguments,
+    args,
     ['Number', 'Number', 'Number']
   );
   //what it manipulates is the model view matrix
@@ -6015,31 +6022,31 @@ p5.prototype.camera = function(x, y, z){
 };
 
 /**
- * sets perspective camera
- * method  perspective
+ * Sets perspective camera
+ * @method  perspective
  * @param  {Number} fovy   camera frustum vertical field of view,
  *                         from bottom to top of view, in degrees
  * @param  {Number} aspect camera frustum aspect ratio
  * @param  {Number} near   frustum near plane length
  * @param  {Number} far    frustum far plane length
- * @return {p5}
+ * @return {p5}            the p5 object
  * @example
  * <div>
  * <code>
- * //drag mouse to toggle the world
+ * //drag mouse to toggle the world!
  * //you will see there's a vanish point
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  *   perspective(60 / 180 * PI, width/height, 0.1, 100);
  * }
  * function draw(){
- *  background(0);
+ *  background(200);
  *  orbitControl();
- *  for(var i = -5; i < 6; i++){
- *     for(var j = -5; j < 6; j++){
+ *  for(var i = -1; i < 2; i++){
+ *     for(var j = -2; j < 3; j++){
  *       push();
- *       translate(i*100, 0, j*100);
- *       sphere(20);
+ *       translate(i*160, 0, j*160);
+ *       box(40, 40, 40);
  *       pop();
  *     }
  *   }
@@ -6048,9 +6055,13 @@ p5.prototype.camera = function(x, y, z){
  * </div>
  */
 p5.prototype.perspective = function(fovy,aspect,near,far) {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   this._validateParameters(
     'perspective',
-    arguments,
+    args,
     ['Number', 'Number', 'Number', 'Number']
   );
   this._renderer.uPMatrix = p5.Matrix.identity();
@@ -6059,30 +6070,32 @@ p5.prototype.perspective = function(fovy,aspect,near,far) {
 };
 
 /**
- * setup ortho camera
- * method  ortho
+ * Setup ortho camera
+ * @method  ortho
  * @param  {Number} left   camera frustum left plane
  * @param  {Number} right  camera frustum right plane
  * @param  {Number} bottom camera frustum bottom plane
  * @param  {Number} top    camera frustum top plane
  * @param  {Number} near   camera frustum near plane
  * @param  {Number} far    camera frustum far plane
- * @return {p5}
+ * @return {p5}            the p5 object
  * @example
  * <div>
  * <code>
+ * //drag mouse to toggle the world!
+ * //there's no vanish point
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  *   ortho(-width/2, width/2, height/2, -height/2, 0.1, 100);
  * }
  * function draw(){
- *  background(0);
+ *  background(200);
  *  orbitControl();
- *  for(var i = -5; i < 6; i++){
- *     for(var j = -5; j < 6; j++){
+ *  for(var i = -1; i < 2; i++){
+ *     for(var j = -2; j < 3; j++){
  *       push();
- *       translate(i*100, 0, j*100);
- *       sphere(20);
+ *       translate(i*160, 0, j*160);
+ *       box(40, 40, 40);
  *       pop();
  *     }
  *   }
@@ -6091,9 +6104,13 @@ p5.prototype.perspective = function(fovy,aspect,near,far) {
  * </div>
  */
 p5.prototype.ortho = function(left,right,bottom,top,near,far) {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   this._validateParameters(
     'ortho',
-    arguments,
+    args,
       ['Number', 'Number', 'Number', 'Number', 'Number', 'Number']
   );
   left /= this.width;
@@ -6106,6 +6123,7 @@ p5.prototype.ortho = function(left,right,bottom,top,near,far) {
 };
 
 module.exports = p5;
+
 },{"../core/core":48}],30:[function(_dereq_,module,exports){
 //@TODO: documentation of immediate mode
 
@@ -6293,9 +6311,9 @@ p5.prototype.orbitControl = function(){
 module.exports = p5;
 },{"../core/core":48}],32:[function(_dereq_,module,exports){
 /**
- * module Lights, Camera
- * submodule Lights
- * for p5
+ * @module Lights, Camera
+ * @submodule Lights
+ * @for p5
  * @requires core
  */
 
@@ -6304,26 +6322,26 @@ module.exports = p5;
 var p5 = _dereq_('../core/core');
 
 /**
- * creates an ambient light with a color
- * method  ambientLight
+ * Creates an ambient light with a color
+ * @method  ambientLight
  * @param  {Number|Array|String|p5.Color} v1  gray value,
  * red or hue value (depending on the current color mode),
  * or color Array, or CSS color string
  * @param  {Number}            [v2] optional: green or saturation value
  * @param  {Number}            [v3] optional: blue or brightness value
  * @param  {Number}            [a]  optional: opacity
- * @return {p5}
+ * @return {p5}                the p5 object
  * @example
  * <div>
  * <code>
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
  * function draw(){
  *   background(0);
  *   ambientLight(150);
  *   ambientMaterial(250);
- *   sphere(100);
+ *   sphere(200);
  * }
  * </code>
  * </div>
@@ -6331,7 +6349,7 @@ var p5 = _dereq_('../core/core');
 p5.prototype.ambientLight = function(v1, v2, v3, a){
   var gl = this._renderer.GL;
   var shaderProgram = this._renderer._getShader(
-    'lightVert', 'lightFrag');
+    'lightVert', 'lightTextureFrag');
 
   gl.useProgram(shaderProgram);
   shaderProgram.uAmbientColor = gl.getUniformLocation(
@@ -6360,8 +6378,8 @@ p5.prototype.ambientLight = function(v1, v2, v3, a){
 };
 
 /**
- * creates a directional light with a color and a direction
- * method  directionalLight
+ * Creates a directional light with a color and a direction
+ * @method  directionalLight
  * @param  {Number|Array|String|p5.Color} v1   gray value,
  * red or hue value (depending on the current color mode),
  * or color Array, or CSS color string
@@ -6371,12 +6389,12 @@ p5.prototype.ambientLight = function(v1, v2, v3, a){
  * @param  {Number|p5.Vector} x   x axis direction or a p5.Vector
  * @param  {Number}          [y]  optional: y axis direction
  * @param  {Number}          [z]  optional: z axis direction
- * @return {p5}
+ * @return {p5}              the p5 object
  * @example
  * <div>
  * <code>
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
  * function draw(){
  *   background(0);
@@ -6385,15 +6403,20 @@ p5.prototype.ambientLight = function(v1, v2, v3, a){
  *   var dirY = (mouseY / height - 0.5) *(-2);
  *   directionalLight(250, 250, 250, dirX, dirY, 0.25);
  *   ambientMaterial(250);
- *   sphere(100, 128);
+ *   sphere(200, 128);
  * }
  * </code>
  * </div>
  */
 p5.prototype.directionalLight = function(v1, v2, v3, a, x, y, z) {
+  // TODO(jgessner): Find an example using this and profile it.
+  // var args = new Array(arguments.length);
+  // for (var i = 0; i < args.length; ++i) {
+  //   args[i] = arguments[i];
+  // }
   // this._validateParameters(
   //   'directionalLight',
-  //   arguments,
+  //   args,
   //   [
   //     //rgbaxyz
   //     ['Number', 'Number', 'Number', 'Number', 'Number', 'Number', 'Number'],
@@ -6422,7 +6445,7 @@ p5.prototype.directionalLight = function(v1, v2, v3, a, x, y, z) {
 
   var gl = this._renderer.GL;
   var shaderProgram = this._renderer._getShader(
-    'lightVert', 'lightFrag');
+    'lightVert', 'lightTextureFrag');
 
   gl.useProgram(shaderProgram);
   shaderProgram.uDirectionalColor = gl.getUniformLocation(
@@ -6475,8 +6498,8 @@ p5.prototype.directionalLight = function(v1, v2, v3, a, x, y, z) {
 };
 
 /**
- * creates a point light with a color and a light position
- * method  pointLight
+ * Creates a point light with a color and a light position
+ * @method  pointLight
  * @param  {Number|Array|String|p5.Color} v1   gray value,
  * red or hue value (depending on the current color mode),
  * or color Array, or CSS color string
@@ -6486,12 +6509,12 @@ p5.prototype.directionalLight = function(v1, v2, v3, a, x, y, z) {
  * @param  {Number|p5.Vector} x   x axis position or a p5.Vector
  * @param  {Number}          [y]  optional: y axis position
  * @param  {Number}          [z]  optional: z axis position
- * @return {p5}
+ * @return {p5}              the p5 object
  * @example
  * <div>
  * <code>
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
  * function draw(){
  *   background(0);
@@ -6507,12 +6530,17 @@ p5.prototype.directionalLight = function(v1, v2, v3, a, x, y, z) {
  *   // -1,-1---------1,-1
  *   pointLight(250, 250, 250, locX, locY, 0);
  *   ambientMaterial(250);
- *   sphere(100, 128);
+ *   sphere(200, 128);
  * }
  * </code>
  * </div>
  */
 p5.prototype.pointLight = function(v1, v2, v3, a, x, y, z) {
+  // TODO(jgessner): Find an example using this and profile it.
+  // var args = new Array(arguments.length);
+  // for (var i = 0; i < args.length; ++i) {
+  //   args[i] = arguments[i];
+  // }
   // this._validateParameters(
   //   'pointLight',
   //   arguments,
@@ -6544,7 +6572,7 @@ p5.prototype.pointLight = function(v1, v2, v3, a, x, y, z) {
 
   var gl = this._renderer.GL;
   var shaderProgram = this._renderer._getShader(
-    'lightVert', 'lightFrag');
+    'lightVert', 'lightTextureFrag');
 
   gl.useProgram(shaderProgram);
   shaderProgram.uPointLightColor = gl.getUniformLocation(
@@ -6600,9 +6628,9 @@ module.exports = p5;
 
 },{"../core/core":48}],33:[function(_dereq_,module,exports){
 /**
- * module Lights, Camera
- * submodule Material
- * for p5
+ * @module Lights, Camera
+ * @submodule Material
+ * @for p5
  * @requires core
  */
 
@@ -6612,20 +6640,20 @@ var p5 = _dereq_('../core/core');
 //require('./p5.Texture');
 
 /**
- * normal material for geometry
- * method normalMaterial
- * @return {p5}
+ * Normal material for geometry
+ * @method normalMaterial
+ * @return {p5}                the p5 object
  * @example
  * <div>
  * <code>
- * //please call this function before doing any transformation
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
+ *
  * function draw(){
- *  background(255);
+ *  background(0);
  *  normalMaterial();
- *  sphere(100);
+ *  sphere(200);
  * }
  * </code>
  * </div>
@@ -6636,33 +6664,34 @@ p5.prototype.normalMaterial = function(){
 };
 
 /**
- * texture for geometry
- * method texture
- * @return {p5}
+ * Texture for geometry
+ * @method texture
+ * @return {p5}                the p5 object
  * @example
  * <div>
  * <code>
  * var img;
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  *   img = loadImage("assets/cat.jpg");
  * }
+ *
  * function draw(){
- *   background(255);
- *   rotateZ(frameCount * 0.02);
- *   rotateX(frameCount * 0.02);
- *   rotateY(frameCount * 0.02);
- *   // pass image as texture
+ *   background(0);
+ *   rotateZ(frameCount * 0.01);
+ *   rotateX(frameCount * 0.01);
+ *   rotateY(frameCount * 0.01);
+ *   //pass image as texture
  *   texture(img);
- *   box(60);
+ *   box(200, 200, 200);
  * }
  * </code>
  * </div>
  */
 p5.prototype.texture = function(image){
   var gl = this._renderer.GL;
-  var shaderProgram = this._renderer._getShader('normalVert',
-    'textureFrag');
+  var shaderProgram = this._renderer._getShader('lightVert',
+    'lightTextureFrag');
   gl.useProgram(shaderProgram);
   var tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -6709,6 +6738,7 @@ p5.prototype.texture = function(image){
   gl.activeTexture(gl.TEXTURE0 + 0);
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.uniform1i(gl.getUniformLocation(shaderProgram, 'uSampler'), 0);
+  gl.uniform1i(gl.getUniformLocation(shaderProgram, 'isTexture'), true);
   return this;
 };
 
@@ -6737,27 +6767,29 @@ function _nextHighestPOT (value){
 }
 
 /**
- * basic material for geometry with a given color
- * method  basicMaterial
+ * Basic material for geometry with a given color
+ * @method  basicMaterial
  * @param  {Number|Array|String|p5.Color} v1  gray value,
  * red or hue value (depending on the current color mode),
  * or color Array, or CSS color string
  * @param  {Number}            [v2] optional: green or saturation value
  * @param  {Number}            [v3] optional: blue or brightness value
  * @param  {Number}            [a]  optional: opacity
- * @return {p5}
+ * @return {p5}                the p5 object
  * @example
  * <div>
  * <code>
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
+ *
  * function draw(){
  *  background(0);
- *  rotateX(frameCount * 0.02);
- *  rotateZ(frameCount * 0.02);
  *  basicMaterial(250, 0, 0);
- *  box(100);
+ *  rotateX(frameCount * 0.01);
+ *  rotateY(frameCount * 0.01);
+ *  rotateZ(frameCount * 0.01);
+ *  box(200, 200, 200);
  * }
  * </code>
  * </div>
@@ -6783,33 +6815,35 @@ p5.prototype.basicMaterial = function(v1, v2, v3, a){
 };
 
 /**
- * ambient material for geometry with a given color
- * method  ambientMaterial
+ * Ambient material for geometry with a given color
+ * @method  ambientMaterial
  * @param  {Number|Array|String|p5.Color} v1  gray value,
  * red or hue value (depending on the current color mode),
  * or color Array, or CSS color string
  * @param  {Number}            [v2] optional: green or saturation value
  * @param  {Number}            [v3] optional: blue or brightness value
  * @param  {Number}            [a]  optional: opacity
- * @return {p5}
+* @return {p5}                 the p5 object
  * @example
  * <div>
  * <code>
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
  * function draw(){
  *  background(0);
+ *  ambientLight(100);
  *  pointLight(250, 250, 250, 100, 100, 0);
  *  ambientMaterial(250);
- *  sphere(100, 128);
+ *  sphere(200, 128);
  * }
  * </code>
  * </div>
  */
 p5.prototype.ambientMaterial = function(v1, v2, v3, a) {
   var gl = this._renderer.GL;
-  var shaderProgram = this._renderer._getShader('lightVert', 'lightFrag');
+  var shaderProgram =
+    this._renderer._getShader('lightVert', 'lightTextureFrag');
 
   gl.useProgram(shaderProgram);
   shaderProgram.uMaterialColor = gl.getUniformLocation(
@@ -6826,37 +6860,41 @@ p5.prototype.ambientMaterial = function(v1, v2, v3, a) {
     shaderProgram, 'uSpecular' );
   gl.uniform1i(shaderProgram.uSpecular, false);
 
+  gl.uniform1i(gl.getUniformLocation(shaderProgram, 'isTexture'), false);
+
   return this;
 };
 
 /**
- * specular material for geometry with a given color
- * method specularMaterial
+ * Specular material for geometry with a given color
+ * @method specularMaterial
  * @param  {Number|Array|String|p5.Color} v1  gray value,
  * red or hue value (depending on the current color mode),
  * or color Array, or CSS color string
  * @param  {Number}            [v2] optional: green or saturation value
  * @param  {Number}            [v3] optional: blue or brightness value
  * @param  {Number}            [a]  optional: opacity
- * @return {p5}
+ * @return {p5}                the p5 object
  * @example
  * <div>
  * <code>
  * function setup(){
- *   createCanvas(windowWidth, windowHeight, 'webgl');
+ *   createCanvas(100, 100, WEBGL);
  * }
  * function draw(){
  *  background(0);
+ *  ambientLight(100);
  *  pointLight(250, 250, 250, 100, 100, 0);
  *  specularMaterial(250);
- *  sphere(100, 128);
+ *  sphere(200, 128);
  * }
  * </code>
  * </div>
  */
 p5.prototype.specularMaterial = function(v1, v2, v3, a) {
   var gl = this._renderer.GL;
-  var shaderProgram = this._renderer._getShader('lightVert', 'lightFrag');
+  var shaderProgram =
+    this._renderer._getShader('lightVert', 'lightTextureFrag');
 
   gl.useProgram(shaderProgram);
   shaderProgram.uMaterialColor = gl.getUniformLocation(
@@ -6873,11 +6911,15 @@ p5.prototype.specularMaterial = function(v1, v2, v3, a) {
     shaderProgram, 'uSpecular' );
   gl.uniform1i(shaderProgram.uSpecular, true);
 
+  gl.uniform1i(gl.getUniformLocation(shaderProgram, 'isTexture'), false);
+
   return this;
 };
 
 module.exports = p5;
 },{"../core/core":48}],34:[function(_dereq_,module,exports){
+//functions are adjusted from Three.js(http://threejs.org)
+
 'use strict';
 
 var p5 = _dereq_('../core/core');
@@ -7153,6 +7195,10 @@ module.exports = p5.Geometry3D;
 /**
 * @requires constants
 * @todo see methods below needing further implementation.
+* future consideration: implement SIMD optimizations
+* when browser compatibility becomes available
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/
+*   Reference/Global_Objects/SIMD
 */
 
 'use strict';
@@ -7482,52 +7528,46 @@ p5.Matrix.prototype.mult = function(multMatrix){
 
 /**
  * scales a p5.Matrix by scalars or a vector
- * @param  {p5.Vector | Array | Numbers}
+ * @param  {p5.Vector | Array }
  *                      vector to scale by
  * @return {p5.Matrix}  this
  */
 p5.Matrix.prototype.scale = function() {
   var x,y,z;
+  var args = new Array(arguments.length);
+  for(var i = 0; i < args.length; i++) {
+    args[i] = arguments[i];
+  }
   //if our 1st arg is a type p5.Vector
-  if (arguments[0] instanceof p5.Vector){
-    x = arguments[0].x;
-    y = arguments[0].y;
-    z = arguments[0].z;
+  if (args[0] instanceof p5.Vector){
+    x = args[0].x;
+    y = args[0].y;
+    z = args[0].z;
   }
   //otherwise if it's an array
-  else if (arguments[0] instanceof Array){
-    x = arguments[0][0];
-    y = arguments[0][1];
-    z = arguments[0][2];
+  else if (args[0] instanceof Array){
+    x = args[0][0];
+    y = args[0][1];
+    z = args[0][2];
   }
-  //otherwise it's probably some numbers
-  else {
-    //short circuit eval to make sure we maintain
-    //component size
-    x = arguments[0] || 1;
-    y = arguments[1] || 1;
-    z = arguments[2] || 1;
-  }
-
   var _dest = new GLMAT_ARRAY_TYPE(16);
+  _dest[0] = this.mat4[0] * x;
+  _dest[1] = this.mat4[1] * x;
+  _dest[2] = this.mat4[2] * x;
+  _dest[3] = this.mat4[3] * x;
+  _dest[4] = this.mat4[4] * y;
+  _dest[5] = this.mat4[5] * y;
+  _dest[6] = this.mat4[6] * y;
+  _dest[7] = this.mat4[7] * y;
+  _dest[8] = this.mat4[8] * z;
+  _dest[9] = this.mat4[9] * z;
+  _dest[10] = this.mat4[10] * z;
+  _dest[11] = this.mat4[11] * z;
+  _dest[12] = this.mat4[12];
+  _dest[13] = this.mat4[13];
+  _dest[14] = this.mat4[14];
+  _dest[15] = this.mat4[15];
 
-  for (var i = 0; i < this.mat4.length; i++) {
-    var row = i % 4;
-    switch(row){
-    case 0:
-      _dest[i] = this.mat4[i]*x;
-      break;
-    case 1:
-      _dest[i] = this.mat4[i]*y;
-      break;
-    case 2:
-      _dest[i] = this.mat4[i]*z;
-      break;
-    case 3:
-      _dest[i] = this.mat4[i];
-      break;
-    }
-  }
   this.mat4 = _dest;
   return this;
 };
@@ -8093,12 +8133,12 @@ p5.Renderer3D.prototype.translate = function(x, y, z) {
 
 /**
  * Scales the Model View Matrix by a vector
- * @param  {Number} x [description]
- * @param  {Number} y [description]
- * @param  {Number} z [description]
+ * @param  {Number | p5.Vector | Array} x [description]
+ * @param  {Number} [y] y-axis scalar
+ * @param  {Number} [z] z-axis scalar
  * @return {this}   [description]
  */
-p5.Renderer3D.prototype.scale = function(x, y, z) {
+p5.Renderer3D.prototype.scale = function(x,y,z) {
   this.uMVMatrix.scale([x,y,z]);
   return this;
 };
@@ -8172,6 +8212,7 @@ module.exports = p5.Renderer3D;
 'use strict';
 
 var p5 = _dereq_('../core/core');
+var hashCount = 0;
 
 /**
  * createBuffer
@@ -8179,6 +8220,14 @@ var p5 = _dereq_('../core/core');
  * @param  {String} obj [description]
  */
 p5.Renderer3D.prototype.createBuffer = function(gId, obj) {
+
+  hashCount ++;
+  if(hashCount > 1000){
+    var key = Object.keys(this.gHash)[0];
+    delete this.gHash[key];
+    hashCount --;
+  }
+
   var gl = this.GL;
   this.gHash[gId] = {};
   this.gHash[gId].len = obj.len;
@@ -8275,12 +8324,10 @@ module.exports = {
     "precision mediump float;\nvarying vec3 vVertexNormal;\nvoid main(void) {\n  gl_FragColor = vec4(vVertexNormal, 1.0);\n}",
   basicFrag:
     "precision mediump float;\nvarying vec3 vVertexNormal;\nuniform vec4 uMaterialColor;\nvoid main(void) {\n  gl_FragColor = uMaterialColor;\n}",
-  textureFrag:
-    "precision mediump float;\nvarying highp vec2 vVertTexCoord;\nuniform sampler2D uSampler;\nvoid main(void) {\n  gl_FragColor = texture2D(uSampler, vec2(vVertTexCoord.s,vVertTexCoord.t));\n}",
   lightVert:
     "attribute vec3 aPosition;\nattribute vec3 aNormal;\nattribute vec2 aTexCoord;\n\nuniform mat4 uModelViewMatrix;\nuniform mat4 uProjectionMatrix;\nuniform mat4 uNormalMatrix;\nuniform float uResolution;\nuniform int uAmbientLightCount;\nuniform int uDirectionalLightCount;\nuniform int uPointLightCount;\n\nuniform vec3 uAmbientColor[8];\nuniform vec3 uLightingDirection[8];\nuniform vec3 uDirectionalColor[8];\nuniform vec3 uPointLightLocation[8];\nuniform vec3 uPointLightColor[8];\nuniform bool uSpecular;\n\nvarying vec3 vVertexNormal;\nvarying vec2 vVertTexCoord;\nvarying vec3 vLightWeighting;\n\nvec3 ambientLightFactor = vec3(0.0, 0.0, 0.0);\nvec3 directionalLightFactor = vec3(0.0, 0.0, 0.0);\nvec3 pointLightFactor = vec3(0.0, 0.0, 0.0);\nvec3 pointLightFactor2 = vec3(0.0, 0.0, 0.0);\n\nvoid main(void){\n\n  vec4 positionVec4 = vec4(aPosition / uResolution, 1.0);\n  gl_Position = uProjectionMatrix * uModelViewMatrix * positionVec4;\n\n  vec3 vertexNormal = vec3( uNormalMatrix * vec4( aNormal, 1.0 ) );\n  vVertexNormal = vertexNormal;\n  vVertTexCoord = aTexCoord;\n\n  vec4 mvPosition = uModelViewMatrix * vec4(aPosition / uResolution, 1.0);\n  vec3 eyeDirection = normalize(-mvPosition.xyz);\n\n  float shininess = 32.0;\n  float specularFactor = 2.0;\n  float diffuseFactor = 0.3;\n\n  for(int i = 0; i < 8; i++){\n    if(uAmbientLightCount == i) break;\n    ambientLightFactor += uAmbientColor[i];\n  }\n\n  for(int j = 0; j < 8; j++){\n    if(uDirectionalLightCount == j) break;\n    vec3 dir = uLightingDirection[j];\n    float directionalLightWeighting = max(dot(vertexNormal, dir), 0.0);\n    directionalLightFactor += uDirectionalColor[j] * directionalLightWeighting;\n  }\n\n  for(int k = 0; k < 8; k++){\n    if(uPointLightCount == k) break;\n    vec3 loc = uPointLightLocation[k];\n    //loc = loc / uResolution;\n    vec3 lightDirection = normalize(loc - mvPosition.xyz);\n\n    float directionalLightWeighting = max(dot(vertexNormal, lightDirection), 0.0);\n    pointLightFactor += uPointLightColor[k] * directionalLightWeighting;\n\n    //factor2 for specular\n    vec3 reflectionDirection = reflect(-lightDirection, vertexNormal);\n    float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), shininess);\n\n    pointLightFactor2 += uPointLightColor[k] * (specularFactor * specularLightWeighting\n      +  directionalLightWeighting * diffuseFactor);\n  }\n  \n  if(!uSpecular){\n    vLightWeighting =  ambientLightFactor + directionalLightFactor + pointLightFactor;\n  }else{\n    vLightWeighting = ambientLightFactor + directionalLightFactor + pointLightFactor2;\n  }\n\n}",
-  lightFrag:
-    "precision mediump float;\n\nuniform vec4 uMaterialColor;\nvarying vec3 vLightWeighting;\n\nvoid main(void) {\n  gl_FragColor = vec4(vec3(uMaterialColor.rgb * vLightWeighting), uMaterialColor.a);\n}"
+  lightTextureFrag:
+    "precision mediump float;\n\nuniform vec4 uMaterialColor;\nuniform sampler2D uSampler;\nuniform bool isTexture;\n\nvarying vec3 vLightWeighting;\nvarying highp vec2 vVertTexCoord;\n\nvoid main(void) {\n  if(!isTexture){\n    gl_FragColor = vec4(vec3(uMaterialColor.rgb * vLightWeighting), uMaterialColor.a);\n  }else{\n    vec4 textureColor = texture2D(uSampler, vec2(vVertTexCoord.s,vVertTexCoord.t));\n    if(vLightWeighting == vec3(0., 0., 0.)){\n      gl_FragColor = textureColor;\n    }else{\n      gl_FragColor = vec4(vec3(textureColor.rgb * vLightWeighting), textureColor.a); \n    }\n  }\n}"
 };
 },{}],39:[function(_dereq_,module,exports){
 
@@ -8904,12 +8951,17 @@ p5.prototype.brightness = function(c) {
  * </div>
  */
 p5.prototype.color = function() {
-  if (arguments[0] instanceof p5.Color) {
-    return arguments[0];
-  } else if (arguments[0] instanceof Array) {
-    return new p5.Color(this, arguments[0]);
+  var args = new Array(arguments.length);
+
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
+
+  if (args[0] instanceof p5.Color) {
+    return args[0];
+  } else if (args[0] instanceof Array) {
+    return new p5.Color(this, args[0]);
   } else {
-    var args = Array.prototype.slice.call(arguments);
     return new p5.Color(this, args);
   }
 };
@@ -10347,9 +10399,13 @@ _dereq_('./error_helpers');
  * </div>
  */
 p5.prototype.arc = function(x, y, w, h, start, stop, mode) {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   this._validateParameters(
     'arc',
-    arguments,
+    args,
     [
       ['Number', 'Number', 'Number', 'Number', 'Number', 'Number'],
       [ 'Number', 'Number', 'Number', 'Number',
@@ -10424,9 +10480,13 @@ p5.prototype.arc = function(x, y, w, h, start, stop, mode) {
  * </div>
  */
 p5.prototype.ellipse = function(x, y, w, h) {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   this._validateParameters(
     'ellipse',
-    arguments,
+    args,
     ['Number', 'Number', 'Number', 'Number']
   );
 
@@ -10486,35 +10546,39 @@ p5.prototype.line = function() {
   if (!this._renderer._doStroke) {
     return this;
   }
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   //check whether we should draw a 3d line or 2d
   if(this._renderer.isP3D){
     this._validateParameters(
       'line',
-      arguments,
+      args,
       [
         ['Number', 'Number', 'Number', 'Number', 'Number', 'Number']
       ]
     );
     this._renderer.line(
-      arguments[0],
-      arguments[1],
-      arguments[2],
-      arguments[3],
-      arguments[4],
-      arguments[5]);
+      args[0],
+      args[1],
+      args[2],
+      args[3],
+      args[4],
+      args[5]);
   } else {
     this._validateParameters(
       'line',
-      arguments,
+      args,
       [
         ['Number', 'Number', 'Number', 'Number'],
       ]
     );
     this._renderer.line(
-      arguments[0],
-      arguments[1],
-      arguments[2],
-      arguments[3]);
+      args[0],
+      args[1],
+      args[2],
+      args[3]);
   }
   return this;
 };
@@ -10543,31 +10607,35 @@ p5.prototype.point = function() {
   if (!this._renderer._doStroke) {
     return this;
   }
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   //check whether we should draw a 3d line or 2d
   if(this._renderer.isP3D){
     this._validateParameters(
       'point',
-      arguments,
+      args,
       [
         ['Number', 'Number', 'Number']
       ]
     );
     this._renderer.point(
-      arguments[0],
-      arguments[1],
-      arguments[2]
+      args[0],
+      args[1],
+      args[2]
       );
   } else {
     this._validateParameters(
       'point',
-      arguments,
+      args,
       [
         ['Number', 'Number']
       ]
     );
     this._renderer.point(
-      arguments[0],
-      arguments[1]
+      args[0],
+      args[1]
     );
   }
   return this;
@@ -10602,10 +10670,14 @@ p5.prototype.quad = function() {
   if (!this._renderer._doStroke && !this._renderer._doFill) {
     return this;
   }
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   if(this._renderer.isP3D){
     this._validateParameters(
       'quad',
-      arguments,
+      args,
       [
         [ 'Number', 'Number', 'Number',
           'Number', 'Number', 'Number',
@@ -10614,37 +10686,37 @@ p5.prototype.quad = function() {
       ]
     );
     this._renderer.quad(
-      arguments[0],
-      arguments[1],
-      arguments[2],
-      arguments[3],
-      arguments[4],
-      arguments[5],
-      arguments[6],
-      arguments[7],
-      arguments[8],
-      arguments[9],
-      arguments[10],
-      arguments[11]
+      args[0],
+      args[1],
+      args[2],
+      args[3],
+      args[4],
+      args[5],
+      args[6],
+      args[7],
+      args[8],
+      args[9],
+      args[10],
+      args[11]
       );
   } else {
     this._validateParameters(
       'quad',
-      arguments,
+      args,
       [
         [ 'Number', 'Number', 'Number', 'Number',
           'Number', 'Number', 'Number', 'Number' ]
       ]
     );
     this._renderer.quad(
-     arguments[0],
-     arguments[1],
-     arguments[2],
-     arguments[3],
-     arguments[4],
-     arguments[5],
-     arguments[6],
-    arguments[7]
+     args[0],
+     args[1],
+     args[2],
+     args[3],
+     args[4],
+     args[5],
+     args[6],
+    args[7]
     );
   }
   return this;
@@ -10695,9 +10767,13 @@ p5.prototype.quad = function() {
 * </div>
 */
 p5.prototype.rect = function (x, y, w, h, tl, tr, br, bl) {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   this._validateParameters(
     'rect',
-    arguments,
+    args,
     [
       ['Number', 'Number', 'Number', 'Number'],
       ['Number', 'Number', 'Number', 'Number', 'Number'],
@@ -10738,41 +10814,45 @@ p5.prototype.triangle = function() {
   if (!this._renderer._doStroke && !this._renderer._doFill) {
     return this;
   }
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   if(this._renderer.isP3D){
     this._validateParameters(
       'triangle',
-      arguments,
+      args,
       [
         ['Number', 'Number', 'Number', 'Number', 'Number', 'Number',
          'Number', 'Number', 'Number']
       ]
     );
     this._renderer.triangle(
-      arguments[0],
-      arguments[1],
-      arguments[2],
-      arguments[3],
-      arguments[4],
-      arguments[5],
-      arguments[6],
-      arguments[7],
-      arguments[8]
+      args[0],
+      args[1],
+      args[2],
+      args[3],
+      args[4],
+      args[5],
+      args[6],
+      args[7],
+      args[8]
       );
   } else {
     this._validateParameters(
       'triangle',
-      arguments,
+      args,
       [
         ['Number', 'Number', 'Number', 'Number', 'Number', 'Number']
       ]
     );
     this._renderer.triangle(
-     arguments[0],
-     arguments[1],
-     arguments[2],
-     arguments[3],
-     arguments[4],
-     arguments[5]
+     args[0],
+     args[1],
+     args[2],
+     args[3],
+     args[4],
+     args[5]
     );
   }
   return this;
@@ -11497,10 +11577,9 @@ var p5 = function(sketch, node, sync) {
 
   if (window.DeviceOrientationEvent) {
     this._events.deviceorientation = null;
-  } else if (window.DeviceMotionEvent) {
+  }
+  if (window.DeviceMotionEvent && !window._isNodeWebkit) {
     this._events.devicemotion = null;
-  } else {
-    this._events.MozOrientation = null;
   }
 
   //FF doesn't recognize mousewheel as of FF3.x
@@ -11560,6 +11639,7 @@ var p5 = function(sketch, node, sync) {
       }
 
       userPreload();
+      this._runIfPreloadsAreDone();
     } else {
       this._setup();
       this._runFrames();
@@ -11567,9 +11647,8 @@ var p5 = function(sketch, node, sync) {
     }
   }.bind(this);
 
-  this._decrementPreload = function(){
+  this._runIfPreloadsAreDone = function(){
     var context = this._isGlobal ? window : this;
-    context._setProperty('_preloadCount', context._preloadCount - 1);
     if (context._preloadCount === 0) {
       var loadingScreen = document.getElementById(context._loadingScreenId);
       if (loadingScreen) {
@@ -11579,6 +11658,12 @@ var p5 = function(sketch, node, sync) {
       context._runFrames();
       context._draw();
     }
+  };
+
+  this._decrementPreload = function(){
+    var context = this._isGlobal ? window : this;
+    context._setProperty('_preloadCount', context._preloadCount - 1);
+    context._runIfPreloadsAreDone();
   };
 
   this._wrapPreload = function(obj, fnName){
@@ -11648,6 +11733,7 @@ var p5 = function(sketch, node, sync) {
       this._setProperty('frameCount', this.frameCount + 1);
       this.redraw();
       this._updatePAccelerations();
+      this._updatePRotations();
       this._updatePMouseCoords();
       this._updatePTouchCoords();
       this._frameRate = 1000.0/(now - this._lastFrameTime);
@@ -11798,13 +11884,17 @@ var p5 = function(sketch, node, sync) {
     }
   }
 
-  var self = this;
-  window.addEventListener('focus', function() {
-    self._setProperty('focused', true);
-  });
-
-  window.addEventListener('blur', function() {
-    self._setProperty('focused', false);
+  var focusHandler = function() {
+    this._setProperty('focused', true);
+  }.bind(this);
+  var blurHandler = function() {
+    this._setProperty('focused', false);
+  }.bind(this);
+  window.addEventListener('focus', focusHandler);
+  window.addEventListener('blur', blurHandler);
+  this.registerMethod('remove', function() {
+    window.removeEventListener(focusHandler);
+    window.removeEventListener(blurHandler);
   });
 
   // TODO: ???
@@ -11904,9 +11994,13 @@ var curveDetail = 20;
  * </div>
  */
 p5.prototype.bezier = function(x1, y1, x2, y2, x3, y3, x4, y4) {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   this._validateParameters(
     'bezier',
-    arguments,
+    args,
     [ 'Number', 'Number', 'Number', 'Number',
       'Number', 'Number', 'Number', 'Number' ]
   );
@@ -12099,9 +12193,13 @@ p5.prototype.bezierTangent = function(a, b, c, d, t) {
  * </div>
  */
 p5.prototype.curve = function(x1, y1, x2, y2, x3, y3, x4, y4) {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   this._validateParameters(
     'curve',
-    arguments,
+    args,
     [ 'Number', 'Number', 'Number', 'Number',
       'Number', 'Number', 'Number', 'Number' ]
   );
@@ -13139,7 +13237,7 @@ p5.Element = function(elt, pInst) {
  *
  * Attaches the element to the parent specified. A way of setting
  * the container for the element. Accepts either a string ID, DOM
- * node, or p5.Element.
+ * node, or p5.Element. If no arguments given, parent node is returned.
  *
  * @method parent
  * @param  {String|Object} parent the ID, DOM node, or p5.Element
@@ -13171,13 +13269,17 @@ p5.Element = function(elt, pInst) {
  * </code></div>
  */
 p5.Element.prototype.parent = function(p) {
-  if (typeof p === 'string') {
-    p = document.getElementById(p);
-  } else if (p instanceof p5.Element) {
-    p = p.elt;
+  if (arguments.length === 0){
+    return this.elt.parentNode;
+  } else {
+    if (typeof p === 'string') {
+      p = document.getElementById(p);
+    } else if (p instanceof p5.Element) {
+      p = p.elt;
+    }
+    p.appendChild(this.elt);
+    return this;
   }
-  p.appendChild(this.elt);
-  return this;
 };
 
 /**
@@ -13335,16 +13437,33 @@ p5.Element.prototype.mouseOver = function (fxn) {
 
 
 /**
- * The .changed() function is called when the value of an element is changed.
+ * The .changed() function is called when the value of an
+ * element is changed.
  * This can be used to attach an element specific event listener.
  *
  * @method changed
- * @param  {Function} fxn function to be fired when mouse is
- *                    moved over the element.
+ * @param  {Function} fxn function to be fired when the value of an
+ * element changes.
  * @return {p5.Element}
  */
 p5.Element.prototype.changed = function (fxn) {
   attachListener('change', fxn, this);
+  return this;
+};
+
+/**
+ * The .input() function is called when any user input is
+ * detected with an element. The input event is often used
+ * to detect keystrokes in a input element, or changes on a
+ * slider element. This can be used to attach an element specific
+ * event listener.
+ *
+ * @method input
+ * @param  {Function} fxn function to be fired on user input.
+ * @return {p5.Element}
+ */
+p5.Element.prototype.input = function (fxn) {
+  attachListener('input', fxn, this);
   return this;
 };
 
@@ -14013,14 +14132,16 @@ p5.Renderer2D.prototype.stroke = function() {
 // IMAGE | Loading & Displaying
 //////////////////////////////////////////////
 
-p5.Renderer2D.prototype.image = function (img, x, y, w, h) {
+p5.Renderer2D.prototype.image =
+  function (img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
   var frame = img.canvas || img.elt;
   try {
     if (this._tint && img.canvas) {
-      this.drawingContext.drawImage(this._getTintedImageCanvas(img),
-        x, y, w, h);
+      this.drawingContext.drawImage(this._getTintedImageCanvas(img), sx, sy,
+        sWidth, sHeight, dx, dy, dWidth, dHeight);
     } else {
-      this.drawingContext.drawImage(frame, x, y, w, h);
+      this.drawingContext.drawImage(frame, sx, sy, sWidth, sHeight, dx, dy,
+        dWidth, dHeight);
     }
   } catch (e) {
     if (e.name !== 'NS_ERROR_NOT_AVAILABLE') {
@@ -14130,7 +14251,7 @@ p5.Renderer2D.prototype.get = function(x, y, w, h) {
 
   var ctx = this._pInst || this;
 
-  var pd = ctx.pixelDensity || ctx._pInst.pixelDensity;
+  var pd = ctx.pixelDensity;
 
   this.loadPixels.call(ctx);
 
@@ -14153,7 +14274,7 @@ p5.Renderer2D.prototype.get = function(x, y, w, h) {
     var sh = dh * pd;
 
     var region = new p5.Image(dw, dh);
-    region.canvas.getContext('2d').drawImage(ctx.canvas, sx, sy, sw, sh,
+    region.canvas.getContext('2d').drawImage(this.canvas, sx, sy, sw, sh,
       0, 0, dw, dh);
 
     return region;
@@ -14915,17 +15036,8 @@ p5.Renderer2D.prototype.rotate = function(r) {
   this.drawingContext.rotate(r);
 };
 
-p5.Renderer2D.prototype.scale = function() {
-  var x = 1.0,
-    y = 1.0;
-  if (arguments.length === 1) {
-    x = y = arguments[0];
-  } else {
-    x = arguments[0];
-    y = arguments[1];
-  }
+p5.Renderer2D.prototype.scale = function(x,y) {
   this.drawingContext.scale(x, y);
-
   return this;
 };
 
@@ -14958,12 +15070,12 @@ p5.Renderer2D.prototype.translate = function(x, y) {
 p5.Renderer2D.prototype.text = function (str, x, y, maxWidth, maxHeight) {
 
   var p = this._pInst, cars, n, ii, jj, line, testLine,
-    testWidth, words, totalHeight, baselineHacked;
+    testWidth, words, totalHeight, baselineHacked,
+    finalMaxHeight = Number.MAX_VALUE;
 
   // baselineHacked: (HACK)
-  // This is an ugly temporary fix to conform to
-  // Processing's vertical alignment implementation
-  // for BASELINE vetical alignment in a boundings box
+  // A temporary fix to conform to Processing's implementation
+  // of BASELINE vertical alignment in a bounding box
 
   if (!(this._doFill || this._doStroke)) {
     return;
@@ -14994,7 +15106,7 @@ p5.Renderer2D.prototype.text = function (str, x, y, maxWidth, maxHeight) {
       }
     }
 
-    if (this._rectMode === constants.CENTER ){
+    if (this._rectMode === constants.CENTER) {
 
       x -= maxWidth / 2;
       y -= maxHeight / 2;
@@ -15024,6 +15136,9 @@ p5.Renderer2D.prototype.text = function (str, x, y, maxWidth, maxHeight) {
         this.drawingContext.textBaseline = constants.TOP;
         break;
       }
+
+      // remember the max-allowed y-position for any line (fix to #928)
+      finalMaxHeight = (y + maxHeight) - p.textAscent();
     }
 
     for (ii = 0; ii < cars.length; ii++) {
@@ -15034,7 +15149,7 @@ p5.Renderer2D.prototype.text = function (str, x, y, maxWidth, maxHeight) {
         testLine = line + words[n] + ' ';
         testWidth = this.textWidth(testLine);
         if (testWidth > maxWidth && line.length > 0) {
-          this._renderText(p, line, x, y);
+          this._renderText(p, line, x, y, finalMaxHeight);
           line = words[n] + ' ';
           y += p.textLeading();
         } else {
@@ -15042,14 +15157,14 @@ p5.Renderer2D.prototype.text = function (str, x, y, maxWidth, maxHeight) {
         }
       }
 
-      this._renderText(p, line, x, y);
+      this._renderText(p, line, x, y, finalMaxHeight);
       y += p.textLeading();
     }
   }
   else {
     for (jj = 0; jj < cars.length; jj++) {
 
-      this._renderText(p, cars[jj], x, y);
+      this._renderText(p, cars[jj], x, y, finalMaxHeight);
       y += p.textLeading();
     }
   }
@@ -15057,10 +15172,15 @@ p5.Renderer2D.prototype.text = function (str, x, y, maxWidth, maxHeight) {
   if (baselineHacked) {
     this.drawingContext.textBaseline = constants.BASELINE;
   }
+
   return p;
 };
 
-p5.Renderer2D.prototype._renderText = function(p, line, x, y) {
+p5.Renderer2D.prototype._renderText = function(p, line, x, y, maxY) {
+
+  if (y >= maxY) {
+    return; // don't render lines beyond our maxY position
+  }
 
   p.push(); // fix to #803
 
@@ -15242,7 +15362,11 @@ p5.prototype.createCanvas = function(w, h, renderer) {
   else {
     if (isDefault) {
       c = document.createElement('canvas');
-      c.id = 'defaultCanvas';
+      var i = 0;
+      while (document.getElementById('defaultCanvas'+i)) {
+        i++;
+      }
+      c.id = 'defaultCanvas'+i;
     } else { // resize the default canvas if new one is created
       c = this.canvas;
     }
@@ -15688,17 +15812,17 @@ p5.prototype.loop = function() {
 p5.prototype.push = function () {
   this._renderer.push();
   this._styles.push({
-    doStroke: this._renderer._doStroke,
-    doFill: this._renderer._doFill,
-    tint: this._renderer._tint,
-    imageMode: this._renderer._imageMode,
-    rectMode: this._renderer._rectMode,
-    ellipseMode: this._renderer._ellipseMode,
-    colorMode: this._renderer._colorMode,
-    textFont: this._renderer._textFont,
-    textLeading: this._renderer._textLeading,
-    textSize: this._renderer._textSize,
-    textStyle: this._renderer._textStyle
+    _doStroke: this._renderer._doStroke,
+    _doFill: this._renderer._doFill,
+    _tint: this._renderer._tint,
+    _imageMode: this._renderer._imageMode,
+    _rectMode: this._renderer._rectMode,
+    _ellipseMode: this._renderer._ellipseMode,
+    _colorMode: this._renderer._colorMode,
+    _textFont: this._renderer._textFont,
+    _textLeading: this._renderer._textLeading,
+    _textSize: this._renderer._textSize,
+    _textStyle: this._renderer._textStyle
   });
 };
 
@@ -15756,17 +15880,9 @@ p5.prototype.push = function () {
 p5.prototype.pop = function () {
   this._renderer.pop();
   var lastS = this._styles.pop();
-  this._renderer._doStroke = lastS.doStroke;
-  this._renderer._doFill = lastS.doFill;
-  this._renderer._tint = lastS.tint;
-  this._renderer._imageMode = lastS.imageMode;
-  this._renderer._rectMode = lastS.rectMode;
-  this._renderer._ellipseMode = lastS.ellipseMode;
-  this._renderer._colorMode = lastS.colorMode;
-  this._renderer._textFont = lastS.textFont;
-  this._renderer._textLeading = lastS.textLeading;
-  this._renderer._textSize = lastS.textSize;
-  this._renderer._textStyle = lastS.textStyle;
+  for(var prop in lastS){
+    this._renderer[prop] = lastS[prop];
+  }
 };
 
 p5.prototype.pushStyle = function() {
@@ -15960,17 +16076,21 @@ p5.prototype.rotate = function() {
  * @return {[type]}     [description]
  */
 p5.prototype.rotateX = function(rad) {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   if (this._renderer.isP3D) {
     this._validateParameters(
       'rotateX',
-      arguments,
+      args,
       [
         ['Number']
       ]
     );
     this._renderer.rotateX(rad);
   } else {
-    throw 'not yet implemented.';
+    throw 'not supported in p2d. Please use webgl mode';
   }
   return this;
 };
@@ -15982,16 +16102,20 @@ p5.prototype.rotateX = function(rad) {
  */
 p5.prototype.rotateY = function(rad) {
   if (this._renderer.isP3D) {
+    var args = new Array(arguments.length);
+    for (var i = 0; i < args.length; ++i) {
+      args[i] = arguments[i];
+    }
     this._validateParameters(
       'rotateY',
-      arguments,
+      args,
       [
         ['Number']
       ]
     );
     this._renderer.rotateY(rad);
   } else {
-    throw 'not yet implemented.';
+    throw 'not supported in p2d. Please use webgl mode';
   }
   return this;
 };
@@ -16003,9 +16127,13 @@ p5.prototype.rotateY = function(rad) {
  */
 p5.prototype.rotateZ = function(rad) {
   if (this._renderer.isP3D) {
+    var args = new Array(arguments.length);
+    for (var i = 0; i < args.length; ++i) {
+      args[i] = arguments[i];
+    }
     this._validateParameters(
       'rotateZ',
-      arguments,
+      args,
       [
         ['Number']
       ]
@@ -16034,10 +16162,12 @@ p5.prototype.rotateZ = function(rad) {
  * can be further controlled with push() and pop().
  *
  * @method scale
- * @param  {Number} s   percentage to scale the object, or percentage to
+ * @param  {Number | p5.Vector | Array} s
+ *                      percent to scale the object, or percentage to
  *                      scale the object in the x-axis if multiple arguments
  *                      are given
- * @param  {Number} [y] percentage to scale the object in the y-axis
+ * @param  {Number} [y] percent to scale the object in the y-axis
+ * @param  {Number} [z] percent to scale the object in the z-axis (webgl only)
  * @return {p5}         the p5 object
  * @example
  * <div>
@@ -16057,26 +16187,37 @@ p5.prototype.rotateZ = function(rad) {
  * </div>
  */
 p5.prototype.scale = function() {
-  if (this._renderer.isP3D) {
-    this._validateParameters(
-      'scale',
-      arguments,
-      [
-        //p3d
-        ['Number', 'Number', 'Number']
-      ]
-    );
-    this._renderer.scale(arguments[0], arguments[1], arguments[2]);
-  } else {
-    this._validateParameters(
-      'scale',
-      arguments,
-      [
-        //p2d
-        ['Number', 'Number']
-      ]
-    );
-    this._renderer.scale.apply(this._renderer, arguments);
+  var x,y,z;
+  var args = new Array(arguments.length);
+  for(var i = 0; i < args.length; i++) {
+    args[i] = arguments[i];
+  }
+  if(args[0] instanceof p5.Vector){
+    x = args[0].x;
+    y = args[0].y;
+    z = args[0].z;
+  }
+  else if(args[0] instanceof Array){
+    x = args[0][0];
+    y = args[0][1];
+    z = args[0][2] || 1;
+  }
+  else {
+    if(args.length === 1){
+      x = y = z = args[0];
+    }
+    else {
+      x = args[0];
+      y = args[1];
+      z = args[2] || 1;
+    }
+  }
+
+  if(this._renderer.isP3D){
+    this._renderer.scale.call(this._renderer, x,y,z);
+  }
+  else {
+    this._renderer.scale.call(this._renderer, x,y);
   }
   return this;
 };
@@ -16190,10 +16331,15 @@ p5.prototype.shearY = function(angle) {
  * </div>
  */
 p5.prototype.translate = function(x, y, z) {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
+
   if (this._renderer.isP3D) {
     this._validateParameters(
       'translate',
-      arguments,
+      args,
       [
         //p3d
         ['Number', 'Number', 'Number']
@@ -16203,7 +16349,7 @@ p5.prototype.translate = function(x, y, z) {
   } else {
     this._validateParameters(
       'translate',
-      arguments,
+      args,
       [
         //p2d
         ['Number', 'Number']
@@ -16768,10 +16914,14 @@ p5.prototype.quadraticVertex = function(cx, cy, x3, y3) {
  * </div>
  */
 p5.prototype.vertex = function(x, y, moveTo) {
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   if(this._renderer.isP3D){
     this._validateParameters(
       'vertex',
-      arguments,
+      args,
       [
         ['Number', 'Number', 'Number']
       ]
@@ -16781,7 +16931,7 @@ p5.prototype.vertex = function(x, y, moveTo) {
   }else{
     this._validateParameters(
       'vertex',
-      arguments,
+      args,
       [
         ['Number', 'Number'],
         ['Number', 'Number', 'Number']
@@ -16897,12 +17047,173 @@ p5.prototype._updatePAccelerations = function(){
   this._setProperty('pAccelerationZ', this.accelerationZ);
 };
 
+/**
+ * The system variable rotationX always contains the rotation of the
+ * device along the x axis. Value is represented as 0 to +/-180 degrees.
+ *
+ * @property rotationX
+ */
+p5.prototype.rotationX = 0;
+
+/**
+ * The system variable rotationY always contains the rotation of the
+ * device along the y axis. Value is represented as 0 to +/-180 degrees.
+ *
+ * @property rotationY
+ */
+p5.prototype.rotationY = 0;
+
+/**
+ * The system variable rotationZ always contains the rotation of the
+ * device along the z axis. Value is represented as 0 to 359 degrees.
+ * <br><br>
+ * Unlike rotationX and rotationY, this variable is available for devices
+ * with a built-in compass only.
+ *
+ * @property rotationZ
+ */
+p5.prototype.rotationZ = 0;
+
+/**
+ * The system variable pRotationX always contains the rotation of the
+ * device along the x axis in the frame previous to the current frame. Value
+ * is represented as 0 to +/-180 degrees.
+ * <br><br>
+ * pRotationX can also be used with rotationX to determine the rotate
+ * direction of the device along the X-axis.
+ * @example
+ * <div class='norender'>
+ * <code>
+ * // A simple if statement looking at whether
+ * // rotationX - pRotationX < 0 is true or not will be
+ * // sufficient for determining the rotate direction
+ * // in most cases.
+ *
+ * // Some extra logic is needed to account for cases where
+ * // the angles wrap around.
+ * var rotateDirection = 'clockwise';
+ *
+ * // Simple range conversion to make things simpler.
+ * // This is not absolutely neccessary but the logic
+ * // will be different in that case.
+ *
+ * var rX = rotationX + 180;
+ * var pRX = pRotationX + 180;
+ *
+ * if ((rX - pRX > 0 && rX - pRX < 270)|| rX - pRX < -270){
+ *   rotateDirection = 'clockwise';
+ * } else if (rX - pRX < 0 || rX - pRX > 270){
+ *   rotateDirection = 'counter-clockwise';
+ * }
+ * </code>
+ * </div>
+ *
+ * @property pRotationX
+ */
+p5.prototype.pRotationX = 0;
+
+/**
+ * The system variable pRotationY always contains the rotation of the
+ * device along the y axis in the frame previous to the current frame. Value
+ * is represented as 0 to +/-180 degrees.
+ * <br><br>
+ * pRotationY can also be used with rotationY to determine the rotate
+ * direction of the device along the Y-axis.
+ * @example
+ * <div class='norender'>
+ * <code>
+ * // A simple if statement looking at whether
+ * // rotationY - pRotationY < 0 is true or not will be
+ * // sufficient for determining the rotate direction
+ * // in most cases.
+ *
+ * // Some extra logic is needed to account for cases where
+ * // the angles wrap around.
+ * var rotateDirection = 'clockwise';
+ *
+ * // Simple range conversion to make things simpler.
+ * // This is not absolutely neccessary but the logic
+ * // will be different in that case.
+ *
+ * var rY = rotationY + 180;
+ * var pRY = pRotationY + 180;
+ *
+ * if ((rY - pRY > 0 && rY - pRY < 270)|| rY - pRY < -270){
+ *   rotateDirection = 'clockwise';
+ * } else if (rY - pRY < 0 || rY - pRY > 270){
+ *   rotateDirection = 'counter-clockwise';
+ * }
+ * </code>
+ * </div>
+ *
+ * @property pRotationY
+ */
+p5.prototype.pRotationY = 0;
+
+/**
+ * The system variable pRotationZ always contains the rotation of the
+ * device along the z axis in the frame previous to the current frame. Value
+ * is represented as 0 to 359 degrees.
+ * <br><br>
+ * pRotationZ can also be used with rotationZ to determine the rotate
+ * direction of the device along the Z-axis.
+ * @example
+ * <div class='norender'>
+ * <code>
+ * // A simple if statement looking at whether
+ * // rotationZ - pRotationZ < 0 is true or not will be
+ * // sufficient for determining the rotate direction
+ * // in most cases.
+ *
+ * // Some extra logic is needed to account for cases where
+ * // the angles wrap around.
+ * var rotateDirection = 'clockwise';
+ *
+ * if ((rotationZ - pRotationZ > 0 &&
+ *   rotationZ - pRotationZ < 270)||
+ *   rotationZ - pRotationZ < -270){
+ *
+ *   rotateDirection = 'clockwise';
+ *
+ * } else if (rotationZ - pRotationZ < 0 ||
+ *   rotationZ - pRotationZ > 270){
+ *
+ *   rotateDirection = 'counter-clockwise';
+ *
+ * }
+ * </code>
+ * </div>
+ *
+ * @property pRotationZ
+ */
+p5.prototype.pRotationZ = 0;
+
+var startAngleX = 0;
+var startAngleY = 0;
+var startAngleZ = 0;
+
+var rotateDirectionX = 'clockwise';
+var rotateDirectionY = 'clockwise';
+var rotateDirectionZ = 'clockwise';
+
+var pRotateDirectionX;
+var pRotateDirectionY;
+var pRotateDirectionZ;
+
+p5.prototype._updatePRotations = function(){
+  this._setProperty('pRotationX', this.rotationX);
+  this._setProperty('pRotationY', this.rotationY);
+  this._setProperty('pRotationZ', this.rotationZ);
+};
+
+p5.prototype.turnAxis = undefined;
+
 var move_threshold = 0.5;
 var shake_threshold = 30;
 
 /**
  * The setMoveThreshold() function is used to set the movement threshold for
- * the deviceMoved() function.
+ * the deviceMoved() function. The default threshold is set to 0.5.
  *
  * @method setMoveThreshold
  * @param {number} value The threshold value
@@ -16926,12 +17237,10 @@ p5.prototype.setShakeThreshold = function(val){
   }
 };
 
-var old_max_axis = '';
-var new_max_axis = '';
-
 /**
- * The deviceMoved() function is called when the devices orientation changes
- * by more than the threshold value.
+ * The deviceMoved() function is called when the device is moved by more than
+ * the threshold value along X, Y or Z axis. The default threshold is set to
+ * 0.5.
  * @method deviceMoved
  * @example
  * <div>
@@ -16957,7 +17266,12 @@ var new_max_axis = '';
 
 /**
  * The deviceTurned() function is called when the device rotates by
- * more than 90 degrees.
+ * more than 90 degrees continuously.
+ * <br><br>
+ * The axis that triggers the deviceTurned() method is stored in the turnAxis
+ * variable. The deviceTurned() method can be locked to trigger on any axis:
+ * X, Y or Z by comparing the turnAxis variable to 'X', 'Y' or 'Z'.
+ *
  * @method deviceTurned
  * @example
  * <div>
@@ -16972,9 +17286,32 @@ var new_max_axis = '';
  *   rect(25, 25, 50, 50);
  * }
  * function deviceTurned() {
- *   value = value + 5;
- *   if (value > 255) {
+ *   if (value == 0){
+ *     value = 255
+ *   } else if (value == 255) {
  *     value = 0;
+ *   }
+ * }
+ * </code>
+ * </div>
+ * <div>
+ * <code>
+ * // Run this example on a mobile device
+ * // Rotate the device by 90 degrees in the
+ * // X-axis to change the value.
+ *
+ * var value = 0;
+ * function draw() {
+ *   fill(value);
+ *   rect(25, 25, 50, 50);
+ * }
+ * function deviceTurned() {
+ *   if (turnAxis == 'X'){
+ *     if (value == 0){
+ *       value = 255
+ *     } else if (value == 255) {
+ *       value = 0;
+ *     }
  *   }
  * }
  * </code>
@@ -17008,21 +17345,15 @@ var new_max_axis = '';
  */
 
 p5.prototype._ondeviceorientation = function (e) {
-  this._setProperty('accelerationX', e.beta);
-  this._setProperty('accelerationY', e.gamma);
-  this._setProperty('accelerationZ', e.alpha);
+  this._setProperty('rotationX', e.beta);
+  this._setProperty('rotationY', e.gamma);
+  this._setProperty('rotationZ', e.alpha);
   this._handleMotion();
 };
 p5.prototype._ondevicemotion = function (e) {
   this._setProperty('accelerationX', e.acceleration.x * 2);
   this._setProperty('accelerationY', e.acceleration.y * 2);
   this._setProperty('accelerationZ', e.acceleration.z * 2);
-  this._handleMotion();
-};
-p5.prototype._onMozOrientation = function (e) {
-  this._setProperty('accelerationX', e.x);
-  this._setProperty('accelerationY', e.y);
-  this._setProperty('accelerationZ', e.z);
   this._handleMotion();
 };
 p5.prototype._handleMotion = function() {
@@ -17043,23 +17374,70 @@ p5.prototype._handleMotion = function() {
   }
   var deviceTurned = this.deviceTurned || window.deviceTurned;
   if (typeof deviceTurned === 'function') {
-    var max_val = 0;
-    if (Math.abs(this.accelerationX) > max_val) {
-      max_val = this.accelerationX;
-      new_max_axis = 'x';
+    // The angles given by rotationX etc is from range -180 to 180.
+    // The following will convert them to 0 to 360 for ease of calculation
+    // of cases when the angles wrapped around.
+    // _startAngleX will be converted back at the end and updated.
+    var wRX = this.rotationX + 180;
+    var wPRX = this.pRotationX + 180;
+    var wSAX = startAngleX + 180;
+    if ((wRX - wPRX > 0 && wRX - wPRX < 270)|| wRX - wPRX < -270){
+      rotateDirectionX = 'clockwise';
+    } else if (wRX - wPRX < 0 || wRX - wPRX > 270){
+      rotateDirectionX = 'counter-clockwise';
     }
-    if (Math.abs(this.accelerationY) > max_val) {
-      max_val = this.accelerationY;
-      new_max_axis = 'y';
+    if (rotateDirectionX !== pRotateDirectionX){
+      wSAX = wRX;
     }
-    if (Math.abs(this.accelerationZ) > max_val) {
-      new_max_axis = 'z';
+    if (Math.abs(wRX - wSAX) > 90 && Math.abs(wRX - wSAX) < 270){
+      wSAX = wRX;
+      this._setProperty('turnAxis', 'X');
+      deviceTurned();
     }
-    if (old_max_axis !== '' && old_max_axis !== new_max_axis) {
-      deviceTurned(new_max_axis);
+    pRotateDirectionX = rotateDirectionX;
+    startAngleX = wSAX - 180;
 
+    // Y-axis is identical to X-axis except for changing some names.
+    var wRY = this.rotationY + 180;
+    var wPRY = this.pRotationY + 180;
+    var wSAY = startAngleY + 180;
+    if ((wRY - wPRY > 0 && wRY - wPRY < 270)|| wRY - wPRY < -270){
+      rotateDirectionY = 'clockwise';
+    } else if (wRY - wPRY < 0 || wRY - this.pRotationY > 270){
+      rotateDirectionY = 'counter-clockwise';
     }
-    old_max_axis = new_max_axis;
+    if (rotateDirectionY !== pRotateDirectionY){
+      wSAY = wRY;
+    }
+    if (Math.abs(wRY - wSAY) > 90 && Math.abs(wRY - wSAY) < 270){
+      wSAY = wRY;
+      this._setProperty('turnAxis', 'Y');
+      deviceTurned();
+    }
+    pRotateDirectionY = rotateDirectionY;
+    startAngleY = wSAY - 180;
+
+    // Z-axis is already in the range 0 to 360
+    // so no conversion is needed.
+    if ((this.rotationZ - this.pRotationZ > 0 &&
+      this.rotationZ - this.pRotationZ < 270)||
+      this.rotationZ - this.pRotationZ < -270){
+      rotateDirectionZ = 'clockwise';
+    } else if (this.rotationZ - this.pRotationZ < 0 ||
+      this.rotationZ - this.pRotationZ > 270){
+      rotateDirectionZ = 'counter-clockwise';
+    }
+    if (rotateDirectionZ !== pRotateDirectionZ){
+      startAngleZ = this.rotationZ;
+    }
+    if (Math.abs(this.rotationZ - startAngleZ) > 90 &&
+      Math.abs(this.rotationZ - startAngleZ) < 270){
+      startAngleZ = this.rotationZ;
+      this._setProperty('turnAxis', 'Z');
+      deviceTurned();
+    }
+    pRotateDirectionZ = rotateDirectionZ;
+    this._setProperty('turnAxis', undefined);
   }
   var deviceShaken = this.deviceShaken || window.deviceShaken;
   if (typeof deviceShaken === 'function') {
@@ -17652,24 +18030,24 @@ p5.prototype.pwinMouseY = 0;
  * @property mouseButton
  *
  * @example
-	* <div>
-	* <code>
-	* function draw() {
-	*   background(237, 34, 93);
-	*   fill(0);
-	*
-	*   if (mouseIsPressed) {
-	*     if (mouseButton == LEFT)
-	*       ellipse(50, 50, 50, 50);
-	*     if (mouseButton == RIGHT)
-	*       rect(25, 25, 50, 50);
-	*     if (mouseButton == CENTER)
-	*       triangle(23, 75, 50, 20, 78, 75);
-	*   }
-	*
-	*   print(mouseButton);
-	* }
-	* </code>
+    * <div>
+    * <code>
+    * function draw() {
+    *   background(237, 34, 93);
+    *   fill(0);
+    *
+    *   if (mouseIsPressed) {
+    *     if (mouseButton == LEFT)
+    *       ellipse(50, 50, 50, 50);
+    *     if (mouseButton == RIGHT)
+    *       rect(25, 25, 50, 50);
+    *     if (mouseButton == CENTER)
+    *       triangle(23, 75, 50, 20, 78, 75);
+    *   }
+    *
+    *   print(mouseButton);
+    * }
+    * </code>
  * </div>
  */
 p5.prototype.mouseButton = 0;
@@ -17681,21 +18059,21 @@ p5.prototype.mouseButton = 0;
  * @property mouseIsPressed
  *
  * @example
-	* <div>
-	* <code>
-	* function draw() {
-	*   background(237, 34, 93);
-	*   fill(0);
-	*
-	*   if (mouseIsPressed)
-	*     ellipse(50, 50, 50, 50);
-	*   else
-	*     rect(25, 25, 50, 50);
-	*
-	*   print(mouseIsPressed);
-	* }
-	* </code>
-	* </div>
+    * <div>
+    * <code>
+    * function draw() {
+    *   background(237, 34, 93);
+    *   fill(0);
+    *
+    *   if (mouseIsPressed)
+    *     ellipse(50, 50, 50, 50);
+    *   else
+    *     rect(25, 25, 50, 50);
+    *
+    *   print(mouseIsPressed);
+    * }
+    * </code>
+    * </div>
  */
 p5.prototype.mouseIsPressed = false;
 p5.prototype.isMousePressed = false; // both are supported
@@ -18043,28 +18421,28 @@ p5.prototype._onclick = function(e) {
  *
  * @method mouseWheel
  *
-	* @example
-	* <div>
-	* <code>
-	* var pos = 25;
-	*
-	* function draw() {
-	*   background(237, 34, 93);
-	*   fill(0);
-	*   rect(25, pos, 50, 50);
-	* }
-	*
-	* function mouseWheel(event) {
-	*   //event.delta can be +1 or -1 depending
-	*   //on the wheel/scroll direction
-	*   print(event.delta);
-	*   //move the square one pixel up or down
-	*   pos += event.delta;
-	*   //uncomment to block page scrolling
-	*   //return false;
-	* }
-	* </code>
-	* </div>
+    * @example
+    * <div>
+    * <code>
+    * var pos = 25;
+    *
+    * function draw() {
+    *   background(237, 34, 93);
+    *   fill(0);
+    *   rect(25, pos, 50, 50);
+    * }
+    *
+    * function mouseWheel(event) {
+    *   //event.delta can be +1 or -1 depending
+    *   //on the wheel/scroll direction
+    *   print(event.delta);
+    *   //move the square one pixel up or down
+    *   pos += event.delta;
+    *   //uncomment to block page scrolling
+    *   //return false;
+    * }
+    * </code>
+    * </div>
  */
 p5.prototype._onmousewheel = p5.prototype._onDOMMouseScroll = function(e) {
   var context = this._isGlobal ? window : this;
@@ -19287,8 +19665,8 @@ _dereq_('../core/error_helpers');
  * <br><br>
  * The image may not be immediately available for rendering
  * If you want to ensure that the image is ready before doing
- * anything with it you can do perform those operations in the
- * callback, or place the loadImage() call in preload().
+ * anything with it, place the loadImage() call in preload().
+ * You may also supply a callback function to handle the image when it's ready.
  * <br><br>
  * The path to the image should be relative to the HTML file
  * that links in your sketch. Loading an from a URL or other
@@ -19329,6 +19707,7 @@ _dereq_('../core/error_helpers');
 p5.prototype.loadImage = function(path, successCallback, failureCallback) {
   var img = new Image();
   var pImg = new p5.Image(1, 1, this);
+  var decrementPreload = p5._getDecrementPreload.apply(this, arguments);
 
   img.onload = function() {
     pImg.width = pImg.canvas.width = img.width;
@@ -19340,10 +19719,15 @@ p5.prototype.loadImage = function(path, successCallback, failureCallback) {
     if (typeof successCallback === 'function') {
       successCallback(pImg);
     }
+    if (decrementPreload && (successCallback !== decrementPreload)) {
+      decrementPreload();
+    }
   };
   img.onerror = function(e) {
     p5._friendlyFileLoadError(0,img.src);
-    if (typeof failureCallback === 'function') {
+    // don't get failure callback mixed up with decrementPreload
+    if ((typeof failureCallback === 'function') &&
+      (failureCallback !== decrementPreload)) {
       failureCallback(e);
     }
   };
@@ -19364,14 +19748,50 @@ p5.prototype.loadImage = function(path, successCallback, failureCallback) {
 };
 
 /**
+ * Validates clipping params. Per drawImage spec sWidth and sHight cannot be
+ * negative or greater than image intrinsic width and height
+ * @private
+ * @param {Number} sVal
+ * @param {Number} iVal
+ * @returns {Number}
+ * @private
+ */
+function _sAssign(sVal, iVal) {
+  if (sVal > 0 && sVal < iVal) {
+    return sVal;
+  }
+  else {
+    return iVal;
+  }
+}
+
+/**
  * Draw an image to the main canvas of the p5js sketch
  *
  * @method image
- * @param  {p5.Image} image    the image to display
- * @param  {Number}   [x=0]    x-coordinate of the image
- * @param  {Number}   [y=0]    y-coordinate of the image
- * @param  {Number}   [width]  width to display the image
- * @param  {Number}   [height] height to display the image
+ * @param  {p5.Image} img    the image to display
+ * @param  {Number}   [sx=0]   The X coordinate of the top left corner of the
+ *                             sub-rectangle of the source image to draw into
+ *                             the destination canvas.
+ * @param  {Number}   [sy=0]   The Y coordinate of the top left corner of the
+ *                             sub-rectangle of the source image to draw into
+ *                             the destination canvas.
+ * @param {Number} [sWidth=img.width] The width of the sub-rectangle of the
+ *                                    source image to draw into the destination
+ *                                    canvas.
+ * @param {Number} [sHeight=img.height] The height of the sub-rectangle of the
+ *                                      source image to draw into the
+ *                                      destination context.
+ * @param  {Number}   [dx=0]    The X coordinate in the destination canvas at
+ *                              which to place the top-left corner of the
+ *                              source image.
+ * @param  {Number}   [dy=0]    The Y coordinate in the destination canvas at
+ *                              which to place the top-left corner of the
+ *                              source image.
+ * @param  {Number}   [dWidth]  The width to draw the image in the destination
+ *                              canvas. This allows scaling of the drawn image.
+ * @param  {Number}   [dHeight] The height to draw the image in the destination
+ *                              canvas. This allows scaling of the drawn image.
  * @example
  * <div>
  * <code>
@@ -19381,6 +19801,8 @@ p5.prototype.loadImage = function(path, successCallback, failureCallback) {
  * }
  * function setup() {
  *   image(img, 0, 0);
+ *   image(img, 0, 0, 100, 100);
+ *   image(img, 0, 0, 100, 100, 0, 0, 100, 100);
  * }
  * </code>
  * </div>
@@ -19395,25 +19817,52 @@ p5.prototype.loadImage = function(path, successCallback, failureCallback) {
  * </code>
  * </div>
  */
-p5.prototype.image = function(img, x, y, width, height) {
+p5.prototype.image =
+  function(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
   // Temporarily disabling until options for p5.Graphics are added.
+  // var args = new Array(arguments.length);
+  // for (var i = 0; i < args.length; ++i) {
+  //   args[i] = arguments[i];
+  // }
   // this._validateParameters(
   //   'image',
-  //   arguments,
+  //   args,
   //   [
   //     ['p5.Image', 'Number', 'Number'],
   //     ['p5.Image', 'Number', 'Number', 'Number', 'Number']
   //   ]
   // );
 
-  // set defaults
-  x = x || 0;
-  y = y || 0;
-  width = width || img.width;
-  height = height || img.height;
-  var vals = canvas.modeAdjust(x, y, width, height, this._renderer._imageMode);
+  // set defaults per spec: https://goo.gl/3ykfOq
+  if (arguments.length <= 5) {
+    dx = sx || 0;
+    dy = sy || 0;
+    sx = 0;
+    sy = 0;
+    dWidth = sWidth || img.width;
+    dHeight = sHeight || img.height;
+    sWidth = img.width;
+    sHeight = img.height;
+  } else if (arguments.length === 9) {
+    sx = sx || 0;
+    sy = sy || 0;
+    sWidth = _sAssign(sWidth, img.width);
+    sHeight = _sAssign(sHeight, img.height);
+
+    dx = dx || 0;
+    dy = dy || 0;
+    dWidth = dWidth || img.width;
+    dHeight = dHeight || img.height;
+  } else {
+    throw 'Wrong number of arguments to image()';
+  }
+
+  var vals = canvas.modeAdjust(dx, dy, dWidth, dHeight,
+    this._renderer._imageMode);
+
   // tint the image if there is a tint
-  this._renderer.image(img, vals.x, vals.y, vals.w, vals.h);
+  this._renderer.image(img, sx, sy, sWidth, sHeight, vals.x, vals.y, vals.w,
+    vals.h);
 };
 
 /**
@@ -19698,6 +20147,7 @@ p5.Image = function(width, height){
    *     pixels[idx+3] = a;
    *   }
    * }
+   * </pre></code>
    * <br><br>
    * Before accessing this array, the data must loaded with the loadPixels()
    * function. After the array data has been modified, the updatePixels()
@@ -20218,9 +20668,8 @@ p5.prototype.blend = function() {
  * }
  *
  * function setup() {
- *   background(img0);
- *   image(img1, 0, 0);
- *   copy(7, 22, 10, 10, 35, 25, 50, 50);
+ *   background(img);
+ *   copy(img, 7, 22, 10, 10, 35, 25, 50, 50);
  *   stroke(255);
  *   noFill();
  *   // Rectangle shows area being copied
@@ -20612,10 +21061,34 @@ var opentype = _dereq_('opentype.js');
 _dereq_('../core/error_helpers');
 
 /**
+ * Checks if we are in preload and returns the last arg which will be the
+ * _decrementPreload function if called from a loadX() function.  Should
+ * only be used in loadX() functions.
+ * @private
+ */
+p5._getDecrementPreload = function() {
+  var decrementPreload = arguments[arguments.length - 1];
+
+  // when in preload decrementPreload will always be the last arg as it is set
+  // with args.push() before invocation in _wrapPreload
+  if ((window.preload || this.preload) &&
+    typeof decrementPreload === 'function') {
+    return decrementPreload;
+  } else {
+    return null;
+  }
+};
+
+/**
  * Loads an opentype font file (.otf, .ttf) from a file or a URL,
  * and returns a PFont Object. This method is asynchronous,
  * meaning it may not finish before the next line in your sketch
  * is executed.
+ * <br><br>
+ * The path to the font should be relative to the HTML file
+ * that links in your sketch. Loading an from a URL or other
+ * remote location may be blocked due to your browser's built-in
+ * security.
  *
  * @method loadFont
  * @param  {String}        path       name of the file or url to load
@@ -20642,7 +21115,7 @@ _dereq_('../core/error_helpers');
  * }
  * </code></div>
  *
- * <p>Outside preload(), you may supply a callback function to handle the
+ * <p>Outside of preload(), you may supply a callback function to handle the
  * object:</p>
  *
  * <div><code>
@@ -20662,12 +21135,13 @@ _dereq_('../core/error_helpers');
 p5.prototype.loadFont = function(path, onSuccess, onError) {
 
   var p5Font = new p5.Font(this);
+  var decrementPreload = p5._getDecrementPreload.apply(this, arguments);
 
   opentype.load(path, function(err, font) {
 
     if (err) {
 
-      if (typeof onError !== 'undefined') {
+      if ((typeof onError !== 'undefined') && (onError !== decrementPreload)) {
         return onError(err);
       }
       throw err;
@@ -20678,6 +21152,10 @@ p5.prototype.loadFont = function(path, onSuccess, onError) {
     if (typeof onSuccess !== 'undefined') {
       onSuccess(p5Font);
     }
+    if (decrementPreload && (onSuccess !== decrementPreload)) {
+      decrementPreload();
+    }
+
   });
 
   return p5Font;
@@ -20738,9 +21216,9 @@ p5.prototype.loadBytes = function() {
  * }
  * </code></div>
  *
- * <p>Outside preload(), you may supply a callback function to handle the
+ *
+ * <p>Outside of preload(), you may supply a callback function to handle the
  * object:</p>
-
  * <div><code>
  * function setup() {
  *   noLoop();
@@ -20764,6 +21242,8 @@ p5.prototype.loadBytes = function() {
 p5.prototype.loadJSON = function() {
   var path = arguments[0];
   var callback = arguments[1];
+  var decrementPreload = p5._getDecrementPreload.apply(this, arguments);
+
   var ret = []; // array needed for preload
   // assume jsonp for URLs
   var t = 'json'; //= path.indexOf('http') === -1 ? 'json' : 'jsonp';
@@ -20775,15 +21255,31 @@ p5.prototype.loadJSON = function() {
     }
   }
 
-  reqwest({url: path, type: t, crossOrigin: true})
-    .then(function(resp) {
+  reqwest({
+    url: path,
+    type: t,
+    crossOrigin: true,
+    error: function (resp, msg, err) {
+      if (msg) {
+        console.log(msg);
+      }
+      if (err && err.message) {
+        console.log(err.message);
+      }
+    },
+    success: function(resp) {
       for (var k in resp) {
         ret[k] = resp[k];
       }
       if (typeof callback !== 'undefined') {
         callback(resp);
       }
-    });
+      if (decrementPreload && (callback !== decrementPreload)) {
+        decrementPreload();
+      }
+    }
+  });
+
   return ret;
 };
 
@@ -20824,7 +21320,7 @@ p5.prototype.loadJSON = function() {
  * }
  * </code></div>
  *
- * <p>Outside preload(), you may supply a callback function to handle the
+ * <p>Outside of preload(), you may supply a callback function to handle the
  * object:</p>
  *
  * <div><code>
@@ -20842,19 +21338,29 @@ p5.prototype.loadJSON = function() {
 p5.prototype.loadStrings = function (path, callback) {
   var ret = [];
   var req = new XMLHttpRequest();
+  var decrementPreload = p5._getDecrementPreload.apply(this, arguments);
+
+  req.addEventListener('error', function () {
+    console.log('An error occurred loading strings: ' + path);
+  });
+
   req.open('GET', path, true);
   req.onreadystatechange = function () {
-    if (req.readyState === 4 && (req.status === 200 )) {
-      var arr = req.responseText.match(/[^\r\n]+/g);
-      for (var k in arr) {
-        ret[k] = arr[k];
+    if (req.readyState === 4) {
+      if (req.status === 200) {
+        var arr = req.responseText.match(/[^\r\n]+/g);
+        for (var k in arr) {
+          ret[k] = arr[k];
+        }
+        if (typeof callback !== 'undefined') {
+          callback(ret);
+        }
+        if (decrementPreload && (callback !== decrementPreload)) {
+          decrementPreload();
+        }
+      } else {
+        p5._friendlyFileLoadError(3, path);
       }
-      if (typeof callback !== 'undefined') {
-        callback(ret);
-      }
-    }
-    else{
-      p5._friendlyFileLoadError(3,path);
     }
   };
   req.send(null);
@@ -20890,7 +21396,8 @@ p5.prototype.loadStrings = function (path, callback) {
  * <p>This method is asynchronous, meaning it may not finish before the next
  * line in your sketch is executed. Calling loadTable() inside preload()
  * guarantees to complete the operation before setup() and draw() are called.
- * Outside preload(), you may supply a callback function to handle the object.
+ * <p>Outside of preload(), you may supply a callback function to handle the
+ * object:</p>
  * </p>
  *
  * @method loadTable
@@ -20902,43 +21409,43 @@ p5.prototype.loadStrings = function (path, callback) {
  * @return {Object}                    Table object containing data
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the following CSV file called "mammals.csv"
+    * <div class="norender">
+    * <code>
+    * // Given the following CSV file called "mammals.csv"
  * // located in the project's "assets" folder:
  * //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	*   //the file can be remote
-	*   //table = loadTable("http://p5js.org/reference/assets/mammals.csv",
-	*   //                  "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   //count the columns
-	*   print(table.getRowCount() + " total rows in table");
-	*   print(table.getColumnCount() + " total columns in table");
-	*
-	*   print(table.getColumn("name"));
-	*   //["Goat", "Leopard", "Zebra"]
-	*
-	*   //cycle through the table
-	*   for (var r = 0; r < table.getRowCount(); r++)
-	*     for (var c = 0; c < table.getColumnCount(); c++) {
-	*       print(table.getString(r, c));
-	*     }
-	* }
-	* </code>
-	* </div>
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    *   //the file can be remote
+    *   //table = loadTable("http://p5js.org/reference/assets/mammals.csv",
+    *   //                  "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   //count the columns
+    *   print(table.getRowCount() + " total rows in table");
+    *   print(table.getColumnCount() + " total columns in table");
+    *
+    *   print(table.getColumn("name"));
+    *   //["Goat", "Leopard", "Zebra"]
+    *
+    *   //cycle through the table
+    *   for (var r = 0; r < table.getRowCount(); r++)
+    *     for (var c = 0; c < table.getColumnCount(); c++) {
+    *       print(table.getString(r, c));
+    *     }
+    * }
+    * </code>
+    * </div>
  */
 p5.prototype.loadTable = function (path) {
   var callback = null;
@@ -20946,8 +21453,11 @@ p5.prototype.loadTable = function (path) {
   var header = false;
   var sep = ',';
   var separatorSet = false;
+  var decrementPreload = p5._getDecrementPreload.apply(this, arguments);
+
   for (var i = 1; i < arguments.length; i++) {
-    if (typeof(arguments[i]) === 'function' ){
+    if ((typeof(arguments[i]) === 'function') &&
+      (arguments[i] !== decrementPreload)) {
       callback = arguments[i];
     }
     else if (typeof(arguments[i]) === 'string') {
@@ -21112,10 +21622,15 @@ p5.prototype.loadTable = function (path) {
       if (callback !== null) {
         callback(t);
       }
+      if (decrementPreload && (callback !== decrementPreload)) {
+        decrementPreload();
+      }
     })
     .fail(function(err,msg){
       p5._friendlyFileLoadError(2,path);
-      if (typeof callback !== 'undefined') {
+      // don't get error callback mixed up with decrementPreload
+      if ((typeof callback !== 'undefined') &&
+        (callback !== decrementPreload)) {
         callback(false);
       }
     });
@@ -21153,7 +21668,9 @@ function makeObject(row, headers) {
  * This method is asynchronous, meaning it may not finish before the next
  * line in your sketch is executed. Calling loadXML() inside preload()
  * guarantees to complete the operation before setup() and draw() are called.
- * Outside preload(), you may supply a callback function to handle the object.
+ *
+ * <p>Outside of preload(), you may supply a callback function to handle the
+ * object:</p>
  *
  * @method loadXML
  * @param  {String}   filename   name of the file or URL to load
@@ -21164,6 +21681,8 @@ function makeObject(row, headers) {
  */
 p5.prototype.loadXML = function(path, callback) {
   var ret = document.implementation.createDocument(null, null);
+  var decrementPreload = p5._getDecrementPreload.apply(this, arguments);
+
   reqwest({
     url: path,
     type: 'xml',
@@ -21176,7 +21695,10 @@ p5.prototype.loadXML = function(path, callback) {
       var x = resp.documentElement;
       ret.appendChild(x);
       if (typeof callback !== 'undefined') {
-        callback(resp);
+        callback(ret);
+      }
+      if (decrementPreload && (callback !== decrementPreload)) {
+        decrementPreload();
       }
     });
   return ret;
@@ -21872,6 +22394,7 @@ function destroyClickedElement(event) {
 }
 
 module.exports = p5;
+
 },{"../core/core":48,"../core/error_helpers":51,"opentype.js":8,"reqwest":27}],71:[function(_dereq_,module,exports){
 /**
  * @module IO
@@ -21945,38 +22468,38 @@ p5.Table = function (rows) {
  *  @param   {p5.TableRow} [row] row to be added to the table
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   //add a row
-	*   var newRow = table.addRow();
-	*   newRow.setString("id", table.getRowCount() - 1);
-	*   newRow.setString("species", "Canis Lupus");
-	*   newRow.setString("name", "Wolf");
-	*
-	*   //print the results
-	*   for (var r = 0; r < table.getRowCount(); r++)
-	*     for (var c = 0; c < table.getColumnCount(); c++)
-	*       print(table.getString(r, c));
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   //add a row
+    *   var newRow = table.addRow();
+    *   newRow.setString("id", table.getRowCount() - 1);
+    *   newRow.setString("species", "Canis Lupus");
+    *   newRow.setString("name", "Wolf");
+    *
+    *   //print the results
+    *   for (var r = 0; r < table.getRowCount(); r++)
+    *     for (var c = 0; c < table.getColumnCount(); c++)
+    *       print(table.getString(r, c));
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.addRow = function(row) {
   // make sure it is a valid TableRow
@@ -21998,35 +22521,35 @@ p5.Table.prototype.addRow = function(row) {
  * @param   {Number} id ID number of the row to remove
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   //remove the first row
-	*   var r = table.removeRow(0);
-	*
-	*   //print the results
-	*   for (var r = 0; r < table.getRowCount(); r++)
-	*     for (var c = 0; c < table.getColumnCount(); c++)
-	*       print(table.getString(r, c));
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   //remove the first row
+    *   var r = table.removeRow(0);
+    *
+    *   //print the results
+    *   for (var r = 0; r < table.getRowCount(); r++)
+    *     for (var c = 0; c < table.getColumnCount(); c++)
+    *       print(table.getString(r, c));
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.removeRow = function(id) {
   this.rows[id].table = null; // remove reference to table
@@ -22045,33 +22568,33 @@ p5.Table.prototype.removeRow = function(id) {
  * @return {TableRow} p5.TableRow object
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   var row = table.getRow(1);
-	*   //print it column by column
-	*   //note: a row is an object, not an array
-	*   for (var c = 0; c < table.getColumnCount(); c++)
-	*     print(row.getString(c));
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   var row = table.getRow(1);
+    *   //print it column by column
+    *   //note: a row is an object, not an array
+    *   for (var c = 0; c < table.getColumnCount(); c++)
+    *     print(row.getString(c));
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.getRow = function(r) {
   return this.rows[r];
@@ -22084,38 +22607,38 @@ p5.Table.prototype.getRow = function(r) {
  *  @return {Array}   Array of p5.TableRows
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   var rows = table.getRows();
-	*
-	*   //warning: rows is an array of objects
-	*   for (var r = 0; r < rows.length; r++)
-	*     rows[r].set("name", "Unicorn");
-	*
-	*   //print the results
-	*   for (var r = 0; r < table.getRowCount(); r++)
-	*     for (var c = 0; c < table.getColumnCount(); c++)
-	*       print(table.getString(r, c));
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   var rows = table.getRows();
+    *
+    *   //warning: rows is an array of objects
+    *   for (var r = 0; r < rows.length; r++)
+    *     rows[r].set("name", "Unicorn");
+    *
+    *   //print the results
+    *   for (var r = 0; r < table.getRowCount(); r++)
+    *     for (var c = 0; c < table.getColumnCount(); c++)
+    *       print(table.getString(r, c));
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.getRows = function() {
   return this.rows;
@@ -22135,32 +22658,32 @@ p5.Table.prototype.getRows = function() {
  *  @return {TableRow}
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   //find the animal named zebra
-	*   var row = table.findRow("Zebra", "name");
-	*   //find the corresponding species
-	*   print(row.getString("species"));
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   //find the animal named zebra
+    *   var row = table.findRow("Zebra", "name");
+    *   //find the corresponding species
+    *   print(row.getString("species"));
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.findRow = function(value, column) {
   // try the Object
@@ -22197,37 +22720,37 @@ p5.Table.prototype.findRow = function(value, column) {
  *  @return {Array}        An Array of TableRow objects
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   //add another goat
-	*   var newRow = table.addRow();
-	*   newRow.setString("id", table.getRowCount() - 1);
-	*   newRow.setString("species", "Scape Goat");
-	*   newRow.setString("name", "Goat");
-	*
-	*   //find the rows containing animals named Goat
-	*   var rows = table.findRows("Goat", "name");
-	*   print(rows.length + " Goats found");
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   //add another goat
+    *   var newRow = table.addRow();
+    *   newRow.setString("id", table.getRowCount() - 1);
+    *   newRow.setString("species", "Scape Goat");
+    *   newRow.setString("name", "Goat");
+    *
+    *   //find the rows containing animals named Goat
+    *   var rows = table.findRows("Goat", "name");
+    *   print(rows.length + " Goats found");
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.findRows = function(value, column) {
   var ret = [];
@@ -22324,31 +22847,31 @@ p5.Table.prototype.matchRows = function(regexp, column) {
  *  @return {Array}       Array of column values
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   //getColumn returns an array that can be printed directly
-	*   print(table.getColumn("species"));
-	*   //outputs ["Capra hircus", "Panthera pardus", "Equus zebra"]
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   //getColumn returns an array that can be printed directly
+    *   print(table.getColumn("species"));
+    *   //outputs ["Capra hircus", "Panthera pardus", "Equus zebra"]
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.getColumn = function(value) {
   var ret = [];
@@ -22371,31 +22894,31 @@ p5.Table.prototype.getColumn = function(value) {
  *  @method  clearRows
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   table.clearRows();
-	*   print(table.getRowCount() + " total rows in table");
-	*   print(table.getColumnCount() + " total columns in table");
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   table.clearRows();
+    *   print(table.getRowCount() + " total rows in table");
+    *   print(table.getColumnCount() + " total columns in table");
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.clearRows = function() {
   delete this.rows;
@@ -22412,37 +22935,37 @@ p5.Table.prototype.clearRows = function() {
  *  @param {String} [title] title of the given column
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   table.addColumn("carnivore");
-	*   table.set(0, "carnivore", "no");
-	*   table.set(1, "carnivore", "yes");
-	*   table.set(2, "carnivore", "no");
-	*
-	*   //print the results
-	*   for (var r = 0; r < table.getRowCount(); r++)
-	*     for (var c = 0; c < table.getColumnCount(); c++)
-	*       print(table.getString(r, c));
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   table.addColumn("carnivore");
+    *   table.set(0, "carnivore", "no");
+    *   table.set(1, "carnivore", "yes");
+    *   table.set(2, "carnivore", "no");
+    *
+    *   //print the results
+    *   for (var r = 0; r < table.getRowCount(); r++)
+    *     for (var c = 0; c < table.getColumnCount(); c++)
+    *       print(table.getString(r, c));
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.addColumn = function(title) {
   var t = title || null;
@@ -22573,30 +23096,30 @@ p5.Table.prototype.trim = function(column) {
  *  @param  {String|Number} column columnName (string) or ID (number)
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   table.removeColumn("id");
-	*   print(table.getColumnCount());
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   table.removeColumn("id");
+    *   print(table.getColumnCount());
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.removeColumn = function(c) {
   var cString;
@@ -22638,35 +23161,35 @@ p5.Table.prototype.removeColumn = function(c) {
  * @param {String|Number} value  value to assign
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   table.set(0, "species", "Canis Lupus");
-	*   table.set(0, "name", "Wolf");
-	*
-	*   //print the results
-	*   for (var r = 0; r < table.getRowCount(); r++)
-	*     for (var c = 0; c < table.getColumnCount(); c++)
-	*       print(table.getString(r, c));
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   table.set(0, "species", "Canis Lupus");
+    *   table.set(0, "name", "Wolf");
+    *
+    *   //print the results
+    *   for (var r = 0; r < table.getRowCount(); r++)
+    *     for (var c = 0; c < table.getColumnCount(); c++)
+    *       print(table.getString(r, c));
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.set = function(row, column, value) {
   this.rows[row].set(column, value);
@@ -22684,32 +23207,32 @@ p5.Table.prototype.set = function(row, column, value) {
  * @param {Number} value  value to assign
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   table.setNum(1, "id", 1);
-	*
-	*   print(table.getColumn(0));
-	*   //["0", 1, "2"]
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   table.setNum(1, "id", 1);
+    *
+    *   print(table.getColumn(0));
+    *   //["0", 1, "2"]
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.setNum = function(row, column, value){
   this.rows[row].setNum(column, value);
@@ -22743,32 +23266,32 @@ p5.Table.prototype.setString = function(row, column, value){
  * @return {String|Number}
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   print(table.get(0, 1));
-	*   //Capra hircus
-	*   print(table.get(0, "species"));
-	*   //Capra hircus
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   print(table.get(0, 1));
+    *   //Capra hircus
+    *   print(table.get(0, "species"));
+    *   //Capra hircus
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.get = function(row, column) {
   return this.rows[row].get(column);
@@ -22786,30 +23309,30 @@ p5.Table.prototype.get = function(row, column) {
  * @return {Number}
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   print(table.getNum(1, 0) + 100);
-	*   //id 1 + 100 = 101
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   print(table.getNum(1, 0) + 100);
+    *   //id 1 + 100 = 101
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.getNum = function(row, column) {
   return this.rows[row].getNum(column);
@@ -22827,33 +23350,33 @@ p5.Table.prototype.getNum = function(row, column) {
  * @return {String}
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   var tableArray = table.getArray();
-	*
-	*   //output each row as array
-	*   for (var i = 0; i < tableArray.length; i++)
-	*     print(tableArray[i]);
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   var tableArray = table.getArray();
+    *
+    *   //output each row as array
+    *   for (var i = 0; i < tableArray.length; i++)
+    *     print(tableArray[i]);
+    * }
+    * </code>
+    * </div>
  */
 p5.Table.prototype.getString = function(row, column) {
   return this.rows[row].getString(column);
@@ -22870,32 +23393,32 @@ p5.Table.prototype.getString = function(row, column) {
  * @return {Object}
  *
  * @example
-	* <div class="norender">
-	* <code>
-	* // Given the CSV file "mammals.csv"
-	* // in the project's "assets" folder:
-	* //
-	* // id,species,name
-	* // 0,Capra hircus,Goat
-	* // 1,Panthera pardus,Leopard
-	* // 2,Equus zebra,Zebra
-	*
-	* var table;
-	*
-	* function preload() {
-	*   //my table is comma separated value "csv"
-	*   //and has a header specifying the columns labels
-	*   table = loadTable("assets/mammals.csv", "csv", "header");
-	* }
-	*
-	* function setup() {
-	*   var tableObject = table.getObject();
-	*
-	*   print(tableObject);
-	*   //outputs an object
-	* }
-	* </code>
-	* </div>
+    * <div class="norender">
+    * <code>
+    * // Given the CSV file "mammals.csv"
+    * // in the project's "assets" folder:
+    * //
+    * // id,species,name
+    * // 0,Capra hircus,Goat
+    * // 1,Panthera pardus,Leopard
+    * // 2,Equus zebra,Zebra
+    *
+    * var table;
+    *
+    * function preload() {
+    *   //my table is comma separated value "csv"
+    *   //and has a header specifying the columns labels
+    *   table = loadTable("assets/mammals.csv", "csv", "header");
+    * }
+    *
+    * function setup() {
+    *   var tableObject = table.getObject();
+    *
+    *   print(tableObject);
+    *   //outputs an object
+    * }
+    * </code>
+    * </div>
 
  */
 p5.Table.prototype.getObject = function (headerColumn) {
@@ -23134,7 +23657,7 @@ var p5 = _dereq_('../core/core');
  *   print(x); // -3
  *   print(y); // 3
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.abs = Math.abs;
 
@@ -23170,7 +23693,7 @@ p5.prototype.abs = Math.abs;
  *   text(nfc(ax, 2,2), ax, ay - 5);
  *   text(nfc(bx,1,1), bx, by - 5);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.ceil = Math.ceil;
 
@@ -23208,7 +23731,7 @@ p5.prototype.ceil = Math.ceil;
  *   fill(0);
  *   ellipse(xc, 66, 9,9); // Constrained
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.constrain = function(n, low, high) {
   return Math.max(Math.min(n, high), low);
@@ -23252,7 +23775,7 @@ p5.prototype.constrain = function(n, low, high) {
  *   pop();
  *   // Fancy!
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.dist = function(x1, y1, x2, y2) {
   return Math.sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
@@ -23300,7 +23823,7 @@ p5.prototype.dist = function(x1, y1, x2, y2) {
  *   line(0, 0, 0, height);
  *   line(0, height-1, width, height-1);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.exp = Math.exp;
 
@@ -23335,7 +23858,7 @@ p5.prototype.exp = Math.exp;
  *   text(nfc(ax, 2,2), ax, ay - 5);
  *   text(nfc(bx,1,1), bx, by - 5);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.floor = Math.floor;
 
@@ -23373,7 +23896,7 @@ p5.prototype.floor = Math.floor;
  *   point(d, y);
  *   point(e, y);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.lerp = function(start, stop, amt) {
   return amt*(stop-start)+start;
@@ -23415,7 +23938,7 @@ p5.prototype.lerp = function(start, stop, amt) {
  *   noFill();
  *   stroke(0);
  *   beginShape();
- *   for(var x=0; x<width; x++) {
+ *   for(var x=0; x < width; x++) {
  *     xValue = map(x, 0, width, 0, maxX);
  *     yValue = log(xValue);
  *     y = map(yValue, -maxY, maxY, height, 0);
@@ -23425,7 +23948,7 @@ p5.prototype.lerp = function(start, stop, amt) {
  *   line(0,0,0,height);
  *   line(0,height/2,width, height/2);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.log = Math.log;
 
@@ -23457,7 +23980,7 @@ p5.prototype.log = Math.log;
  *   line(0, 0, x2, y2);
  *   print(mag(x2, y2));  // Prints "106.30146"
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.mag = function(x, y) {
   return Math.sqrt(x*x+y*y);
@@ -23497,7 +24020,7 @@ p5.prototype.mag = function(x, y) {
  *       var x2 = map(mouseX, 0, width, 0, 200);
  *       ellipse(x2, 125, 50, 50);
  *     }
- *   </div></code>
+ *   </code></div>
  */
 p5.prototype.map = function(n, start1, stop1, start2, stop2) {
   return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
@@ -23532,7 +24055,7 @@ p5.prototype.map = function(n, start1, stop1, start2, stop2) {
  *   textSize(32);
  *   text(max(numArray), maxX, maxY);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.max = function() {
   if (arguments[0] instanceof Array) {
@@ -23571,7 +24094,7 @@ p5.prototype.max = function() {
  *   textSize(32);
  *   text(min(numArray), maxX, maxY);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.min = function() {
   if (arguments[0] instanceof Array) {
@@ -23623,7 +24146,7 @@ p5.prototype.min = function() {
  *   normalX = 20;
  *   text(normalized, normalX, normalY);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.norm = function(n, start, stop) {
   return this.map(n, start, stop, 0, 1);
@@ -23655,7 +24178,7 @@ p5.prototype.norm = function(n, start, stop) {
  *
  *   ellipse(eLoc*8, eLoc*8, pow(eSize, 4), pow(eSize, 4));
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.pow = Math.pow;
 
@@ -23690,7 +24213,7 @@ p5.prototype.pow = Math.pow;
  *   text(nfc(ax, 2,2), ax, ay - 5);
  *   text(nfc(bx,1,1), bx, by - 5);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.round = Math.round;
 
@@ -23730,7 +24253,7 @@ p5.prototype.round = Math.round;
  *   text("x = " + x1, 0, y1 + spacing);
  *   text("sqrt(x) = " + x2, 0, y2 + spacing);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.sq = function(n) { return n*n; };
 
@@ -23772,7 +24295,7 @@ p5.prototype.sq = function(n) { return n*n; };
  *   text("x = " + x1, 0, y1 + spacing);
  *   text("sqrt(x) = " + x2, 0, y2 + spacing);
  * }
- * </div></code>
+ * </code></div>
  */
 p5.prototype.sqrt = Math.sqrt;
 
@@ -25979,10 +26502,13 @@ _dereq_('../core/error_helpers');
  * </div>
  */
 p5.prototype.text = function(str, x, y, maxWidth, maxHeight) {
-
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
   this._validateParameters(
     'text',
-    arguments,
+    args,
     [
       ['*', 'Number', 'Number'],
       ['*', 'Number', 'Number', 'Number', 'Number']
@@ -26443,9 +26969,12 @@ p5.Font.prototype._handleAlignment = function(p, ctx, line, x, y) {
 };
 
 function cacheKey() {
-  var args = Array.prototype.slice.call(arguments),
-    i = args.length,
-    hash = '';
+  var args = new Array(arguments.length);
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = arguments[i];
+  }
+  i = args.length;
+  var hash = '';
 
   while (i--) {
     hash += (args[i] === Object(args[i])) ?
