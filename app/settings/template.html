@@ -15,41 +15,42 @@
     <!-- Indentation amount -->
     <div id="indentation" class="section">
       <p class="label">Indentation amount</p>
-      <img class="adjustButton button" src="images/minus-button.svg">
-      <input id="tabSize" type="text"  v-model="tabSizeDisplay" size=3 v-on="change: updateTabSize">
-      <img class="adjustButton button" src="images/plus-button.svg">
+      <div id="indentationAmount">
+        <img class="adjustButton button" src="images/minus-button.svg">
+        <input id="tabSize" type="text"  v-model="tabSizeDisplay" size=3 v-on="change: updateTabSize">
+        <img class="adjustButton button" src="images/plus-button.svg">
+      </div>
+
+      <div id="indentOptions" class="hiddenRadio radioOptions">
+        <input type="radio" value="spaces" id="tabTypeS" v-model="tabType">
+        <label class="radioSelection" for="tabTypeS">spaces</label>
+        <input type="radio" value="tabs" id="tabTypeT" v-model="tabType">
+        <label class="radioSelection" for="tabTypeT">tabs</label>
+      </div>
     </div>
 
-    <div id="indentOptions" class="section hiddenRadio">
-      <input type="radio" name="tabType" value="spaces" id="tabTypeS" v-model="tabType">
-      <label class="indentSelection" id="spaceBox" for="tabTypeS">
-        <span>
-          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="space" x="0" y="0" viewBox="111.98 169.64 394.28 116.59" enable-background="new 111.982048 169.6423035 394.276123 116.5872803" xml:space="preserve"><path d="M495.71 169.64h-50.1c-5.85 0-10.58 4.74-10.58 10.58v34.74H183.25v-34.74c0-5.84-4.74-10.58-10.58-10.58h-50.1c-5.84 0-10.58 4.74-10.58 10.58v45.32 50.1c0 5.84 4.74 10.58 10.58 10.58h50.1 272.95 36.41 13.69c5.85 0 10.58-4.74 10.58-10.58v-95.42C506.3 174.38 501.56 169.64 495.71 169.64z"/></svg>
-        </span>
-        spaces
-      </label>
-      <input type="radio" name="tabType" value="tabs" id="tabTypeT" v-model="tabType">
-      <label class="indentSelection" id="tabBox" for="tabTypeT">
-        <span>
-          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="tab" x="0" y="0" viewBox="111.98 169.64 394.28 196.29" enable-background="new 111.982048 169.6423035 394.276123 196.2901306" xml:space="preserve"><path d="M292.69 348.7v-47.75H123.92c-6.53 0-11.94-5.41-11.94-11.94v-47.75c0-6.53 5.41-11.94 11.94-11.94h168.77v-47.75c0-4.85 2.98-9.14 7.46-11 4.29-1.87 9.51-0.94 12.86 2.61l83.56 83.56c2.43 2.23 3.55 5.41 3.55 8.39 0 2.98-1.12 6.16-3.55 8.39l-83.56 83.56c-3.35 3.55-8.58 4.48-12.86 2.61C295.67 357.84 292.69 353.55 292.69 348.7z"/><path d="M435 355.35v-175.13c0-5.84 4.74-10.58 10.58-10.58h50.09c5.84 0 10.58 4.74 10.58 10.58v175.13c0 5.84-4.74 10.58-10.58 10.58h-50.09C439.74 365.93 435 361.19 435 355.35z"/></svg>
-        </span>
-        tabs
-      </label>
-    </div>
 
 
     <!-- Word wrap -->
-    <div class="section hiddenCheckbox" id="ww">
-      <img id="wordWrapIcon" src="images/wordWrap.svg">
-      <input id="wordWrap" type="checkbox" v-model="wordWrap">
-      <label class="highlight fade" for="wordWrap">Word Wrap</label>
+    <div id="ww" class="section">
+      <p class="label">Word wrap</p>
+      <div id="wwOptions" class="hiddenRadio radioOptions">
+        <input type="radio" value="true" id="wordWrapOn" v-model="wordWrap">
+        <label class="radioSelection" for="wordWrapOn">on</label>
+        <input type="radio" value="false" id="wordWrapOff" v-model="wordWrap">
+        <label class="radioSelection" for="wordWrapOff">off</label>
+      </div>
     </div>
 
     <!-- Run in browser -->
-    <div class="section hiddenCheckbox" id="runInBrowserContainer">
-      <img id="browserIcon" src="images/browser.svg">
-      <input type="checkbox" id="runInBrowser" v-model="runInBrowser">
-      <label class="highlight fade" for="runInBrowser">Run In Browser</label>
+    <div id="rib" class="section">
+      <p class="label">Run in browser</p>
+      <div id="ribOptions" class="hiddenRadio radioOptions">
+        <input type="radio" value=true id="runInBrowserOn" v-model="runInBrowser">
+        <label class="radioSelection" for="runInBrowserOn">on</label>
+        <input type="radio" value=false id="runInBrowserOff" v-model="runInBrowser">
+        <label class="radioSelection" for="runInBrowserOff">off</label>
+      </div>
     </div>
 
     <!-- Console orientation -->

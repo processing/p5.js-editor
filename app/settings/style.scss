@@ -65,15 +65,6 @@
     input[type="radio"] {
       display:none;
     }
-
-    input[type="radio"]:checked + label svg {
-      fill: #e1dedc;
-
-      &:hover {
-        fill: #fff;
-      }
-    }
-
   }
 
   #selectable {
@@ -193,36 +184,39 @@
     transition: all 0.3s ease;
   }
 
-  #tabBox {
-    float: right;
+
+  #indentationAmount {
+    width: 200px;
+    display: inline;
   }
 
-  #spaceBox {
-    float: left;
+  #indentOptions .radioSelection {
+    display: block;
   }
 
-  #indentOptions {
-    position: relative;
-    /* margin-bottom: 12px; */
+  .radioOptions {
 
+    display: inline-block;
+    color: #b5b5b5;
     input[type="radio"]:checked + label {
-      background-color: #e1dedc;
+      color: #333333;
     }
 
     input[type="radio"] + label:hover {
-      background-color: #fff;
+      color: #333333;
     }
+
+    label {
+      cursor: pointer !important;
+    }
+
   }
 
-  .indentSelection {
+  .radioSelection {
     color: #828384;
-    display: inline-block;
     border-radius: 4px;
-    // float: right;
     text-align: center;
-    // width: 67px;
-    width: 44%;
-    transition: all 0.3s ease;
+    transition: all 0.15s ease;
   }
 
 }
