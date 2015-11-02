@@ -236,6 +236,24 @@ module.exports = {
     }
   },
 
+  addLibrary: function(path) {
+    var basename = Path.basename(path);
+    var src = Path.join('mode_assets', 'p5', 'libraries', basename);
+    var dest = Path.join(this.projectPath, 'libraries', basename);
+    fs.createReadStream(src).pipe(fs.createWriteStream(dest));
+
+    var indexPath = Path.join(this.projectPath, 'index.html');
+    fs.readFile(indexPath, 'utf8', function(err, data){
+      var scriptTag = '<script src="libraries/'+basename+'" type="text/javascript"></script>';
+      var p5tag = '<script src="libraries/p5.js" type="text/javascript"></script>';
+
+      if (data.indexOf(scriptTag) < 0) {
+        var newHtml = data.replace(p5tag, p5tag + '\n    ' + scriptTag);
+        fs.writeFile(indexPath, newHtml);
+      }
+    });
+  },
+
   referenceURL: 'http://p5js.org/reference/'
 
 };

@@ -226,6 +226,23 @@ module.exports.setup = function(app) {
     examples.submenu = exampleCategoryMenu;
     fileMenu.append(examples);
 
+    var importLibsLabel = new gui.MenuItem({label: 'Import Library'});
+    var importLibsMenu = new gui.Menu();
+
+    var libfiles = fs.readdirSync(Path.join('mode_assets', 'p5', 'libraries'));
+    libfiles.forEach(function(lib) {
+      importLibsMenu.append(new gui.MenuItem({
+        label: Path.basename(lib),
+        click: function() {
+          app.modeFunction('addLibrary', lib);
+        }
+      }));
+    });
+
+    importLibsLabel.submenu = importLibsMenu;
+    // importLibs.append(new gui.MenuItem({label: 'Serial'}));
+    fileMenu.append(importLibsLabel);
+
     fileMenu.append(new gui.MenuItem({ type: 'separator' }));
 
     fileMenu.append(new gui.MenuItem({ label: 'Run',
@@ -280,15 +297,6 @@ module.exports.setup = function(app) {
       modifiers: 'cmd',
       key: 'e',
       click: function(){
-        // if (nodeGlobal.serialrunning) {
-        //   p5serial.stop();
-        //   nodeGlobal.serialrunning = false;
-        //   serialItem.label = 'Start Serial Server';
-        // } else {
-        //   p5serial.start();
-        //   nodeGlobal.serialrunning = true;
-        //   serialItem.label = 'Stop Serial Server';
-        // }
         if (nodeGlobal.serialrunning) {
           nodeGlobal.serialWindow.close(true);
           nodeGlobal.serialrunning = false;
