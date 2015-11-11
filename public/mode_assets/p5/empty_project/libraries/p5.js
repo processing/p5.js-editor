@@ -1,4 +1,4 @@
-/*! p5.js v0.4.17 October 13, 2015 */
+/*! p5.js v0.4.18 November 09, 2015 */
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.p5 = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 
 },{}],2:[function(_dereq_,module,exports){
@@ -5580,7 +5580,7 @@ p5.prototype.plane = function(width, height){
 
     var obj = geometry3d.generateObj();
 
-    this._renderer.initBuffer(gId, obj);
+    this._renderer.initBuffer(gId, [obj]);
 
   }
 
@@ -5635,9 +5635,9 @@ p5.prototype.sphere = function(radius, detail){
 
     geometry3d.parametricGeometry(createSphere, detailX, detailY);
 
-    var obj = geometry3d.generateObj();
+    var obj = geometry3d.generateObj(true, true);
 
-    this._renderer.initBuffer(gId, obj);
+    this._renderer.initBuffer(gId, [obj]);
   }
 
   this._renderer.drawBuffer(gId);
@@ -5694,7 +5694,7 @@ p5.prototype.cylinder = function(radius, height, detail){
     };
 
     geometry3d.parametricGeometry(createCylinder, detailX, detailY);
-    geometry3d.mergeVertices();
+    var obj = geometry3d.generateObj(true);
 
     var createTop = function(u, v){
       var theta = 2 * Math.PI * u;
@@ -5709,8 +5709,10 @@ p5.prototype.cylinder = function(radius, height, detail){
       }
     };
 
-    geometry3d.parametricGeometry(
-      createTop, detailX, 1, geometry3d.vertices.length);
+    var geometry3d1 = new p5.Geometry3D();
+    geometry3d1.parametricGeometry(
+      createTop, detailX, 1);
+    var obj1 = geometry3d1.generateObj();
 
     var createBottom = function(u, v){
       var theta = 2 * Math.PI * u;
@@ -5724,12 +5726,13 @@ p5.prototype.cylinder = function(radius, height, detail){
       }
     };
 
-    geometry3d.parametricGeometry(
-      createBottom, detailX, 1, geometry3d.vertices.length);
+    var geometry3d2 = new p5.Geometry3D();
+    geometry3d2.parametricGeometry(
+      createBottom, detailX, 1);
+    var obj2 = geometry3d2.generateObj();
 
-    var obj = geometry3d.generateObj(true);
 
-    this._renderer.initBuffer(gId, obj);
+    this._renderer.initBuffer(gId, [obj, obj1, obj2]);
   }
 
   this._renderer.drawBuffer(gId);
@@ -5787,8 +5790,9 @@ p5.prototype.cone = function(radius, height, detail){
     };
 
     geometry3d.parametricGeometry(createCone, detailX, detailY);
-    geometry3d.mergeVertices();
+    var obj = geometry3d.generateObj(true);
 
+    var geometry3d1 = new p5.Geometry3D();
     var createBottom = function(u, v){
       var theta = 2 * Math.PI * u;
       var x = radius * (1 - v) * Math.sin(-theta);
@@ -5797,12 +5801,11 @@ p5.prototype.cone = function(radius, height, detail){
       return new p5.Vector(x, y, z);
     };
 
-    geometry3d.parametricGeometry(
-      createBottom, detailX, 1, geometry3d.vertices.length);
+    geometry3d1.parametricGeometry(
+      createBottom, detailX, 1);
+    var obj1 = geometry3d1.generateObj();
 
-    var obj = geometry3d.generateObj(true);
-
-    this._renderer.initBuffer(gId, obj);
+    this._renderer.initBuffer(gId, [obj, obj1]);
   }
 
   this._renderer.drawBuffer(gId);
@@ -5862,9 +5865,9 @@ p5.prototype.torus = function(radius, tubeRadius, detail){
 
     geometry3d.parametricGeometry(createTorus, detailX, detailY);
 
-    var obj = geometry3d.generateObj();
+    var obj = geometry3d.generateObj(true);
 
-    this._renderer.initBuffer(gId, obj);
+    this._renderer.initBuffer(gId, [obj]);
   }
 
   this._renderer.drawBuffer(gId);
@@ -5962,9 +5965,9 @@ p5.prototype.box = function(width, height, depth){
     geometry3d.parametricGeometry(
       createPlane6, detailX, detailY, geometry3d.vertices.length);
 
-    var obj = geometry3d.generateObj(true);
+    var obj = geometry3d.generateObj();
 
-    this._renderer.initBuffer(gId, obj);
+    this._renderer.initBuffer(gId, [obj]);
   }
 
   this._renderer.drawBuffer(gId);
@@ -6260,7 +6263,7 @@ p5.Renderer3D.prototype.strokeWeight = function() {
 
 p5.Renderer3D.prototype.fill = function(r, g, b, a) {
   var color = this._pInst.color.apply(this._pInst, arguments);
-  var colorNormalized = color._normalize();
+  var colorNormalized = color._array;
   this.curColor = colorNormalized;
   this.drawMode = 'fill';
   return this;
@@ -6268,7 +6271,7 @@ p5.Renderer3D.prototype.fill = function(r, g, b, a) {
 
 p5.Renderer3D.prototype.stroke = function(r, g, b, a) {
   var color = this._pInst.color.apply(this._pInst, arguments);
-  var colorNormalized = color._normalize();
+  var colorNormalized = color._array;
   this.curColor = colorNormalized;
   this.drawMode = 'stroke';
   return this;
@@ -6293,6 +6296,7 @@ p5.Renderer3D.prototype._getColorVertexShader = function(){
 };
 
 module.exports = p5.Renderer3D;
+
 },{"../core/core":48}],31:[function(_dereq_,module,exports){
 'use strict';
 
@@ -6358,7 +6362,7 @@ p5.prototype.ambientLight = function(v1, v2, v3, a){
 
   var color = this._renderer._pInst.color.apply(
     this._renderer._pInst, arguments);
-  var colors = color._normalize();
+  var colors = color._array;
 
   gl.uniform3f( shaderProgram.uAmbientColor,
     colors[0], colors[1], colors[2]);
@@ -6455,7 +6459,7 @@ p5.prototype.directionalLight = function(v1, v2, v3, a, x, y, z) {
   //@TODO: check parameters number
   var color = this._renderer._pInst.color.apply(
     this._renderer._pInst, [v1, v2, v3]);
-  var colors = color._normalize();
+  var colors = color._array;
 
   gl.uniform3f( shaderProgram.uDirectionalColor,
     colors[0], colors[1], colors[2]);
@@ -6582,7 +6586,7 @@ p5.prototype.pointLight = function(v1, v2, v3, a, x, y, z) {
   //@TODO: check parameters number
   var color = this._renderer._pInst.color.apply(
     this._renderer._pInst, [v1, v2, v3]);
-  var colors = color._normalize();
+  var colors = color._array;
 
   gl.uniform3f( shaderProgram.uPointLightColor,
     colors[0], colors[1], colors[2]);
@@ -6693,16 +6697,21 @@ p5.prototype.texture = function(image){
   var shaderProgram = this._renderer._getShader('lightVert',
     'lightTextureFrag');
   gl.useProgram(shaderProgram);
-  var tex = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-
-  // Currently buggy, likely bc of p5 object types
-  // if(!this._isPowerOf2(image.width) || !this._isPowerOf2(image.height)){
-  //   image.width = _nextHighestPOT(image.width);
-  //   image.height = _nextHighestPOT(image.height);
-  // }
   if (image instanceof p5.Image) {
+    //check if image is already used as texture
+    if(!image.isTexture){
+      //createTexture and set isTexture to true
+      var tex = gl.createTexture();
+      image.createTexture(tex);
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+      image._setProperty('isTexture', true);
+    }
+    //otherwise we're good to bind texture without creating
+    //a new one on the gl
+    else {
+      //TODO
+    }
     image.loadPixels();
     var data = new Uint8Array(image.pixels);
     gl.texImage2D(gl.TEXTURE_2D, 0,
@@ -6722,21 +6731,24 @@ p5.prototype.texture = function(image){
   if (_isPowerOf2(image.width) && _isPowerOf2(image.height)) {
     gl.generateMipmap(gl.TEXTURE_2D);
   } else {
-    image.width = _nextHighestPOT(image.width);
-    image.height = _nextHighestPOT(image.height);
-    gl.texParameteri(gl.TETXURE_2D,
-      gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TETXURE_2D,
-      gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TETXURE_2D,
-      gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    //@TODO this is problematic
+    //image.width = _nextHighestPOT(image.width);
+    //image.height = _nextHighestPOT(image.height);
+    gl.texParameteri(gl.TEXTURE_2D,
+    gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,
+    gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,
+    gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D,
+    gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   }
   //this is where we'd activate multi textures
   //eg. gl.activeTexture(gl.TEXTURE0 + (unit || 0));
   //but for now we just have a single texture.
   //@TODO need to extend this functionality
-  gl.activeTexture(gl.TEXTURE0 + 0);
-  gl.bindTexture(gl.TEXTURE_2D, tex);
+  //gl.activeTexture(gl.TEXTURE0 + 0);
+  //gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.uniform1i(gl.getUniformLocation(shaderProgram, 'uSampler'), 0);
   gl.uniform1i(gl.getUniformLocation(shaderProgram, 'isTexture'), true);
   return this;
@@ -6758,13 +6770,13 @@ function _isPowerOf2 (value){
  * @param  {Number} value [description]
  * @return {Number}       [description]
  */
-function _nextHighestPOT (value){
-  --value;
-  for (var i = 1; i < 32; i <<= 1) {
-    value = value | value >> i;
-  }
-  return value + 1;
-}
+// function _nextHighestPOT (value){
+//   --value;
+//   for (var i = 1; i < 32; i <<= 1) {
+//     value = value | value >> i;
+//   }
+//   return value + 1;
+// }
 
 /**
  * Basic material for geometry with a given color
@@ -6805,7 +6817,7 @@ p5.prototype.basicMaterial = function(v1, v2, v3, a){
 
   var color = this._renderer._pInst.color.apply(
     this._renderer._pInst, arguments);
-  var colors = color._normalize();
+  var colors = color._array;
 
   gl.uniform4f( shaderProgram.uMaterialColor,
     colors[0], colors[1], colors[2], colors[3]);
@@ -6851,7 +6863,7 @@ p5.prototype.ambientMaterial = function(v1, v2, v3, a) {
 
   var color = this._renderer._pInst.color.apply(
     this._renderer._pInst, arguments);
-  var colors = color._normalize();
+  var colors = color._array;
 
   gl.uniform4f(shaderProgram.uMaterialColor,
     colors[0], colors[1], colors[2], colors[3]);
@@ -6902,7 +6914,7 @@ p5.prototype.specularMaterial = function(v1, v2, v3, a) {
 
   var color = this._renderer._pInst.color.apply(
     this._renderer._pInst, arguments);
-  var colors = color._normalize();
+  var colors = color._array;
 
   gl.uniform4f(shaderProgram.uMaterialColor,
     colors[0], colors[1], colors[2], colors[3]);
@@ -6917,8 +6929,9 @@ p5.prototype.specularMaterial = function(v1, v2, v3, a) {
 };
 
 module.exports = p5;
+
 },{"../core/core":48}],34:[function(_dereq_,module,exports){
-//functions are adjusted from Three.js(http://threejs.org)
+//some of the functions are adjusted from Three.js(http://threejs.org)
 
 'use strict';
 
@@ -6960,6 +6973,8 @@ p5.Geometry3D.prototype.parametricGeometry = function
   var i, j, p;
   var u, v;
   offset = offset || 0;
+  this.detailX = detailX;
+  this.detailY = detailY;
 
   var sliceCount = detailX + 1;
   for (i = 0; i <= detailY; i++){
@@ -6993,75 +7008,6 @@ p5.Geometry3D.prototype.parametricGeometry = function
       this.uvs.push([uvb, uvc, uvd]);
     }
   }
-};
-
-/**
- * merge duplicated vertices
- */
-p5.Geometry3D.prototype.mergeVertices= function () {
-
-  var verticesMap = {};
-  var unique = [], changes = [];
-
-  var v, key;
-  var precisionPoints = 4;
-  var precision = Math.pow(10, precisionPoints);
-  var i, face;
-  var indices;
-
-  for (i = 0; i < this.vertices.length; i ++) {
-
-    v = this.vertices[i];
-    key = Math.round(v.x * precision) + '_' +
-    Math.round(v.y * precision) + '_' +
-    Math.round(v.z * precision);
-
-    if (verticesMap[key] === undefined) {
-      verticesMap[key] = i;
-      unique.push(this.vertices[i]);
-      changes[i] = unique.length - 1;
-    } else {
-      changes[i] = changes[verticesMap[key]];
-    }
-
-  }
-  // if faces are completely degenerate after merging vertices, we
-  // have to remove them from the geometry.
-  var faceIndicesToRemove = [];
-
-  for (i = 0; i < this.faces.length; i ++) {
-
-    face = this.faces[i];
-
-    face[0] = changes[face[0]];
-    face[1] = changes[face[1]];
-    face[2] = changes[face[2]];
-
-    indices = [face[0], face[1], face[2]];
-
-    var dupIndex = - 1;
-
-    // if any duplicate vertices are found in a Face
-    // we have to remove the face as nothing can be saved
-    for (var n = 0; n < 3; n ++) {
-      if (indices[n] === indices[(n + 1) % 3]) {
-        dupIndex = n;
-        faceIndicesToRemove.push(i);
-        break;
-      }
-    }
-  }
-
-  for (i = faceIndicesToRemove.length - 1; i >= 0; i --) {
-    var idx = faceIndicesToRemove[i];
-    this.faces.splice(idx, 1);
-  }
-
-  // Use unique set of vertices
-  var diff = this.vertices.length - unique.length;
-  this.vertices = unique;
-  return diff;
-
 };
 
 /**
@@ -7133,6 +7079,51 @@ p5.Geometry3D.prototype.computeVertexNormals = function (){
 
 };
 
+p5.Geometry3D.prototype.averageNormals = function() {
+
+  for(var i = 0; i <= this.detailY; i++){
+    var offset = this.detailX + 1;
+    var temp = p5.Vector
+      .add(this.vertexNormals[i*offset],
+        this.vertexNormals[i*offset + this.detailX]);
+    temp = p5.Vector.div(temp, 2);
+    this.vertexNormals[i*offset] = temp;
+    this.vertexNormals[i*offset + this.detailX] = temp;
+  }
+};
+
+p5.Geometry3D.prototype.averagePoleNormals = function() {
+
+  //average the north pole
+  var sum = new p5.Vector(0, 0, 0);
+  for(var i = 0; i < this.detailX; i++){
+    sum.add(this.vertexNormals[i]);
+  }
+  sum = p5.Vector.div(sum, this.detailX);
+
+  for(i = 0; i < this.detailX; i++){
+    this.vertexNormals[i] = sum;
+  }
+
+  //average the south pole
+  sum = new p5.Vector(0, 0, 0);
+  for(i = this.vertices.length - 1;
+    i > this.vertices.length - 1 - this.detailX; i--){
+    sum.add(this.vertexNormals[i]);
+  }
+  sum = p5.Vector.div(sum, this.detailX);
+
+  for(i = this.vertices.length - 1;
+    i > this.vertices.length - 1 - this.detailX; i--){
+    this.vertexNormals[i] = sum;
+  }
+};
+
+/**
+ * [generateUV description]
+ * @param  {Array} faces [description]
+ * @param  {Array} uvs   [description]
+ */
 p5.Geometry3D.prototype.generateUV = function(faces, uvs){
 
   faces = flatten(faces);
@@ -7148,12 +7139,18 @@ p5.Geometry3D.prototype.generateUV = function(faces, uvs){
 /**
  * generate an object containing information needed to create buffer
  */
-p5.Geometry3D.prototype.generateObj = function(noMerge){
-  if(!noMerge){
-    this.mergeVertices();
-  }
+p5.Geometry3D.prototype.generateObj = function(average, sphere){
+
   this.computeFaceNormals();
   this.computeVertexNormals();
+
+  if(average){
+    this.averageNormals();
+  }
+
+  if(sphere){
+    this.averagePoleNormals();
+  }
 
   var obj = {
     vertices: turnVectorArrayIntoNumberArray(this.vertices),
@@ -7809,7 +7806,7 @@ var RESOLUTION = 1000;
 
 //@TODO should probably implement an override for these attributes
 var attributes = {
-  alpha: false,
+  alpha: true,
   depth: true,
   stencil: true,
   antialias: false,
@@ -7906,10 +7903,10 @@ p5.Renderer3D.prototype.background = function() {
   var gl = this.GL;
   var _col = this._pInst.color.apply(this._pInst, arguments);
   // gl.clearColor(0.0,0.0,0.0,1.0);
-  var _r = (_col.rgba[0]) / 255;
-  var _g = (_col.rgba[1]) / 255;
-  var _b = (_col.rgba[2]) / 255;
-  var _a = (_col.rgba[3]) / 255;
+  var _r = (_col.levels[0]) / 255;
+  var _g = (_col.levels[1]) / 255;
+  var _b = (_col.levels[2]) / 255;
+  var _a = (_col.levels[3]) / 255;
   gl.clearColor(_r, _g, _b, _a);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 };
@@ -8033,7 +8030,6 @@ p5.Renderer3D.prototype.setMatrixUniforms = function(shaderKey) {
     shaderProgram.uNMatrixUniform,
     false, this.uNMatrix.mat4);
 };
-
 //////////////////////////////////////////////
 // GET CURRENT | for shader and color
 //////////////////////////////////////////////
@@ -8206,6 +8202,7 @@ p5.Renderer3D.prototype.pop = function() {
 };
 
 module.exports = p5.Renderer3D;
+
 },{"../core/core":48,"../core/p5.Renderer":54,"./p5.Matrix":35,"./shader":38}],37:[function(_dereq_,module,exports){
 //retained mode is used by rendering 3d_primitives
 
@@ -8216,10 +8213,10 @@ var hashCount = 0;
 
 /**
  * createBuffer
- * @param  {String} gId [description]
- * @param  {String} obj [description]
+ * @param  {String} gId  key of the geometry object
+ * @param  {Array}  arr  array holding bject containing geometry information
  */
-p5.Renderer3D.prototype.createBuffer = function(gId, obj) {
+p5.Renderer3D.prototype.createBuffer = function(gId, arr) {
 
   hashCount ++;
   if(hashCount > 1000){
@@ -8230,49 +8227,59 @@ p5.Renderer3D.prototype.createBuffer = function(gId, obj) {
 
   var gl = this.GL;
   this.gHash[gId] = {};
-  this.gHash[gId].len = obj.len;
-  this.gHash[gId].vertexBuffer = gl.createBuffer();
-  this.gHash[gId].normalBuffer = gl.createBuffer();
-  this.gHash[gId].uvBuffer = gl.createBuffer();
-  this.gHash[gId].indexBuffer = gl.createBuffer();
+  this.gHash[gId].len = [];
+  this.gHash[gId].vertexBuffer = [];
+  this.gHash[gId].normalBuffer = [];
+  this.gHash[gId].uvBuffer = [];
+  this.gHash[gId].indexBuffer =[];
+
+  arr.forEach(function(obj){
+    this.gHash[gId].len.push(obj.len);
+    this.gHash[gId].vertexBuffer.push(gl.createBuffer());
+    this.gHash[gId].normalBuffer.push(gl.createBuffer());
+    this.gHash[gId].uvBuffer.push(gl.createBuffer());
+    this.gHash[gId].indexBuffer.push(gl.createBuffer());
+  }.bind(this));
 };
 
 /**
  * initBuffer description
  * @param  {String} gId    key of the geometry object
- * @param  {Object} obj    an object containing geometry information
+ * @param  {Array}  arr    array holding bject containing geometry information
  */
-p5.Renderer3D.prototype.initBuffer = function(gId, obj) {
+p5.Renderer3D.prototype.initBuffer = function(gId, arr) {
   this._setDefaultCamera();
   var gl = this.GL;
-  this.createBuffer(gId, obj);
+  this.createBuffer(gId, arr);
 
   var shaderProgram = this.mHash[this._getCurShaderId()];
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].vertexBuffer);
-  gl.bufferData(
-    gl.ARRAY_BUFFER, new Float32Array(obj.vertices), gl.STATIC_DRAW);
-  gl.vertexAttribPointer(
-    shaderProgram.vertexPositionAttribute,
-    3, gl.FLOAT, false, 0, 0);
+  arr.forEach(function(obj, i){
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].vertexBuffer[i]);
+    gl.bufferData(
+      gl.ARRAY_BUFFER, new Float32Array(obj.vertices), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(
+      shaderProgram.vertexPositionAttribute,
+      3, gl.FLOAT, false, 0, 0);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].normalBuffer);
-  gl.bufferData(
-    gl.ARRAY_BUFFER, new Float32Array(obj.vertexNormals), gl.STATIC_DRAW);
-  gl.vertexAttribPointer(
-    shaderProgram.vertexNormalAttribute,
-    3, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].normalBuffer[i]);
+    gl.bufferData(
+      gl.ARRAY_BUFFER, new Float32Array(obj.vertexNormals), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(
+      shaderProgram.vertexNormalAttribute,
+      3, gl.FLOAT, false, 0, 0);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].uvBuffer);
-  gl.bufferData(
-    gl.ARRAY_BUFFER, new Float32Array(obj.uvs), gl.STATIC_DRAW);
-  gl.vertexAttribPointer(
-    shaderProgram.textureCoordAttribute,
-    2, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].uvBuffer[i]);
+    gl.bufferData(
+      gl.ARRAY_BUFFER, new Float32Array(obj.uvs), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(
+      shaderProgram.textureCoordAttribute,
+      2, gl.FLOAT, false, 0, 0);
 
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.gHash[gId].indexBuffer);
-  gl.bufferData
-   (gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(obj.faces), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.gHash[gId].indexBuffer[i]);
+    gl.bufferData
+     (gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(obj.faces), gl.STATIC_DRAW);
+  }.bind(this));
 };
 
 /**
@@ -8285,28 +8292,30 @@ p5.Renderer3D.prototype.drawBuffer = function(gId) {
   var shaderKey = this._getCurShaderId();
   var shaderProgram = this.mHash[shaderKey];
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].vertexBuffer);
-  gl.vertexAttribPointer(
-    shaderProgram.vertexPositionAttribute,
-    3, gl.FLOAT, false, 0, 0);
+  this.gHash[gId].len.forEach(function(d, i){
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].vertexBuffer[i]);
+    gl.vertexAttribPointer(
+      shaderProgram.vertexPositionAttribute,
+      3, gl.FLOAT, false, 0, 0);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].normalBuffer);
-  gl.vertexAttribPointer(
-    shaderProgram.vertexNormalAttribute,
-    3, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].normalBuffer[i]);
+    gl.vertexAttribPointer(
+      shaderProgram.vertexNormalAttribute,
+      3, gl.FLOAT, false, 0, 0);
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].uvBuffer);
-  gl.vertexAttribPointer(
-    shaderProgram.textureCoordAttribute,
-    2, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.gHash[gId].uvBuffer[i]);
+    gl.vertexAttribPointer(
+      shaderProgram.textureCoordAttribute,
+      2, gl.FLOAT, false, 0, 0);
 
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.gHash[gId].indexBuffer);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.gHash[gId].indexBuffer[i]);
 
-  this.setMatrixUniforms(shaderKey);
+    this.setMatrixUniforms(shaderKey);
 
-  gl.drawElements(
-    gl.TRIANGLES, this.gHash[gId].len,
-     gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(
+      gl.TRIANGLES, this.gHash[gId].len[i],
+       gl.UNSIGNED_SHORT, 0);
+  }.bind(this));
 };
 
 module.exports = p5.Renderer3D;
@@ -8327,7 +8336,7 @@ module.exports = {
   lightVert:
     "attribute vec3 aPosition;\nattribute vec3 aNormal;\nattribute vec2 aTexCoord;\n\nuniform mat4 uModelViewMatrix;\nuniform mat4 uProjectionMatrix;\nuniform mat4 uNormalMatrix;\nuniform float uResolution;\nuniform int uAmbientLightCount;\nuniform int uDirectionalLightCount;\nuniform int uPointLightCount;\n\nuniform vec3 uAmbientColor[8];\nuniform vec3 uLightingDirection[8];\nuniform vec3 uDirectionalColor[8];\nuniform vec3 uPointLightLocation[8];\nuniform vec3 uPointLightColor[8];\nuniform bool uSpecular;\n\nvarying vec3 vVertexNormal;\nvarying vec2 vVertTexCoord;\nvarying vec3 vLightWeighting;\n\nvec3 ambientLightFactor = vec3(0.0, 0.0, 0.0);\nvec3 directionalLightFactor = vec3(0.0, 0.0, 0.0);\nvec3 pointLightFactor = vec3(0.0, 0.0, 0.0);\nvec3 pointLightFactor2 = vec3(0.0, 0.0, 0.0);\n\nvoid main(void){\n\n  vec4 positionVec4 = vec4(aPosition / uResolution, 1.0);\n  gl_Position = uProjectionMatrix * uModelViewMatrix * positionVec4;\n\n  vec3 vertexNormal = vec3( uNormalMatrix * vec4( aNormal, 1.0 ) );\n  vVertexNormal = vertexNormal;\n  vVertTexCoord = aTexCoord;\n\n  vec4 mvPosition = uModelViewMatrix * vec4(aPosition / uResolution, 1.0);\n  vec3 eyeDirection = normalize(-mvPosition.xyz);\n\n  float shininess = 32.0;\n  float specularFactor = 2.0;\n  float diffuseFactor = 0.3;\n\n  for(int i = 0; i < 8; i++){\n    if(uAmbientLightCount == i) break;\n    ambientLightFactor += uAmbientColor[i];\n  }\n\n  for(int j = 0; j < 8; j++){\n    if(uDirectionalLightCount == j) break;\n    vec3 dir = uLightingDirection[j];\n    float directionalLightWeighting = max(dot(vertexNormal, dir), 0.0);\n    directionalLightFactor += uDirectionalColor[j] * directionalLightWeighting;\n  }\n\n  for(int k = 0; k < 8; k++){\n    if(uPointLightCount == k) break;\n    vec3 loc = uPointLightLocation[k];\n    //loc = loc / uResolution;\n    vec3 lightDirection = normalize(loc - mvPosition.xyz);\n\n    float directionalLightWeighting = max(dot(vertexNormal, lightDirection), 0.0);\n    pointLightFactor += uPointLightColor[k] * directionalLightWeighting;\n\n    //factor2 for specular\n    vec3 reflectionDirection = reflect(-lightDirection, vertexNormal);\n    float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), shininess);\n\n    pointLightFactor2 += uPointLightColor[k] * (specularFactor * specularLightWeighting\n      +  directionalLightWeighting * diffuseFactor);\n  }\n  \n  if(!uSpecular){\n    vLightWeighting =  ambientLightFactor + directionalLightFactor + pointLightFactor;\n  }else{\n    vLightWeighting = ambientLightFactor + directionalLightFactor + pointLightFactor2;\n  }\n\n}",
   lightTextureFrag:
-    "precision mediump float;\n\nuniform vec4 uMaterialColor;\nuniform sampler2D uSampler;\nuniform bool isTexture;\n\nvarying vec3 vLightWeighting;\nvarying highp vec2 vVertTexCoord;\n\nvoid main(void) {\n  if(!isTexture){\n    gl_FragColor = vec4(vec3(uMaterialColor.rgb * vLightWeighting), uMaterialColor.a);\n  }else{\n    vec4 textureColor = texture2D(uSampler, vec2(vVertTexCoord.s,vVertTexCoord.t));\n    if(vLightWeighting == vec3(0., 0., 0.)){\n      gl_FragColor = textureColor;\n    }else{\n      gl_FragColor = vec4(vec3(textureColor.rgb * vLightWeighting), textureColor.a); \n    }\n  }\n}"
+    "precision mediump float;\n\nuniform vec4 uMaterialColor;\nuniform sampler2D uSampler;\nuniform bool isTexture;\n\nvarying vec3 vLightWeighting;\nvarying highp vec2 vVertTexCoord;\n\nvoid main(void) {\n  if(!isTexture){\n    gl_FragColor = vec4(vec3(uMaterialColor.rgb * vLightWeighting), uMaterialColor.a);\n  }else{\n    vec4 textureColor = texture2D(uSampler, vVertTexCoord);\n    if(vLightWeighting == vec3(0., 0., 0.)){\n      gl_FragColor = textureColor;\n    }else{\n      gl_FragColor = vec4(vec3(textureColor.rgb * vLightWeighting), textureColor.a); \n    }\n  }\n}"
 };
 },{}],39:[function(_dereq_,module,exports){
 
@@ -8421,290 +8430,258 @@ if (document.readyState === 'complete') {
 module.exports = p5;
 },{"./3d/3d_primitives":28,"./3d/camera":29,"./3d/immediateMode3D":30,"./3d/interaction":31,"./3d/light":32,"./3d/material":33,"./3d/p5.Geometry3D":34,"./3d/p5.Matrix":35,"./3d/p5.Renderer3D":36,"./3d/retainedMode3D":37,"./3d/shader":38,"./color/creating_reading":41,"./color/p5.Color":42,"./color/setting":43,"./core/2d_primitives":44,"./core/attributes":45,"./core/constants":47,"./core/core":48,"./core/curves":49,"./core/environment":50,"./core/p5.Element":52,"./core/p5.Graphics":53,"./core/p5.Renderer2D":55,"./core/rendering":56,"./core/structure":58,"./core/transform":59,"./core/vertex":60,"./events/acceleration":61,"./events/keyboard":62,"./events/mouse":63,"./events/touch":64,"./image/image":66,"./image/loading_displaying":67,"./image/p5.Image":68,"./image/pixels":69,"./io/files":70,"./io/p5.Table":71,"./io/p5.TableRow":72,"./math/calculation":73,"./math/math":74,"./math/noise":75,"./math/p5.Vector":76,"./math/random":78,"./math/trigonometry":79,"./typography/attributes":80,"./typography/loading_displaying":81,"./typography/p5.Font":82,"./utilities/array_functions":83,"./utilities/conversion":84,"./utilities/string_functions":85,"./utilities/time_date":86}],40:[function(_dereq_,module,exports){
 /**
- * module Utils
- * submodule Color Utils
+ * module Conversion
+ * submodule Color Conversion
  * @for p5
+ * @requires core
+ */
+
+'use strict';
+
+/**
+ * Conversions adapted from <http://www.easyrgb.com/math.html>.
+ *
+ * In these functions, hue is always in the range [0,1); all other components
+ * are in the range [0,1]. 'Brightness' and 'value' are used interchangeably.
  */
 
 var p5 = _dereq_('../core/core');
+var RGBA = [];  // We will reuse this array whenever we convert to RGBA.
 
-p5.ColorUtils = {};
+p5.ColorConversion = {};
 
 /**
- * For a color expressed as an HSBA array, return the corresponding RGBA value
- * @param {Array} hsba An 'array' object that represents a list of HSB colors
- * @return {Array} an array of RGBA values, on a scale of 0-1
+ * Convert an HSBA array to HSLA.
  */
-p5.ColorUtils.hsbaToRGBA = function(hsba) {
-  var h = hsba[0];
-  var s = hsba[1];
-  var v = hsba[2];
-  var a = hsba[3] || 1;
-  // Adapted from http://www.easyrgb.com/math.html
-  // hsv values = 0 - 1, rgb values = 0 - 255
-  var RGBA = [];
-  if(s===0){
-    RGBA = [v, v, v, a];
-  } else {
-    // h must be < 1
-    var var_h = h * 6;
-    if (var_h===6) {
-      var_h = 0;
+p5.ColorConversion._hsbaToHSLA = function(hsba) {
+  var hue = hsba[0];
+  var sat = hsba[1];
+  var val = hsba[2];
+
+  // Calculate lightness.
+  var li = (2 - sat) * val / 2;
+
+  // Convert saturation.
+  if (li !== 0) {
+    if (li === 1) {
+      sat = 0;
+    } else if (li < 0.5) {
+      sat = sat / (2 - sat);
+    } else {
+      sat = sat * val / (2 - li * 2);
     }
-    //Or ... var_i = floor( var_h )
-    var var_i = Math.floor( var_h );
-    var var_1 = v*(1-s);
-    var var_2 = v*(1-s*(var_h-var_i));
-    var var_3 = v*(1-s*(1-(var_h-var_i)));
-    var r;
-    var g;
-    var b;
-    if(var_i===0){
-      r = v;
-      g = var_3;
-      b = var_1;
-    }else if(var_i===1){
-      r = var_2;
-      g = v;
-      b = var_1;
-    }else if(var_i===2){
-      r = var_1;
-      g = v;
-      b = var_3;
-    }else if(var_i===3){
-      r = var_1;
-      g = var_2;
-      b = v;
-    }else if (var_i===4){
-      r = var_3;
-      g = var_1;
-      b = v;
-    }else{
-      r = v;
-      g = var_1;
-      b = var_2;
-    }
-    RGBA = [r, g, b, a];
   }
+
+  // Hue and alpha stay the same.
+  return [hue, sat, li, hsba[3]];
+};
+
+/**
+ * Convert an HSBA array to RGBA.
+ */
+p5.ColorConversion._hsbaToRGBA = function(hsba) {
+  var hue = hsba[0] * 6;  // We will split hue into 6 sectors.
+  var sat = hsba[1];
+  var val = hsba[2];
+
+  RGBA.length = 0;  // Clear persistent RGBA array.
+
+  if (sat === 0) {
+    RGBA = [val, val, val, hsba[3]];  // Return early if grayscale.
+  } else {
+    var sector = Math.floor(hue);
+    var tint1 = val * (1 - sat);
+    var tint2 = val * (1 - sat * (hue - sector));
+    var tint3 = val * (1 - sat * (1 + sector - hue));
+    var red, green, blue;
+    if (sector === 0) {  // Red to yellow.
+      red = val;
+      green = tint3;
+      blue = tint1;
+    } else if (sector === 1) {  // Yellow to green.
+      red = tint2;
+      green = val;
+      blue = tint1;
+    } else if (sector === 2) {  // Green to cyan.
+      red = tint1;
+      green = val;
+      blue = tint3;
+    } else if (sector === 3) {  // Cyan to blue.
+      red = tint1;
+      green = tint2;
+      blue = val;
+    } else if (sector === 4) {  // Blue to magenta.
+      red = tint3;
+      green = tint1;
+      blue = val;
+    } else {  // Magenta to red.
+      red = val;
+      green = tint1;
+      blue = tint2;
+    }
+    RGBA = [red, green, blue, hsba[3]];
+  }
+
   return RGBA;
 };
 
 /**
- * For a color expressed as an RGBA array, return the corresponding HSBA value
- *
- * @param {Array} rgba An 'array' object that represents a list of RGB colors
- * @return {Array} an array of HSB values
+ * Convert an HSLA array to HSBA.
  */
-p5.ColorUtils.rgbaToHSBA = function(rgba) {
-  var r = rgba[0];
-  var g = rgba[1];
-  var b = rgba[2];
-  var a = rgba[3] || 1;
+p5.ColorConversion._hslaToHSBA = function(hsla) {
+  var hue = hsla[0];
+  var sat = hsla[1];
+  var li = hsla[2];
 
-  var min = Math.min(r, g, b); //Min. value of RGB
-  var max = Math.max(r, g, b); //Max. value of RGB
-  var delta_max = max - min;             //Delta RGB value
-
-  var h;
-  var s;
-  var v = max;
-
-  if (delta_max === 0) { //This is a gray, no chroma...
-    h = 0; //HSV results from 0 to 1
-    s = 0;
+  // Calculate brightness.
+  var val;
+  if (li < 0.5) {
+    val = (1 + sat) * li;
+  } else {
+    val = li + sat - li * sat;
   }
-  else { //Chromatic data...
-    s = delta_max/max;
 
-    var delta_r = ( ( ( max - r ) / 6 ) + ( delta_max / 2 ) ) / delta_max;
-    var delta_g = ( ( ( max - g ) / 6 ) + ( delta_max / 2 ) ) / delta_max;
-    var delta_b = ( ( ( max - b ) / 6 ) + ( delta_max / 2 ) ) / delta_max;
+  // Convert saturation.
+  sat = 2 * (val - li) / val;
 
-    if (r === max) {
-      h = delta_b - delta_g;
-    } else if (g === max) {
-      h = 1/3 + delta_r - delta_b;
-    } else if (b === max) {
-      h = 2/3 + delta_g - delta_r;
-    }
-
-    if (h < 0) {
-      h += 1;
-    }
-    if (h > 1) {
-      h -= 1;
-    }
-  }
-  return [h, s, v, a];
+  // Hue and alpha stay the same.
+  return [hue, sat, val, hsla[3]];
 };
 
 /**
- * For a color expressed as an HSLA array, return the corresponding RGBA value
+ * Convert an HSLA array to RGBA.
  *
- * @param  {Array} hsla An 'array' object that represents a list of HSL colors
- * @return {Array} an array of RGBA values, on a scale of 0-1
+ * We need to change basis from HSLA to something that can be more easily be
+ * projected onto RGBA. We will choose hue and brightness as our first two
+ * components, and pick a convenient third one ('zest') so that we don't need
+ * to calculate formal HSBA saturation.
  */
-p5.ColorUtils.hslaToRGBA = function(hsla){
-  var h = hsla[0];
-  var s = hsla[1];
-  var l = hsla[2];
-  var a = hsla[3] || 1;
+p5.ColorConversion._hslaToRGBA = function(hsla){
+  var hue = hsla[0] * 6;  // We will split hue into 6 sectors.
+  var sat = hsla[1];
+  var li = hsla[2];
 
-  // Adapted from http://www.easyrgb.com/math.html
-  // hsl values = 0 - 1, rgb values = 0 - 1
-  var rgba = [];
-  if(s === 0){
-    rgba = [l, l, l, a];
+  RGBA.length = 0;  // Clear persistent RGBA array.
+
+  if (sat === 0) {
+    RGBA = [li, li, li, hsla[3]]; // Return early if grayscale.
   } else {
-    var m, n, r, g, b;
 
-    n = l < 0.5 ? l * (1 + s) : (l + s) - (s * l);
-    m = 2 * l - n;
+    // Calculate brightness.
+    var val;
+    if (li < 0.5) {
+      val = (1 + sat) * li;
+    } else {
+      val = li + sat - li * sat;
+    }
 
-    var convert = function(x, y, hue){
-      if (hue < 0) {
-        hue += 1;
-      } else if (hue > 1) {
-        hue -= 1;
+    // Define zest.
+    var zest = 2 * li - val;
+
+    // Implement projection (project onto green by default).
+    var hzvToRGB = function(hue, zest, val) {
+      if (hue < 0) {  // Hue must wrap to allow projection onto red and blue.
+        hue += 6;
+      } else if (hue >= 6) {
+        hue -= 6;
       }
-
-      if ( ( 6 * hue ) < 1 ) {
-        return ( x + ( y - x ) * 6 * hue );
-      } else if ( ( 2 * hue ) < 1 ) {
-        return ( y );
-      } else if ( ( 3 * hue ) < 2 ) {
-        return ( x + ( y - x ) * ( ( 2 / 3 ) - hue ) * 6 );
-      } else {
-        return x;
+      if (hue < 1) {  // Red to yellow (increasing green).
+        return (zest + (val - zest) * hue);
+      } else if (hue < 3) {  // Yellow to cyan (greatest green).
+        return val;
+      } else if (hue < 4) {  // Cyan to blue (decreasing green).
+        return (zest + (val - zest) * (4 - hue));
+      } else {  // Blue to red (least green).
+        return zest;
       }
     };
 
-    r = convert( m, n, h + ( 1 / 3 ) );
-    g = convert( m, n, h );
-    b = convert( m, n, h - ( 1 / 3 ) );
-
-    rgba = [r, g, b, a];
+    // Perform projections, offsetting hue as necessary.
+    RGBA = [hzvToRGB(hue + 2, zest, val),
+            hzvToRGB(hue    , zest, val),
+            hzvToRGB(hue - 2, zest, val),
+            hsla[3]];
   }
 
-  return rgba;
+  return RGBA;
 };
 
 /**
- * For a color expressed as an RGBA array, return the corresponding HSBA value
- *
- * @param {Array} rgba An 'array' object that represents a list of RGB colors
- * @return {Array} an array of HSL values
+ * Convert an RGBA array to HSBA.
  */
-p5.ColorUtils.rgbaToHSLA = function(rgba) {
-  var r = rgba[0];
-  var g = rgba[1];
-  var b = rgba[2];
-  var a = rgba[3] || 1;
+p5.ColorConversion._rgbaToHSBA = function(rgba) {
+  var red = rgba[0];
+  var green = rgba[1];
+  var blue = rgba[2];
 
-  var min = Math.min(r, g, b); //Min. value of RGB
-  var max = Math.max(r, g, b); //Max. value of RGB
-  var delta_max = max - min;             //Delta RGB value
+  var val = Math.max(red, green, blue);
+  var chroma = val - Math.min(red, green, blue);
 
-  var h;
-  var s;
-  var l = (max + min) / 2;
-
-  var delta_r;
-  var delta_g;
-  var delta_b;
-
-  if (delta_max === 0) { // This is a gray, no chroma...
-    h = 0;             // HSL results from 0 to 1
-    s = 0;
-  } else {              // Chromatic data...
-
-    delta_r = ( ( ( max - r ) / 6 ) + ( delta_max / 2 ) ) / delta_max;
-    delta_g = ( ( ( max - g ) / 6 ) + ( delta_max / 2 ) ) / delta_max;
-    delta_b = ( ( ( max - b ) / 6 ) + ( delta_max / 2 ) ) / delta_max;
-
-    if ( r === max ){
-      h = delta_b - delta_g;
-    } else if ( g === max ){
-      h = ( 1 / 3 ) + delta_r - delta_b;
-    } else if ( b === max ) {
-      h = ( 2 / 3 ) + delta_g - delta_r;
+  var hue, sat;
+  if (chroma === 0) {  // Return early if grayscale.
+    hue = 0;
+    sat = 0;
+  }
+  else {
+    sat = chroma / val;
+    if (red === val) {  // Magenta to yellow.
+      hue = (green - blue) / chroma;
+    } else if (green === val) { // Yellow to cyan.
+      hue = 2 + (blue - red) / chroma;
+    } else if (blue === val) {  // Cyan to magenta.
+      hue = 4 + (red - green) / chroma;
     }
-
-    if ( h < 0 ) {
-      h += 1;
+    if (hue < 0) {  // Confine hue to the interval [0, 1).
+      hue += 6;
+    } else if (hue >= 6) {
+      hue -= 6;
     }
+  }
 
-    if ( h > 1 ) {
-      h -= 1;
-    }
+  return [hue / 6, sat, val, rgba[3]];
+};
 
-    if ( l < 0.5 ){
-      s = delta_max / ( max + min );
+/**
+ * Convert an RGBA array to HSLA.
+ */
+p5.ColorConversion._rgbaToHSLA = function(rgba) {
+  var red = rgba[0];
+  var green = rgba[1];
+  var blue = rgba[2];
+
+  var val = Math.max(red, green, blue);
+  var min = Math.min(red, green, blue);
+  var li = val + min;  // We will halve this later.
+  var chroma = val - min;
+
+  var hue, sat;
+  if (chroma === 0) {  // Return early if grayscale.
+    hue = 0;
+    sat = 0;
+  } else {
+    if (li < 1) {
+      sat = chroma / li;
     } else {
-      s = delta_max / ( 2 - max - min );
+      sat = chroma / (2 - chroma);
     }
-
-  }
-  return [h, s, l, a];
-};
-
-/**
- * For a color expressed as an hsla array, return the corresponding HSBA value
- *
- * @param {Array} hsla An 'array' object that represents a list of HSLA colors
- * @return {Array} an array of HSBA values
- */
-p5.ColorUtils.hslaToHSBA = function(hsla) {
-  var h = hsla[0];
-  var s = hsla[1];
-  var l = hsla[2];
-  var a = hsla[3] || 1;
-
-  var v;
-
-  //Hue and Alpha stay the same
-  s *= l < 0.5 ? l : 1 - l;
-  v = l + s;
-  s = 2 * s / (l + s);
-
-  return[ h, s, v, a];
-};
-
-/**
- * For a color expressed as an hsba array, return the corresponding HSLA value
- *
- * @param {Array} hsba An 'array' object that represents a list of HSBA colors
- * @return {Array} an array of HSLA values
- */
-p5.ColorUtils.hsbaToHSLA = function(hsba) {
-  var h = hsba[0];
-  var s = hsba[1];
-  var v = hsba[2];
-  var a = hsba[3] || 1;
-
-  //Hue and Alpha stay the same
-  //Lightness is (2 - s) * v / 2
-  var l = (2 - s) * v / 2;
-
-  //Saturation is very different between the two color spaces
-  //If l < 0.5 set it to s / (2 - s)
-  //Otherwise s * v / (2 - (2 - s) * v)
-  if( l !== 0 ){
-    if( l === 1 ){
-      s = 0;
+    if (red === val) {  // Magenta to yellow.
+      hue = (green - blue) / chroma;
+    } else if (green === val) {  // Yellow to cyan.
+      hue = 2 + (blue - red) / chroma;
+    } else if (blue === val) {  // Cyan to magenta.
+      hue = 4 + (red - green) / chroma;
     }
-    else if( l < 0.5 ){
-      s = s / (2 - s);
-    }
-    else{
-      s = s * v / (2 - l * 2);
+    if (hue < 0) {  // Confine hue to the interval [0, 1).
+      hue += 6;
+    } else if (hue >= 6) {
+      hue -= 6;
     }
   }
 
-  return [ h, s, l, a];
+  return [hue / 6, sat, li / 2, rgba[3]];
 };
 
-module.exports = p5.ColorUtils;
+module.exports = p5.ColorConversion;
 
 },{"../core/core":48}],41:[function(_dereq_,module,exports){
 /**
@@ -8712,6 +8689,7 @@ module.exports = p5.ColorUtils;
  * @submodule Creating & Reading
  * @for p5
  * @requires core
+ * @requires constants
  */
 
 'use strict';
@@ -8740,14 +8718,14 @@ _dereq_('./p5.Color');
  */
 p5.prototype.alpha = function(c) {
   if (c instanceof p5.Color || c instanceof Array) {
-    return this.color(c).getAlpha();
+    return this.color(c)._getAlpha();
   } else {
     throw new Error('Needs p5.Color or pixel array as argument.');
   }
 };
 
 /**
- * Extracts the blue value from a color or a pixel array.
+ * Extracts the blue value from a color or pixel array.
  *
  * @method blue
  * @param {Object} obj p5.Color object or pixel array
@@ -8767,17 +8745,17 @@ p5.prototype.alpha = function(c) {
  */
 p5.prototype.blue = function(c) {
   if (c instanceof p5.Color || c instanceof Array) {
-    return this.color(c).getBlue();
+    return this.color(c)._getBlue();
   } else {
     throw new Error('Needs p5.Color or pixel array as argument.');
   }
 };
 
 /**
- * Extracts the brightness value from a color.
+ * Extracts the HSB brightness value from a color or pixel array.
  *
  * @method brightness
- * @param {Object} color p5.Color object
+ * @param {Object} color p5.Color object or pixel array
  * @example
  * <div>
  * <code>
@@ -8794,7 +8772,7 @@ p5.prototype.blue = function(c) {
  */
 p5.prototype.brightness = function(c) {
   if (c instanceof p5.Color || c instanceof Array) {
-    return this.color(c).getBrightness();
+    return this.color(c)._getBrightness();
   } else {
     throw new Error('Needs p5.Color or pixel array as argument.');
   }
@@ -8951,25 +8929,20 @@ p5.prototype.brightness = function(c) {
  * </div>
  */
 p5.prototype.color = function() {
-  var args = new Array(arguments.length);
-
-  for (var i = 0; i < args.length; ++i) {
-    args[i] = arguments[i];
-  }
-
-  if (args[0] instanceof p5.Color) {
-    return args[0];
-  } else if (args[0] instanceof Array) {
-    return new p5.Color(this, args[0]);
+  if (arguments[0] instanceof p5.Color) {
+    return arguments[0];  // Do nothing if argument is already a color object.
+  } else if (arguments[0] instanceof Array) {
+    return new p5.Color(this, arguments[0]);
   } else {
-    return new p5.Color(this, args);
+    return new p5.Color(this, arguments);
   }
 };
+
 /**
  * Extracts the green value from a color or pixel array.
  *
  * @method green
- * @param {Object} color p5.Color object
+ * @param {Object} color p5.Color object or pixel array
  * @example
  * <div>
  * <code>
@@ -8986,17 +8959,23 @@ p5.prototype.color = function() {
  */
 p5.prototype.green = function(c) {
   if (c instanceof p5.Color || c instanceof Array) {
-    return this.color(c).getGreen();
+    return this.color(c)._getGreen();
   } else {
     throw new Error('Needs p5.Color or pixel array as argument.');
   }
 };
 
 /**
- * Extracts the hue value from a color.
+ * Extracts the hue value from a color or pixel array.
+ *
+ * Hue exists in both HSB and HSL. This function will return the
+ * HSB-normalized hue when supplied with an HSB color object (or when supplied
+ * with a pixel array while the color mode is HSB), but will default to the
+ * HSL-normalized hue otherwise. (The values will only be different if the
+ * maximum hue setting for each system is different.)
  *
  * @method hue
- * @param {Object} color p5.Color object
+ * @param {Object} color p5.Color object or pixel array
  * @example
  * <div>
  * <code>
@@ -9012,27 +8991,23 @@ p5.prototype.green = function(c) {
  * </div>
  */
 p5.prototype.hue = function(c) {
-  if (!(c instanceof p5.Color)) {
-    throw new Error('Needs p5.Color as argument.');
+  if (c instanceof p5.Color || c instanceof Array) {
+    return this.color(c)._getHue();
+  } else {
+    throw new Error('Needs p5.Color or pixel array as argument.');
   }
-  return c.getHue();
 };
 
 /**
- * Calculates a color or colors between two color at a specific increment,
- * using gamma correction to blend colors in the linear RGB space.
- * The amt parameter is the amount to interpolate between the two values
- * where 0.0 equal to the first point, 0.1 is very near the first point,
- * 0.5 is halfway in between, etc. An amount below 0 will be treated as 0.
- * Likewise, amounts above 1 will be capped at 1. This is different from
- * the behavior of lerp(), but necessary because otherwise numbers outside
- * the range will produce strange and unexpected colors.
+ * Blends two colors to find a third color somewhere between them. The amt
+ * parameter is the amount to interpolate between the two values where 0.0
+ * equal to the first color, 0.1 is very near the first color, 0.5 is halfway
+ * in between, etc. An amount below 0 will be treated as 0. Likewise, amounts
+ * above 1 will be capped at 1. This is different from the behavior of lerp(),
+ * but necessary because otherwise numbers outside the range will produce
+ * strange and unexpected colors.
  *
- * The regular RGB color representation stores the square root of the
- * displayed color, not the value itself. Your monitor behaves as if it
- * squares the color values before displaying it. lerpColor first transforms
- * colors into the linear color space before blending, to correctly mix the
- * colors as two rays of light.
+ * The way that colours are interpolated depends on the current color mode.
  *
  * @method lerpColor
  * @param  {Array/Number} c1  interpolate from this color
@@ -9042,10 +9017,12 @@ p5.prototype.hue = function(c) {
  * @example
  * <div>
  * <code>
+ * colorMode(RGB);
  * stroke(255);
  * background(51);
- * from = color(204, 102, 0);
- * to = color(0, 102, 153);
+ * from = color(218, 165, 32);
+ * to = color(72, 61, 139);
+ * colorMode(RGB);  // Try changing to HSB.
  * interA = lerpColor(from, to, .33);
  * interB = lerpColor(from, to, .66);
  * fill(from);
@@ -9060,36 +9037,55 @@ p5.prototype.hue = function(c) {
  * </div>
  */
 p5.prototype.lerpColor = function(c1, c2, amt) {
-  var l1, l2, l3, l4;
-  var fromColor, toColor;
+  var mode = this._renderer._colorMode;
+  var maxes = this._renderer._colorMaxes;
+  var l0, l1, l2, l3;
+  var fromArray, toArray;
 
-  if(this._renderer._colorMode === constants.RGB) {
-    fromColor = this.color(c1).rgba;
-    toColor = this.color(c2).rgba;
+  if (mode === constants.RGB) {
+    fromArray = c1.levels.map(function(level) {
+      return level / 255;
+    });
+    toArray = c2.levels.map(function(level) {
+      return level / 255;
+    });
+  } else if (mode === constants.HSB) {
+    c1._getBrightness();  // Cache hsba so it definitely exists.
+    c2._getBrightness();
+    fromArray = c1.hsba;
+    toArray = c2.hsba;
+  } else if (mode === constants.HSL) {
+    c1._getLightness();  // Cache hsla so it definitely exists.
+    c2._getLightness();
+    fromArray = c1.hsla;
+    toArray = c2.hsla;
+  } else {
+    throw new Error (mode + 'cannot be used for interpolation.');
   }
-  else if (this._renderer._colorMode === constants.HSB) {
-    fromColor = this.color(c1).hsba;
-    toColor = this.color(c2).hsba;
-  }
-  else if(this._renderer._colorMode === constants.HSL) {
-    fromColor = this.color(c1).hsla;
-    toColor = this.color(c2).hsla;
-  }
-  else {
-    return;
-  }
-  l1 = this.lerp(fromColor[0], toColor[0], amt);
-  l2 = this.lerp(fromColor[1], toColor[1], amt);
-  l3 = this.lerp(fromColor[2], toColor[2], amt);
-  l4 = this.lerp(fromColor[3], toColor[3], amt);
-  return this.color(l1, l2, l3, l4);
+
+  // Prevent extrapolation.
+  amt = Math.max(Math.min(amt, 1), 0);
+
+  // Perform interpolation.
+  l0 = this.lerp(fromArray[0], toArray[0], amt);
+  l1 = this.lerp(fromArray[1], toArray[1], amt);
+  l2 = this.lerp(fromArray[2], toArray[2], amt);
+  l3 = this.lerp(fromArray[3], toArray[3], amt);
+
+  // Scale components.
+  l0 *= maxes[mode][0];
+  l1 *= maxes[mode][1];
+  l2 *= maxes[mode][2];
+  l3 *= maxes[mode][3];
+
+  return this.color(l0, l1, l2, l3);
 };
 
 /**
- * Extracts the lightness value from a color.
+ * Extracts the HSL lightness value from a color or pixel array.
  *
  * @method lightness
- * @param {Object} color p5.Color object
+ * @param {Object} color p5.Color object or pixel array
  * @example
  * <div>
  * <code>
@@ -9104,10 +9100,9 @@ p5.prototype.lerpColor = function(c1, c2, amt) {
  * </code>
  * </div>
  */
-
 p5.prototype.lightness = function(c) {
   if (c instanceof p5.Color || c instanceof Array) {
-    return this.color(c).getLightness();
+    return this.color(c)._getLightness();
   } else {
     throw new Error('Needs p5.Color or pixel array as argument.');
   }
@@ -9144,17 +9139,22 @@ p5.prototype.lightness = function(c) {
  */
 p5.prototype.red = function(c) {
   if (c instanceof p5.Color || c instanceof Array) {
-    return this.color(c).getRed();
+    return this.color(c)._getRed();
   } else {
     throw new Error('Needs p5.Color or pixel array as argument.');
   }
 };
 
 /**
- * Extracts the saturation value from a color.
+ * Extracts the saturation value from a color or pixel array.
+ *
+ * Saturation is scaled differently in HSB and HSL. This function will return
+ * the HSB saturation when supplied with an HSB color object (or when supplied
+ * with a pixel array while the color mode is HSB), but will default to the
+ * HSL saturation otherwise.
  *
  * @method saturation
- * @param {Object} color p5.Color object
+ * @param {Object} color p5.Color object or pixel array
  * @example
  * <div>
  * <code>
@@ -9170,13 +9170,12 @@ p5.prototype.red = function(c) {
  * </div>
  */
 p5.prototype.saturation = function(c) {
-  if (!(c instanceof p5.Color)) {
-    throw new Error('Needs p5.Color as argument.');
+  if (c instanceof p5.Color || c instanceof Array) {
+    return this.color(c)._getSaturation();
+  } else {
+    throw new Error('Needs p5.Color or pixel array as argument.');
   }
-  return c.getSaturation();
 };
-
-
 
 module.exports = p5;
 
@@ -9185,307 +9184,308 @@ module.exports = p5;
  * @module Color
  * @submodule Creating & Reading
  * @for p5
+ * @requires core
+ * @requires constants
+ * @requires color_conversion
  */
 
 var p5 = _dereq_('../core/core');
-var color_utils = _dereq_('./color_utils');
 var constants = _dereq_('../core/constants');
+var color_conversion = _dereq_('./color_conversion');
 
 /**
+ * We define colors to be immutable objects. Each color stores the color mode
+ * and level maxes that applied at the time of its construction. These are
+ * used to interpret the input arguments and to format the output e.g. when
+ * saturation() is requested.
+ *
+ * Internally we store an array representing the ideal RGBA values in floating
+ * point form, normalized from 0 to 1. From this we calculate the closest
+ * screen color (RGBA levels from 0 to 255) and expose this to the renderer.
+ *
+ * We also cache normalized, floating point components of the color in various
+ * representations as they are calculated. This is done to prevent repeating a
+ * conversion that has already been performed.
  *
  * @class p5.Color
  * @constructor
- * rgba, hsla, hsba are normalized rgba arrays
- * (1, 1, 1, 1)
  */
-p5.Color = function (pInst, vals) {
+p5.Color = function(pInst, vals) {
+
+  // Record color mode and maxes at time of construction.
   this.mode = pInst._renderer._colorMode;
   this.maxes = pInst._renderer._colorMaxes;
-  var isHSB = this.mode === constants.HSB,
-      isRGB = this.mode === constants.RGB,
-      isHSL = this.mode === constants.HSL;
 
-  if (isRGB) {
-    this._array = p5.Color._getFormattedColor.apply(pInst, vals);
-  } else if (isHSB) {
-    this.hsba = p5.Color._getFormattedColor.apply(pInst, vals);
-    this._array = color_utils.hsbaToRGBA(this.hsba);
-  } else if (isHSL){
-    this.hsla = p5.Color._getFormattedColor.apply(pInst, vals);
-    this._array = color_utils.hslaToRGBA(this.hsla);
+  // Calculate normalized RGBA values.
+  if (this.mode !== constants.RGB &&
+      this.mode !== constants.HSL &&
+      this.mode !== constants.HSB) {
+    throw new Error(this.mode + ' is an invalid colorMode.');
   } else {
-    throw new Error(pInst._renderer._colorMode + ' is an invalid colorMode.');
+    this._array = p5.Color._parseInputs.apply(pInst, vals);
   }
 
-  this.rgba = [ Math.round(this._array[0] * 255),
-                Math.round(this._array[1] * 255),
-                Math.round(this._array[2] * 255),
-                Math.round(this._array[3] * 255)];
+  // Expose closest screen color.
+  this.levels = this._array.map(function(level) {
+    return Math.round(level * 255);
+  });
+
   return this;
 };
 
-p5.Color.prototype.getHue = function() {
-  // Hue is consistent in both HSL & HSB
-  if (this.hsla) {
-    return this.hsla[0] * this.maxes[constants.HSL][0];
-  } else if (this.hsba) {
+p5.Color.prototype.toString = function() {
+  var a = this.levels;
+  a[3] = this._array[3];  // String representation uses normalized alpha.
+  return 'rgba('+a[0]+','+a[1]+','+a[2]+','+ a[3] +')';
+};
+
+p5.Color.prototype._getAlpha = function() {
+  return this._array[3] * this.maxes[this.mode][3];
+};
+
+p5.Color.prototype._getBlue = function() {
+  return this._array[2] * this.maxes[constants.RGB][2];
+};
+
+p5.Color.prototype._getBrightness = function() {
+  if (!this.hsba) {
+    this.hsba = color_conversion._rgbaToHSBA(this._array);
+  }
+  return this.hsba[2] * this.maxes[constants.HSB][2];
+};
+
+p5.Color.prototype._getGreen = function() {
+  return this._array[1] * this.maxes[constants.RGB][1];
+};
+
+/**
+ * Hue is the same in HSB and HSL, but the maximum value may be different.
+ * This function will return the HSB-normalized saturation when supplied with
+ * an HSB color object, but will default to the HSL-normalized saturation
+ * otherwise.
+ */
+p5.Color.prototype._getHue = function() {
+  if (this.mode === constants.HSB) {
+    if (!this.hsba) {
+      this.hsba = color_conversion._rgbaToHSBA(this._array);
+    }
     return this.hsba[0] * this.maxes[constants.HSB][0];
   } else {
-    this.hsla = color_utils.rgbaToHSLA(this._array);
+    if (!this.hsla) {
+      this.hsla = color_conversion._rgbaToHSLA(this._array);
+    }
     return this.hsla[0] * this.maxes[constants.HSL][0];
   }
 };
 
-p5.Color.prototype.getSaturation = function() {
-  // Saturation exists in both HSB and HSL, but returns different values
-  // We are preferring HSL here (because it is a web color space)
-  // until the global flag issue can be resolved
-  if (this.hsba && this.mode === constants.HSB) {
+p5.Color.prototype._getLightness = function() {
+  if (!this.hsla) {
+    this.hsla = color_conversion._rgbaToHSLA(this._array);
+  }
+  return this.hsla[2] * this.maxes[constants.HSL][2];
+};
+
+p5.Color.prototype._getRed = function() {
+  return this._array[0] * this.maxes[constants.RGB][0];
+};
+
+/**
+ * Saturation is scaled differently in HSB and HSL. This function will return
+ * the HSB saturation when supplied with an HSB color object, but will default
+ * to the HSL saturation otherwise.
+ */
+p5.Color.prototype._getSaturation = function() {
+  if (this.mode === constants.HSB) {
+    if (!this.hsba) {
+      this.hsba = color_conversion._rgbaToHSBA(this._array);
+    }
     return this.hsba[1] * this.maxes[constants.HSB][1];
   } else {
-    if( !this.hsla ) {
-      this.hsla = color_utils.rgbaToHSLA(this._array);
+    if (!this.hsla) {
+      this.hsla = color_conversion._rgbaToHSLA(this._array);
     }
     return this.hsla[1] * this.maxes[constants.HSL][1];
   }
 };
 
-// Brightness only exists as an HSB value
-p5.Color.prototype.getBrightness = function() {
-  if (this.hsba) {
-    return this.hsba[2] * this.maxes[constants.HSB][2];
-  } else {
-    this.hsba = color_utils.rgbaToHSBA(this._array);
-    return this.hsba[2] * this.maxes[constants.HSB][2];
-  }
-};
-
-// Lightness only exists as an HSL value
-p5.Color.prototype.getLightness = function() {
-  if (this.hsla) {
-    return this.hsla[2] * this.maxes[constants.HSL][2];
-  } else {
-    this.hsla = color_utils.rgbaToHSLA(this._array);
-    return this.hsla[2] * this.maxes[constants.HSL][2];
-  }
-};
-
-p5.Color.prototype.getRed = function() {
-  return this._array[0] * this.maxes[constants.RGB][0];
-};
-
-p5.Color.prototype.getGreen = function() {
-  return this._array[1] * this.maxes[constants.RGB][1];
-};
-
-p5.Color.prototype.getBlue = function() {
-  return this._array[2] * this.maxes[constants.RGB][2];
-};
-
-p5.Color.prototype.getAlpha = function() {
-  return this._array[3] * this.maxes[this.mode][3];
-};
-
-p5.Color.prototype.toString = function() {
-  var a = this.rgba;
-  a[3] = this._array[3];
-  return 'rgba('+a[0]+','+a[1]+','+a[2]+','+ a[3] +')';
-};
-
-p5.Color.prototype._normalize = function(){
-  var arr = this.rgba.map(function(value){
-    return value / 255;
-  });
-  return arr;
+/**
+ * CSS named colors.
+ */
+var namedColors = {
+  aliceblue:             '#f0f8ff',
+  antiquewhite:          '#faebd7',
+  aqua:                  '#00ffff',
+  aquamarine:            '#7fffd4',
+  azure:                 '#f0ffff',
+  beige:                 '#f5f5dc',
+  bisque:                '#ffe4c4',
+  black:                 '#000000',
+  blanchedalmond:        '#ffebcd',
+  blue:                  '#0000ff',
+  blueviolet:            '#8a2be2',
+  brown:                 '#a52a2a',
+  burlywood:             '#deb887',
+  cadetblue:             '#5f9ea0',
+  chartreuse:            '#7fff00',
+  chocolate:             '#d2691e',
+  coral:                 '#ff7f50',
+  cornflowerblue:        '#6495ed',
+  cornsilk:              '#fff8dc',
+  crimson:               '#dc143c',
+  cyan:                  '#00ffff',
+  darkblue:              '#00008b',
+  darkcyan:              '#008b8b',
+  darkgoldenrod:         '#b8860b',
+  darkgray:              '#a9a9a9',
+  darkgreen:             '#006400',
+  darkgrey:              '#a9a9a9',
+  darkkhaki:             '#bdb76b',
+  darkmagenta:           '#8b008b',
+  darkolivegreen:        '#556b2f',
+  darkorange:            '#ff8c00',
+  darkorchid:            '#9932cc',
+  darkred:               '#8b0000',
+  darksalmon:            '#e9967a',
+  darkseagreen:          '#8fbc8f',
+  darkslateblue:         '#483d8b',
+  darkslategray:         '#2f4f4f',
+  darkslategrey:         '#2f4f4f',
+  darkturquoise:         '#00ced1',
+  darkviolet:            '#9400d3',
+  deeppink:              '#ff1493',
+  deepskyblue:           '#00bfff',
+  dimgray:               '#696969',
+  dimgrey:               '#696969',
+  dodgerblue:            '#1e90ff',
+  firebrick:             '#b22222',
+  floralwhite:           '#fffaf0',
+  forestgreen:           '#228b22',
+  fuchsia:               '#ff00ff',
+  gainsboro:             '#dcdcdc',
+  ghostwhite:            '#f8f8ff',
+  gold:                  '#ffd700',
+  goldenrod:             '#daa520',
+  gray:                  '#808080',
+  green:                 '#008000',
+  greenyellow:           '#adff2f',
+  grey:                  '#808080',
+  honeydew:              '#f0fff0',
+  hotpink:               '#ff69b4',
+  indianred:             '#cd5c5c',
+  indigo:                '#4b0082',
+  ivory:                 '#fffff0',
+  khaki:                 '#f0e68c',
+  lavender:              '#e6e6fa',
+  lavenderblush:         '#fff0f5',
+  lawngreen:             '#7cfc00',
+  lemonchiffon:          '#fffacd',
+  lightblue:             '#add8e6',
+  lightcoral:            '#f08080',
+  lightcyan:             '#e0ffff',
+  lightgoldenrodyellow:  '#fafad2',
+  lightgray:             '#d3d3d3',
+  lightgreen:            '#90ee90',
+  lightgrey:             '#d3d3d3',
+  lightpink:             '#ffb6c1',
+  lightsalmon:           '#ffa07a',
+  lightseagreen:         '#20b2aa',
+  lightskyblue:          '#87cefa',
+  lightslategray:        '#778899',
+  lightslategrey:        '#778899',
+  lightsteelblue:        '#b0c4de',
+  lightyellow:           '#ffffe0',
+  lime:                  '#00ff00',
+  limegreen:             '#32cd32',
+  linen:                 '#faf0e6',
+  magenta:               '#ff00ff',
+  maroon:                '#800000',
+  mediumaquamarine:      '#66cdaa',
+  mediumblue:            '#0000cd',
+  mediumorchid:          '#ba55d3',
+  mediumpurple:          '#9370db',
+  mediumseagreen:        '#3cb371',
+  mediumslateblue:       '#7b68ee',
+  mediumspringgreen:     '#00fa9a',
+  mediumturquoise:       '#48d1cc',
+  mediumvioletred:       '#c71585',
+  midnightblue:          '#191970',
+  mintcream:             '#f5fffa',
+  mistyrose:             '#ffe4e1',
+  moccasin:              '#ffe4b5',
+  navajowhite:           '#ffdead',
+  navy:                  '#000080',
+  oldlace:               '#fdf5e6',
+  olive:                 '#808000',
+  olivedrab:             '#6b8e23',
+  orange:                '#ffa500',
+  orangered:             '#ff4500',
+  orchid:                '#da70d6',
+  palegoldenrod:         '#eee8aa',
+  palegreen:             '#98fb98',
+  paleturquoise:         '#afeeee',
+  palevioletred:         '#db7093',
+  papayawhip:            '#ffefd5',
+  peachpuff:             '#ffdab9',
+  peru:                  '#cd853f',
+  pink:                  '#ffc0cb',
+  plum:                  '#dda0dd',
+  powderblue:            '#b0e0e6',
+  purple:                '#800080',
+  red:                   '#ff0000',
+  rosybrown:             '#bc8f8f',
+  royalblue:             '#4169e1',
+  saddlebrown:           '#8b4513',
+  salmon:                '#fa8072',
+  sandybrown:            '#f4a460',
+  seagreen:              '#2e8b57',
+  seashell:              '#fff5ee',
+  sienna:                '#a0522d',
+  silver:                '#c0c0c0',
+  skyblue:               '#87ceeb',
+  slateblue:             '#6a5acd',
+  slategray:             '#708090',
+  slategrey:             '#708090',
+  snow:                  '#fffafa',
+  springgreen:           '#00ff7f',
+  steelblue:             '#4682b4',
+  tan:                   '#d2b48c',
+  teal:                  '#008080',
+  thistle:               '#d8bfd8',
+  tomato:                '#ff6347',
+  turquoise:             '#40e0d0',
+  violet:                '#ee82ee',
+  wheat:                 '#f5deb3',
+  white:                 '#ffffff',
+  whitesmoke:            '#f5f5f5',
+  yellow:                '#ffff00',
+  yellowgreen:           '#9acd32'
 };
 
 /**
- * These Regular Expressions are used to build up the patterns for matching
- * viable CSS color strings: fragmenting the regexes in this way increases
- * the legibility and comprehensibility of the code
+ * These regular expressions are used to build up the patterns for matching
+ * viable CSS color strings: fragmenting the regexes in this way increases the
+ * legibility and comprehensibility of the code.
+ *
+ * Note that RGB values of .9 are not parsed by IE, but are supported here for
+ * color string consistency.
  */
-// Match any number of whitespace characters (including no whitespace)
-var WHITESPACE = /\s*/;
-// Match whole-number values, e.g `255` or `79`
-var INTEGER = /(\d{1,3})/;
-// Match decimal values, e.g `129.6`, `79`, or `.9`
-// Note: R, G or B values of `.9` are not parsed by IE: however, they are
-// supported here to provide more consistent color string parsing
-var DECIMAL = /((?:\d+(?:\.\d+)?)|(?:\.\d+))/;
-// Match decimal values followed by a percent sign
-var PERCENT = new RegExp(DECIMAL.source + '%');
+var WHITESPACE = /\s*/;  // Match zero or more whitespace characters.
+var INTEGER = /(\d{1,3})/;  // Match integers: 79, 255, etc.
+var DECIMAL = /((?:\d+(?:\.\d+)?)|(?:\.\d+))/;  // Match 129.6, 79, .9, etc.
+var PERCENT = new RegExp(DECIMAL.source + '%');  // Match 12.9%, 79%, .9%, etc.
 
-var namedColors = {
-  aliceblue: '#f0f8ff',
-  antiquewhite: '#faebd7',
-  aqua: '#00ffff',
-  aquamarine: '#7fffd4',
-  azure: '#f0ffff',
-  beige: '#f5f5dc',
-  bisque: '#ffe4c4',
-  black: '#000000',
-  blanchedalmond: '#ffebcd',
-  blue: '#0000ff',
-  blueviolet: '#8a2be2',
-  brown: '#a52a2a',
-  burlywood: '#deb887',
-  cadetblue: '#5f9ea0',
-  chartreuse: '#7fff00',
-  chocolate: '#d2691e',
-  coral: '#ff7f50',
-  cornflowerblue: '#6495ed',
-  cornsilk: '#fff8dc',
-  crimson: '#dc143c',
-  cyan: '#00ffff',
-  darkblue: '#00008b',
-  darkcyan: '#008b8b',
-  darkgoldenrod: '#b8860b',
-  darkgray: '#a9a9a9',
-  darkgreen: '#006400',
-  darkgrey: '#a9a9a9',
-  darkkhaki: '#bdb76b',
-  darkmagenta: '#8b008b',
-  darkolivegreen: '#556b2f',
-  darkorange: '#ff8c00',
-  darkorchid: '#9932cc',
-  darkred: '#8b0000',
-  darksalmon: '#e9967a',
-  darkseagreen: '#8fbc8f',
-  darkslateblue: '#483d8b',
-  darkslategray: '#2f4f4f',
-  darkslategrey: '#2f4f4f',
-  darkturquoise: '#00ced1',
-  darkviolet: '#9400d3',
-  deeppink: '#ff1493',
-  deepskyblue: '#00bfff',
-  dimgray: '#696969',
-  dimgrey: '#696969',
-  dodgerblue: '#1e90ff',
-  firebrick: '#b22222',
-  floralwhite: '#fffaf0',
-  forestgreen: '#228b22',
-  fuchsia: '#ff00ff',
-  gainsboro: '#dcdcdc',
-  ghostwhite: '#f8f8ff',
-  gold: '#ffd700',
-  goldenrod: '#daa520',
-  gray: '#808080',
-  green: '#008000',
-  greenyellow: '#adff2f',
-  grey: '#808080',
-  honeydew: '#f0fff0',
-  hotpink: '#ff69b4',
-  indianred: '#cd5c5c',
-  indigo: '#4b0082',
-  ivory: '#fffff0',
-  khaki: '#f0e68c',
-  lavender: '#e6e6fa',
-  lavenderblush: '#fff0f5',
-  lawngreen: '#7cfc00',
-  lemonchiffon: '#fffacd',
-  lightblue: '#add8e6',
-  lightcoral: '#f08080',
-  lightcyan: '#e0ffff',
-  lightgoldenrodyellow: '#fafad2',
-  lightgray: '#d3d3d3',
-  lightgreen: '#90ee90',
-  lightgrey: '#d3d3d3',
-  lightpink: '#ffb6c1',
-  lightsalmon: '#ffa07a',
-  lightseagreen: '#20b2aa',
-  lightskyblue: '#87cefa',
-  lightslategray: '#778899',
-  lightslategrey: '#778899',
-  lightsteelblue: '#b0c4de',
-  lightyellow: '#ffffe0',
-  lime: '#00ff00',
-  limegreen: '#32cd32',
-  linen: '#faf0e6',
-  magenta: '#ff00ff',
-  maroon: '#800000',
-  mediumaquamarine: '#66cdaa',
-  mediumblue: '#0000cd',
-  mediumorchid: '#ba55d3',
-  mediumpurple: '#9370db',
-  mediumseagreen: '#3cb371',
-  mediumslateblue: '#7b68ee',
-  mediumspringgreen: '#00fa9a',
-  mediumturquoise: '#48d1cc',
-  mediumvioletred: '#c71585',
-  midnightblue: '#191970',
-  mintcream: '#f5fffa',
-  mistyrose: '#ffe4e1',
-  moccasin: '#ffe4b5',
-  navajowhite: '#ffdead',
-  navy: '#000080',
-  oldlace: '#fdf5e6',
-  olive: '#808000',
-  olivedrab: '#6b8e23',
-  orange: '#ffa500',
-  orangered: '#ff4500',
-  orchid: '#da70d6',
-  palegoldenrod: '#eee8aa',
-  palegreen: '#98fb98',
-  paleturquoise: '#afeeee',
-  palevioletred: '#db7093',
-  papayawhip: '#ffefd5',
-  peachpuff: '#ffdab9',
-  peru: '#cd853f',
-  pink: '#ffc0cb',
-  plum: '#dda0dd',
-  powderblue: '#b0e0e6',
-  purple: '#800080',
-  red: '#ff0000',
-  rosybrown: '#bc8f8f',
-  royalblue: '#4169e1',
-  saddlebrown: '#8b4513',
-  salmon: '#fa8072',
-  sandybrown: '#f4a460',
-  seagreen: '#2e8b57',
-  seashell: '#fff5ee',
-  sienna: '#a0522d',
-  silver: '#c0c0c0',
-  skyblue: '#87ceeb',
-  slateblue: '#6a5acd',
-  slategray: '#708090',
-  slategrey: '#708090',
-  snow: '#fffafa',
-  springgreen: '#00ff7f',
-  steelblue: '#4682b4',
-  tan: '#d2b48c',
-  teal: '#008080',
-  thistle: '#d8bfd8',
-  tomato: '#ff6347',
-  turquoise: '#40e0d0',
-  violet: '#ee82ee',
-  wheat: '#f5deb3',
-  white: '#ffffff',
-  whitesmoke: '#f5f5f5',
-  yellow: '#ffff00',
-  yellowgreen: '#9acd32'
-};
-
-// Regular Expressions for use identifying color pattern strings
+/**
+ * Full color string patterns. The capture groups are necessary.
+ */
 var colorPatterns = {
-  /**
-   * Regular expression for matching colors in format #XXX,
-   * e.g. #416
-   */
+  // Match colors in format #XXX, e.g. #416.
   HEX3: /^#([a-f0-9])([a-f0-9])([a-f0-9])$/i,
 
-  /**
-   * Regular expression for matching colors in format #XXXXXX,
-   * e.g. #b4d455
-   */
+  // Match colors in format #XXXXXX, e.g. #b4d455.
   HEX6: /^#([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i,
 
-  /**
-   * Regular expression for matching colors in format rgb(R, G, B),
-   * e.g. rgb(255, 0, 128)
-   */
+  // Match colors in format rgb(R, G, B), e.g. rgb(255, 0, 128).
   RGB: new RegExp([
-    // Defining RegExp this way makes it more obvious where whitespace
-    // (`\s*`) is permitted between tokens
     '^rgb\\(',
     INTEGER.source,
     ',',
@@ -9495,14 +9495,8 @@ var colorPatterns = {
     '\\)$'
   ].join(WHITESPACE.source), 'i'),
 
-
-  /**
-   * Regular expression for matching colors in format rgb(R%, G%, B%),
-   * e.g. rgb(100%, 0%, 28.9%)
-   */
+  // Match colors in format rgb(R%, G%, B%), e.g. rgb(100%, 0%, 28.9%).
   RGB_PERCENT: new RegExp([
-    // Defining RegExp this way makes it more obvious where whitespace
-    // (`\s*`) is permitted between tokens
     '^rgb\\(',
     PERCENT.source,
     ',',
@@ -9512,10 +9506,7 @@ var colorPatterns = {
     '\\)$'
   ].join(WHITESPACE.source), 'i'),
 
-  /**
-   * Regular expression for matching colors in format rgb(R, G, B, A),
-   * e.g. rgb(255, 0, 128, 0.25)
-   */
+  // Match colors in format rgb(R, G, B, A), e.g. rgb(255, 0, 128, 0.25).
   RGBA: new RegExp([
     '^rgba\\(',
     INTEGER.source,
@@ -9528,10 +9519,7 @@ var colorPatterns = {
     '\\)$'
   ].join(WHITESPACE.source), 'i'),
 
-  /**
-   * Regular expression for matching colors in format rgb(R%, G%, B%, A),
-   * e.g. rgb(100%, 0%, 28.9%. 0.5)
-   */
+  // Match colors in format rgb(R%, G%, B%, A), e.g. rgb(100%, 0%, 28.9%, 0.5).
   RGBA_PERCENT: new RegExp([
     '^rgba\\(',
     PERCENT.source,
@@ -9544,10 +9532,7 @@ var colorPatterns = {
     '\\)$'
   ].join(WHITESPACE.source), 'i'),
 
-  /**
-   * Regular expression for matching colors in format hsla(H, S%, L%),
-   * e.g. hsl(100, 40%, 28.9%)
-   */
+  // Match colors in format hsla(H, S%, L%), e.g. hsl(100, 40%, 28.9%).
   HSL: new RegExp([
     '^hsl\\(',
     INTEGER.source,
@@ -9558,10 +9543,7 @@ var colorPatterns = {
     '\\)$'
   ].join(WHITESPACE.source), 'i'),
 
-  /**
-   * Regular expression for matching colors in format hsla(H, S%, L%, A),
-   * e.g. hsla(100, 40%, 28.9%, 0.5)
-   */
+  // Match colors in format hsla(H, S%, L%, A), e.g. hsla(100, 40%, 28.9%, 0.5).
   HSLA: new RegExp([
     '^hsla\\(',
     INTEGER.source,
@@ -9574,10 +9556,7 @@ var colorPatterns = {
     '\\)$'
   ].join(WHITESPACE.source), 'i'),
 
-  /**
-   * Regular expression for matching colors in format hsb(H, S%, B%),
-   * e.g. hsb(100, 40%, 28.9%)
-   */
+  // Match colors in format hsb(H, S%, B%), e.g. hsb(100, 40%, 28.9%).
   HSB: new RegExp([
     '^hsb\\(',
     INTEGER.source,
@@ -9588,10 +9567,7 @@ var colorPatterns = {
     '\\)$'
   ].join(WHITESPACE.source), 'i'),
 
-  /**
-   * Regular expression for matching colors in format hsba(H, S%, B%, A),
-   * e.g. hsba(100, 40%, 28.9%, 0.5)
-   */
+  // Match colors in format hsba(H, S%, B%, A), e.g. hsba(100, 40%, 28.9%, 0.5).
   HSBA: new RegExp([
     '^hsba\\(',
     INTEGER.source,
@@ -9606,8 +9582,8 @@ var colorPatterns = {
 };
 
 /**
- * For a number of different inputs, returns a color formatted as
- * normalized [r, g, b, a], maxes [255, 255, 255, 255]
+ * For a number of different inputs, returns a color formatted as [r, g, b, a]
+ * arrays, with each component normalized between 0 and 1.
  *
  * @param {Array-like} args An 'array-like' object that represents a list of
  *                          arguments
@@ -9629,52 +9605,75 @@ var colorPatterns = {
  * </code>
  * </div>
  */
-p5.Color._getFormattedColor = function () {
+p5.Color._parseInputs = function() {
   var numArgs = arguments.length;
-  var mode    = this._renderer._colorMode;
-  var maxArr  = this._renderer._colorMaxes[this._renderer._colorMode];
+  var mode = this._renderer._colorMode;
+  var maxes = this._renderer._colorMaxes;
   var results = [];
 
-  // Handle [r,g,b,a] or [h,s,l,a] color values
-  if (numArgs >= 3) {
-    results[0] = arguments[0] / maxArr[0];
-    results[1] = arguments[1] / maxArr[1];
-    results[2] = arguments[2] / maxArr[2];
-    results[3] = typeof arguments[3] === 'number' ?
-              arguments[3] / maxArr[3] : 1;
-  // Handle strings: named colors, hex values, css strings
-  } else if (numArgs === 1 && typeof arguments[0] === 'string') {
-    var str = arguments[0].trim().toLowerCase();
+  if (numArgs >= 3) {  // Argument is a list of component values.
 
-    if (namedColors[str]) {
-      // Handle named color values
-      return p5.Color._getFormattedColor.apply(this, [namedColors[str]]);
+    results[0] = arguments[0] / maxes[mode][0];
+    results[1] = arguments[1] / maxes[mode][1];
+    results[2] = arguments[2] / maxes[mode][2];
+
+    // Alpha may be undefined, so default it to 100%.
+    if (typeof arguments[3] === 'number') {
+      results[3] = arguments[3] / maxes[mode][3];
+    } else {
+      results[3] = 1;
     }
 
-    // Work through available string patterns to determine how to proceed
-    if (colorPatterns.HEX3.test(str)) {
+    // Constrain components to the range [0,1].
+    results = results.map(function(value) {
+      return Math.max(Math.min(value, 1), 0);
+    });
+
+    // Convert to RGBA and return.
+    if (mode === constants.HSL) {
+      return color_conversion._hslaToRGBA(results);
+    } else if (mode === constants.HSB) {
+      return color_conversion._hsbaToRGBA(results);
+    } else {
+      return results;
+    }
+
+  } else if (numArgs === 1 && typeof arguments[0] === 'string') {
+
+    var str = arguments[0].trim().toLowerCase();
+
+    // Return if string is a named colour.
+    if (namedColors[str]) {
+      return p5.Color._parseInputs.apply(this, [namedColors[str]]);
+    }
+
+    // Try RGBA pattern matching.
+    if (colorPatterns.HEX3.test(str)) {  // #rgb
       results = colorPatterns.HEX3.exec(str).slice(1).map(function(color) {
-        // Expand #RGB to #RRGGBB
         return parseInt(color + color, 16) / 255;
       });
       results[3] = 1;
-    } else if (colorPatterns.HEX6.test(str)) {
+      return results;
+    } else if (colorPatterns.HEX6.test(str)) {  // #rrggbb
       results = colorPatterns.HEX6.exec(str).slice(1).map(function(color) {
         return parseInt(color, 16) / 255;
       });
       results[3] = 1;
-    } else if (colorPatterns.RGB.test(str)) {
+      return results;
+    } else if (colorPatterns.RGB.test(str)) {  // rgb(R,G,B)
       results = colorPatterns.RGB.exec(str).slice(1).map(function(color) {
         return color / 255;
       });
       results[3] = 1;
-    } else if (colorPatterns.RGB_PERCENT.test(str)) {
+      return results;
+    } else if (colorPatterns.RGB_PERCENT.test(str)) {  // rgb(R%,G%,B%)
       results = colorPatterns.RGB_PERCENT.exec(str).slice(1)
         .map(function(color) {
           return parseFloat(color) / 100;
         });
       results[3] = 1;
-    } else if (colorPatterns.RGBA.test(str)) {
+      return results;
+    } else if (colorPatterns.RGBA.test(str)) {  // rgba(R,G,B,A)
       results = colorPatterns.RGBA.exec(str).slice(1)
         .map(function(color, idx) {
           if (idx === 3) {
@@ -9682,7 +9681,8 @@ p5.Color._getFormattedColor = function () {
           }
           return color / 255;
         });
-    } else if (colorPatterns.RGBA_PERCENT.test(str)) {
+      return results;
+    } else if (colorPatterns.RGBA_PERCENT.test(str)) {  // rgba(R%,G%,B%,A%)
       results = colorPatterns.RGBA_PERCENT.exec(str).slice(1)
         .map(function(color, idx) {
           if (idx === 3) {
@@ -9690,110 +9690,88 @@ p5.Color._getFormattedColor = function () {
           }
           return parseFloat(color) / 100;
         });
-    }
-    // convert RGBA result to correct color space
-    if( results.length ){
-      if( mode === constants.RGB ){
-        return results;
-      }
-      else if( mode === constants.HSL ){
-        return color_utils.rgbaToHSLA(results);
-      }
-      else if( mode === constants.HSB ){
-        return color_utils.rgbaToHSBA(results);
-      }
+      return results;
     }
 
-    // test string HSLA format
-    if (colorPatterns.HSL.test(str)) {
+    // Try HSLA pattern matching.
+    if (colorPatterns.HSL.test(str)) {  // hsl(H,S,L)
       results = colorPatterns.HSL.exec(str).slice(1)
         .map(function(color, idx) {
-        if( idx === 0 ) {
+        if (idx === 0) {
           return parseInt(color, 10) / 360;
         }
         return parseInt(color, 10) / 100;
       });
       results[3] = 1;
-    } else if (colorPatterns.HSLA.test(str)) {
+    } else if (colorPatterns.HSLA.test(str)) {  // hsla(H,S,L,A)
       results = colorPatterns.HSLA.exec(str).slice(1)
         .map(function(color, idx) {
-        if( idx === 0 ){
+        if (idx === 0) {
           return parseInt(color, 10) / 360;
         }
-        else if( idx === 3 ) {
+        else if (idx === 3) {
           return parseFloat(color);
         }
         return parseInt(color, 10) / 100;
       });
     }
-    // convert HSLA result to correct color space
-    if( results.length ){
-      if( mode === constants.RGB ){
-        return color_utils.hslaToRGBA(results);
-      }
-      else if( mode === constants.HSL ){
-        return results;
-      }
-      else if( mode === constants.HSB ){
-        return color_utils.hslaToHSBA(results);
-      }
+    if (results.length) {
+      return color_conversion._hslaToRGBA(results);
     }
 
-    // test string HSBA format
-    if (colorPatterns.HSB.test(str)) {
+    // Try HSBA pattern matching.
+    if (colorPatterns.HSB.test(str)) {  // hsb(H,S,B)
       results = colorPatterns.HSB.exec(str).slice(1)
         .map(function(color, idx) {
-        if( idx === 0 ) {
+        if (idx === 0) {
           return parseInt(color, 10) / 360;
         }
         return parseInt(color, 10) / 100;
       });
       results[3] = 1;
-    } else if (colorPatterns.HSBA.test(str)) {
+    } else if (colorPatterns.HSBA.test(str)) {  // hsba(H,S,B,A)
       results = colorPatterns.HSBA.exec(str).slice(1)
         .map(function(color, idx) {
-        if( idx === 0 ){
+        if (idx === 0) {
           return parseInt(color, 10) / 360;
         }
-        else if( idx === 3 ) {
+        else if (idx === 3) {
           return parseFloat(color);
         }
         return parseInt(color, 10) / 100;
       });
     }
-    // convert HSBA result to correct color space
-    if( results.length ){
-      if( mode === constants.RGB ){
-        return color_utils.hsbaToRGBA(results);
-      }
-      else if( mode === constants.HSB ){
-        return results;
-      }
-      else if( mode === constants.HSL ){
-        return color_utils.hsbaToHSLA(results);
-      }
+    if (results.length) {
+      return color_conversion._hsbaToRGBA(results);
     }
 
-    // Input did not match any CSS Color pattern: Default to white
+    // Input did not match any CSS color pattern: default to white.
     results = [1, 1, 1, 1];
-  } // Handle greyscale color mode
-  else if((numArgs === 1 || numArgs === 2)&& typeof arguments[0] === 'number')
-  {
-    // When users pass only one argument, they are presumed to be
-    // working in grayscale mode.
-    if (mode === constants.RGB) {
-      results[0] = arguments[0] / maxArr[0];
-      results[1] = arguments[0] / maxArr[1];
-      results[2] = arguments[0] / maxArr[2];
-      results[3] = typeof arguments[1] === 'number' ?
-                     arguments[1] / maxArr[3] : 1;
+
+  } else if ((numArgs === 1 || numArgs === 2) &&
+              typeof arguments[0] === 'number') {  // 'Grayscale' mode.
+
+    /**
+     * For HSB and HSL, interpret the gray level as a brightness/lightness
+     * value (they are equivalent when chroma is zero). For RGB, normalize the
+     * gray level according to the blue maximum.
+     */
+    results[0] = arguments[0] / maxes[mode][2];
+    results[1] = arguments[0] / maxes[mode][2];
+    results[2] = arguments[0] / maxes[mode][2];
+
+    // Alpha may be undefined, so default it to 100%.
+    if (typeof arguments[1] === 'number') {
+      results[3] = arguments[1] / maxes[mode][3];
     } else {
-      results[0] = arguments[0];
-      results[1] = arguments[0];
-      results[2] = arguments[0] / maxArr[2];
-      results[3] = typeof arguments[1] === 'number' ?
-                     arguments[1] / maxArr[3] : 1;
+      results[3] = 1;
     }
+
+    // Constrain components to the range [0,1].
+    results = results.map(function(value) {
+      return Math.max(Math.min(value, 1), 0);
+    });
+
   } else {
     throw new Error (arguments + 'is not a valid color representation.');
   }
@@ -9803,7 +9781,7 @@ p5.Color._getFormattedColor = function () {
 
 module.exports = p5.Color;
 
-},{"../core/constants":47,"../core/core":48,"./color_utils":40}],43:[function(_dereq_,module,exports){
+},{"../core/constants":47,"../core/core":48,"./color_conversion":40}],43:[function(_dereq_,module,exports){
 /**
  * @module Color
  * @submodule Setting
@@ -9947,23 +9925,27 @@ p5.prototype.clear = function() {
 };
 
 /**
- * Changes the way p5.js interprets color data. By default, the parameters
- * for fill(), stroke(), background(), and color() are defined by values
- * between 0 and 255 using the RGB color model. The colorMode() function is
- * used to switch color systems. Regardless of color system, all value ranges
- * are presumed to be 0–255 unless explicitly set otherwise. That is,
- * for a standard HSB range, one would pass colorMode(HSB, 360, 100, 100, 1).
+ * colorMode() changes the way p5.js interprets color data. By default, the
+ * parameters for fill(), stroke(), background(), and color() are defined by
+ * values between 0 and 255 using the RGB color model. This is equivalent to
+ * setting colorMode(RGB, 255). Setting colorMode(HSB) lets you use the HSB
+ * system instead. By default, this is colorMode(HSB, 360, 100, 100, 1). You
+ * can also use HSL.
+ *
+ * Note: existing color objects remember the mode that they were created in,
+ * so you can change modes as you like without affecting their appearance.
  *
  * @method colorMode
- * @param {Number|Constant} mode either RGB or HSB, corresponding to
- *                               Red/Green/Blue and Hue/Saturation/Brightness
- * @param {Number|Constant} max1 range for the red or hue depending on the
- *                               current color mode, or range for all values
- * @param {Number|Constant} max2 range for the green or saturation depending
- *                               on the current color mode
- * @param {Number|Constant} max3 range for the blue or brightness depending
- *                               on the current color mode
- * @param {Number|Constant} maxA range for the alpha
+ * @param {Number|Constant} mode   either RGB or HSB, corresponding to
+ *                                 Red/Green/Blue and Hue/Saturation/Brightness
+ *                                 (or Lightness)
+ * @param {Number|Constant} [max1] range for the red or hue depending on the
+ *                                 current color mode, or range for all values
+ * @param {Number|Constant} [max2] range for the green or saturation depending
+ *                                 on the current color mode
+ * @param {Number|Constant} [max3] range for the blue or brightness/lighntess
+ *                                 depending on the current color mode
+ * @param {Number|Constant} [maxA] range for the alpha
  * @example
  * <div>
  * <code>
@@ -9997,7 +9979,7 @@ p5.prototype.clear = function() {
  * var c = color(127, 255, 0);
  *
  * colorMode(RGB, 1);
- * var myColor = c.getRed();
+ * var myColor = c._getRed();
  * text(myColor, 10, 10, 80, 80);
  * </code>
  * </div>
@@ -10019,27 +10001,29 @@ p5.prototype.colorMode = function() {
   if (arguments[0] === constants.RGB ||
       arguments[0] === constants.HSB ||
       arguments[0] === constants.HSL) {
+
+    // Set color mode.
     this._renderer._colorMode = arguments[0];
 
-    var maxArr = this._renderer._colorMaxes[this._renderer._colorMode];
-
+    // Set color maxes.
+    var maxes = this._renderer._colorMaxes[this._renderer._colorMode];
     if (arguments.length === 2) {
-      maxArr[0] = arguments[1];
-      maxArr[1] = arguments[1];
-      maxArr[2] = arguments[1];
-      maxArr[3] = arguments[1];
+      maxes[0] = arguments[1];  // Red
+      maxes[1] = arguments[1];  // Green
+      maxes[2] = arguments[1];  // Blue
+      maxes[3] = arguments[1];  // Alpha
     } else if (arguments.length === 4) {
-      maxArr[0] = arguments[1];
-      maxArr[1] = arguments[2];
-      maxArr[2] = arguments[3];
-    }
-    if (arguments.length === 5) {
-      maxArr[0] = arguments[1];
-      maxArr[1] = arguments[2];
-      maxArr[2] = arguments[3];
-      maxArr[3] = arguments[4];
+      maxes[0] = arguments[1];  // Red
+      maxes[1] = arguments[2];  // Green
+      maxes[2] = arguments[3];  // Blue
+    } else if (arguments.length === 5) {
+      maxes[0] = arguments[1];  // Red
+      maxes[1] = arguments[2];  // Green
+      maxes[2] = arguments[3];  // Blue
+      maxes[3] = arguments[4];  // Alpha
     }
   }
+
   return this;
 };
 
@@ -10328,8 +10312,6 @@ p5.prototype.stroke = function() {
   return this;
 };
 
-
-
 module.exports = p5;
 
 },{"../core/constants":47,"../core/core":48,"./p5.Color":42}],44:[function(_dereq_,module,exports){
@@ -10350,7 +10332,7 @@ _dereq_('./error_helpers');
 
 /**
  * Draw an arc to the screen. If called with only a, b, c, d, start, and
- * stop, the arc will pe drawn as an open pie. If mode is provided, the arc
+ * stop, the arc will be drawn as an open pie. If mode is provided, the arc
  * will be drawn either open, as a chord, or as a pie as specified. The
  * origin may be changed with the ellipseMode() function.<br><br>
  * Note that drawing a full circle (ex: 0 to TWO_PI) will appear blank
@@ -11545,7 +11527,8 @@ var p5 = function(sketch, node, sync) {
   //////////////////////////////////////////////
 
   this._setupDone = false;
-  this.pixelDensity = window.devicePixelRatio || 1; // for handling hidpi
+  // for handling hidpi
+  this._pixelDensity = Math.ceil(window.devicePixelRatio) || 1;
   this._userNode = node;
   this._curElement = null;
   this._elements = [];
@@ -11562,6 +11545,8 @@ var p5 = function(sketch, node, sync) {
     'mousemove': null,
     'mousedown': null,
     'mouseup': null,
+    'dragend': null,
+    'dragover': null,
     'click': null,
     'mouseover': null,
     'mouseout': null,
@@ -11732,10 +11717,6 @@ var p5 = function(sketch, node, sync) {
         time_since_last >= target_time_between_frames - epsilon) {
       this._setProperty('frameCount', this.frameCount + 1);
       this.redraw();
-      this._updatePAccelerations();
-      this._updatePRotations();
-      this._updatePMouseCoords();
-      this._updatePTouchCoords();
       this._frameRate = 1000.0/(now - this._lastFrameTime);
       this._lastFrameTime = now;
     }
@@ -11893,8 +11874,8 @@ var p5 = function(sketch, node, sync) {
   window.addEventListener('focus', focusHandler);
   window.addEventListener('blur', blurHandler);
   this.registerMethod('remove', function() {
-    window.removeEventListener(focusHandler);
-    window.removeEventListener(blurHandler);
+    window.removeEventListener('focus', focusHandler);
+    window.removeEventListener('blur', blurHandler);
   });
 
   // TODO: ???
@@ -12775,18 +12756,20 @@ p5.prototype.fullScreen = function(val) {
 };
 
 /**
- * Toggles pixel scaling for high pixel density displays. By default
- * pixel scaling is on, call devicePixelScaling(false) to turn it off.
- * This devicePixelScaling() function must be the first line of code
- * inside setup().
+ * Sets the pixel scaling for high pixel density displays. By default
+ * pixel density is set to match display density, call pixelDensity(1)
+ * to turn this off. Calling pixelDensity() with no arguments returns
+ * the current pixel density of the sketch.
  *
- * @method devicePixelScaling
- * @param  {Boolean|Number} [val] whether or how much the sketch should scale
+ *
+ * @method pixelDensity
+ * @param  {Number} [val] whether or how much the sketch should scale
+ * @returns {Number} current pixel density of the sketch
  * @example
  * <div>
  * <code>
  * function setup() {
- *   devicePixelScaling(false);
+ *   pixelDensity(1);
  *   createCanvas(100, 100);
  *   background(200);
  *   ellipse(width/2, height/2, 50, 50);
@@ -12796,7 +12779,7 @@ p5.prototype.fullScreen = function(val) {
  * <div>
  * <code>
  * function setup() {
- *   devicePixelScaling(3.0);
+ *   pixelDensity(3.0);
  *   createCanvas(100, 100);
  *   background(200);
  *   ellipse(width/2, height/2, 50, 50);
@@ -12804,18 +12787,35 @@ p5.prototype.fullScreen = function(val) {
  * </code>
  * </div>
  */
-p5.prototype.devicePixelScaling = function(val) {
-  if (val) {
-    if (typeof val === 'number') {
-      this.pixelDensity = val;
-    }
-    else {
-      this.pixelDensity = window.devicePixelRatio || 1;
-    }
+p5.prototype.pixelDensity = function(val) {
+  if (typeof val === 'number') {
+    this._pixelDensity = val;
   } else {
-    this.pixelDensity = 1;
+    return this._pixelDensity;
   }
   this.resizeCanvas(this.width, this.height, true);
+};
+
+/**
+ * Returns the pixel density of the current display the sketch is running on.
+ *
+ * @method displayDensity
+ * @returns {Number} current pixel density of the display
+ * @example
+ * <div>
+ * <code>
+ * function setup() {
+ *   var density = displayDensity();
+ *   pixelDensity(density);
+ *   createCanvas(100, 100);
+ *   background(200);
+ *   ellipse(width/2, height/2, 50, 50);
+ * }
+ * </code>
+ * </div>
+ */
+p5.prototype.displayDensity = function() {
+  return window.devicePixelRatio;
 };
 
 function launchFullscreen(element) {
@@ -13273,6 +13273,9 @@ p5.Element.prototype.parent = function(p) {
     return this.elt.parentNode;
   } else {
     if (typeof p === 'string') {
+      if (p[0] === '#') {
+        p = p.substring(1);
+      }
       p = document.getElementById(p);
     } else if (p instanceof p5.Element) {
       p = p.elt;
@@ -13304,7 +13307,7 @@ p5.Element.prototype.id = function(id) {
  * @return {p5.Element}
  */
 p5.Element.prototype.class = function(c) {
-  this.elt.className += ' '+c;
+  this.elt.className = c;
   return this;
 };
 
@@ -13773,7 +13776,7 @@ p5.Graphics = function(w, h, renderer, pInst) {
   this._styles = [];
   this.width = w;
   this.height = h;
-  this.pixelDensity = pInst.pixelDensity;
+  this._pixelDensity = pInst._pixelDensity;
 
   if (r === constants.WEBGL) {
     this._renderer = new p5.Renderer3D(c, pInst, false);
@@ -13881,8 +13884,8 @@ p5.Renderer.prototype = Object.create(p5.Element.prototype);
 p5.Renderer.prototype.resize = function(w, h) {
   this.width = w;
   this.height = h;
-  this.elt.width = w * this._pInst.pixelDensity;
-  this.elt.height = h * this._pInst.pixelDensity;
+  this.elt.width = w * this._pInst._pixelDensity;
+  this.elt.height = h * this._pInst._pixelDensity;
   this.elt.style.width = w +'px';
   this.elt.style.height = h + 'px';
   if (this._isMainCanvas) {
@@ -14082,8 +14085,8 @@ p5.Renderer2D.prototype._applyDefaults = function() {
 
 p5.Renderer2D.prototype.resize = function(w,h) {
   p5.Renderer.prototype.resize.call(this, w,h);
-  this.drawingContext.scale(this._pInst.pixelDensity,
-                            this._pInst.pixelDensity);
+  this.drawingContext.scale(this._pInst._pixelDensity,
+                            this._pInst._pixelDensity);
 };
 
 //////////////////////////////////////////////
@@ -14093,8 +14096,8 @@ p5.Renderer2D.prototype.resize = function(w,h) {
 p5.Renderer2D.prototype.background = function() {
   this.drawingContext.save();
   this.drawingContext.setTransform(1, 0, 0, 1, 0, 0);
-  this.drawingContext.scale(this._pInst.pixelDensity,
-                            this._pInst.pixelDensity);
+  this.drawingContext.scale(this._pInst._pixelDensity,
+                            this._pInst._pixelDensity);
 
   if (arguments[0] instanceof p5.Image) {
     this._pInst.image(arguments[0], 0, 0, this.width, this.height);
@@ -14245,13 +14248,14 @@ p5.Renderer2D.prototype.get = function(x, y, w, h) {
     h = 1;
   }
 
-  if(x > this.width || y > this.height || x < 0 || y < 0){
+  // if the section does not overlap the canvas
+  if(x + w < 0 || y + h < 0 || x > this.width || y > this.height){
     return [0, 0, 0, 255];
   }
 
   var ctx = this._pInst || this;
 
-  var pd = ctx.pixelDensity;
+  var pd = ctx._pixelDensity;
 
   this.loadPixels.call(ctx);
 
@@ -14282,7 +14286,7 @@ p5.Renderer2D.prototype.get = function(x, y, w, h) {
 };
 
 p5.Renderer2D.prototype.loadPixels = function () {
-  var pd = this.pixelDensity || this._pInst.pixelDensity;
+  var pd = this._pixelDensity || this._pInst._pixelDensity;
   var w = this.width * pd;
   var h = this.height * pd;
   var imageData = this.drawingContext.getImageData(0, 0, w, h);
@@ -14301,16 +14305,16 @@ p5.Renderer2D.prototype.set = function (x, y, imgOrCol) {
   if (imgOrCol instanceof p5.Image) {
     this.drawingContext.save();
     this.drawingContext.setTransform(1, 0, 0, 1, 0, 0);
-    this.drawingContext.scale(this._pInst.pixelDensity,
-      this._pInst.pixelDensity);
+    this.drawingContext.scale(this._pInst._pixelDensity,
+      this._pInst._pixelDensity);
     this.drawingContext.drawImage(imgOrCol.canvas, x, y);
     this.loadPixels.call(this._pInst);
     this.drawingContext.restore();
   } else {
     var ctx = this._pInst || this;
     var r = 0, g = 0, b = 0, a = 0;
-    var idx = 4*((y * ctx.pixelDensity) *
-      (this.width * ctx.pixelDensity) + (x * ctx.pixelDensity));
+    var idx = 4*((y * ctx._pixelDensity) *
+      (this.width * ctx._pixelDensity) + (x * ctx._pixelDensity));
     if (!ctx.imageData) {
       ctx.loadPixels.call(ctx);
     }
@@ -14336,19 +14340,19 @@ p5.Renderer2D.prototype.set = function (x, y, imgOrCol) {
       }
     } else if (imgOrCol instanceof p5.Color) {
       if (idx < ctx.pixels.length) {
-        r = imgOrCol.rgba[0];
-        g = imgOrCol.rgba[1];
-        b = imgOrCol.rgba[2];
-        a = imgOrCol.rgba[3];
+        r = imgOrCol.levels[0];
+        g = imgOrCol.levels[1];
+        b = imgOrCol.levels[2];
+        a = imgOrCol.levels[3];
         //this.updatePixels.call(this);
       }
     }
     // loop over pixelDensity * pixelDensity
-    for (var i = 0; i < ctx.pixelDensity; i++) {
-      for (var j = 0; j < ctx.pixelDensity; j++) {
+    for (var i = 0; i < ctx._pixelDensity; i++) {
+      for (var j = 0; j < ctx._pixelDensity; j++) {
         // loop over
-        idx = 4*((y * ctx.pixelDensity + j) * this.width *
-          ctx.pixelDensity + (x * ctx.pixelDensity + i));
+        idx = 4*((y * ctx._pixelDensity + j) * this.width *
+          ctx._pixelDensity + (x * ctx._pixelDensity + i));
         ctx.pixels[idx] = r;
         ctx.pixels[idx+1] = g;
         ctx.pixels[idx+2] = b;
@@ -14359,7 +14363,7 @@ p5.Renderer2D.prototype.set = function (x, y, imgOrCol) {
 };
 
 p5.Renderer2D.prototype.updatePixels = function (x, y, w, h) {
-  var pd = this.pixelDensity || this._pInst.pixelDensity;
+  var pd = this._pixelDensity || this._pInst._pixelDensity;
   if (x === undefined &&
       y === undefined &&
       w === undefined &&
@@ -15027,8 +15031,8 @@ function(n00, n01, n02, n10, n11, n12) {
 
 p5.Renderer2D.prototype.resetMatrix = function() {
   this.drawingContext.setTransform(1, 0, 0, 1, 0, 0);
-  this.drawingContext.scale(this._pInst.pixelDensity,
-                            this._pInst.pixelDensity);
+  this.drawingContext.scale(this._pInst._pixelDensity,
+                            this._pInst._pixelDensity);
   return this;
 };
 
@@ -15934,9 +15938,9 @@ p5.prototype.redraw = function () {
   var userSetup = this.setup || window.setup;
   var userDraw = this.draw || window.draw;
   if (typeof userDraw === 'function') {
-    this.push();
+    this.resetMatrix();
     if (typeof userSetup === 'undefined') {
-      this.scale(this.pixelDensity, this.pixelDensity);
+      this.scale(this._pixelDensity, this._pixelDensity);
     }
     var self = this;
     this._registeredMethods.pre.forEach(function (f) {
@@ -15946,7 +15950,6 @@ p5.prototype.redraw = function () {
     this._registeredMethods.post.forEach(function (f) {
       f.call(self);
     });
-    this.pop();
   }
 };
 
@@ -17347,12 +17350,14 @@ p5.prototype.setShakeThreshold = function(val){
  */
 
 p5.prototype._ondeviceorientation = function (e) {
+  this._updatePRotations();
   this._setProperty('rotationX', e.beta);
   this._setProperty('rotationY', e.gamma);
   this._setProperty('rotationZ', e.alpha);
   this._handleMotion();
 };
 p5.prototype._ondevicemotion = function (e) {
+  this._updatePAccelerations();
   this._setProperty('accelerationX', e.acceleration.x * 2);
   this._setProperty('accelerationY', e.acceleration.y * 2);
   this._setProperty('accelerationZ', e.acceleration.z * 2);
@@ -18084,10 +18089,12 @@ p5.prototype._updateMouseCoords = function(e) {
   if(e.type === 'touchstart' ||
      e.type === 'touchmove' ||
      e.type === 'touchend') {
+    this._updatePTouchCoords();
     this._setProperty('mouseX', this.touchX);
     this._setProperty('mouseY', this.touchY);
   } else {
     if(this._curElement !== null) {
+      this._updatePMouseCoords();
       var mousePos = getMousePos(this._curElement.elt, e);
       this._setProperty('mouseX', mousePos.x);
       this._setProperty('mouseY', mousePos.y);
@@ -18097,7 +18104,7 @@ p5.prototype._updateMouseCoords = function(e) {
   this._setProperty('winMouseY', e.pageY);
 };
 
-p5.prototype._updatePMouseCoords = function(e) {
+p5.prototype._updatePMouseCoords = function() {
   this._setProperty('pmouseX', this.mouseX);
   this._setProperty('pmouseY', this.mouseY);
   this._setProperty('pwinMouseX', this.winMouseX);
@@ -18356,6 +18363,9 @@ p5.prototype._onmouseup = function(e) {
   }
 };
 
+p5.prototype._ondragend = p5.prototype._onmouseup;
+p5.prototype._ondragover = p5.prototype._onmousemove;
+
 /**
  * The mouseClicked() function is called once after a mouse button has been
  * pressed and then released.<br><br>
@@ -18513,8 +18523,9 @@ p5.prototype.ptouchY = 0;
 
 /**
  * The system variable touches[] contains an array of the positions of all
- * current touch points, relative to (0, 0) of the canvas. Each element in
- * the array is an object with x and y properties.
+ * current touch points, relative to (0, 0) of the canvas, and IDs identifying a
+ * unique touch as it moves. Each element in the array is an object with x, y,
+ * and id properties.
  *
  * @property touches[]
  */
@@ -18532,17 +18543,18 @@ p5.prototype._updateTouchCoords = function(e) {
   if(e.type === 'mousedown' ||
      e.type === 'mousemove' ||
      e.type === 'mouseup'){
+    this._updatePMouseCoords();
     this._setProperty('touchX', this.mouseX);
     this._setProperty('touchY', this.mouseY);
   } else {
-    var touchPos = getTouchPos(this._curElement.elt, e, 0);
-    this._setProperty('touchX', touchPos.x);
-    this._setProperty('touchY', touchPos.y);
+    this._updatePTouchCoords();
+    var touchInfo = getTouchInfo(this._curElement.elt, e, 0);
+    this._setProperty('touchX', touchInfo.x);
+    this._setProperty('touchY', touchInfo.y);
 
     var touches = [];
     for(var i = 0; i < e.touches.length; i++){
-      var pos = getTouchPos(this._curElement.elt, e, i);
-      touches[i] = {x: pos.x, y: pos.y};
+      touches[i] = getTouchInfo(this._curElement.elt, e, i);
     }
     this._setProperty('touches', touches);
   }
@@ -18553,13 +18565,14 @@ p5.prototype._updatePTouchCoords = function() {
   this._setProperty('ptouchY', this.touchY);
 };
 
-function getTouchPos(canvas, e, i) {
+function getTouchInfo(canvas, e, i) {
   i = i || 0;
   var rect = canvas.getBoundingClientRect();
   var touch = e.touches[i] || e.changedTouches[i];
-  return  {
+  return {
     x: touch.clientX - rect.left,
-    y: touch.clientY - rect.top
+    y: touch.clientY - rect.top,
+    id: touch.identifier
   };
 }
 
@@ -19841,10 +19854,19 @@ p5.prototype.image =
     dy = sy || 0;
     sx = 0;
     sy = 0;
-    dWidth = sWidth || img.width;
-    dHeight = sHeight || img.height;
-    sWidth = img.width;
-    sHeight = img.height;
+    if (img.elt && img.elt.videoWidth && !img.canvas) { // video no canvas
+      var actualW = img.elt.videoWidth;
+      var actualH = img.elt.videoHeight;
+      dWidth = sWidth || img.width;
+      dHeight = sHeight || img.width*actualH/actualW;
+      sWidth = actualW;
+      sHeight = actualH;
+    } else {
+      dWidth = sWidth || img.width;
+      dHeight = sHeight || img.height;
+      sWidth = img.width;
+      sHeight = img.height;
+    }
   } else if (arguments.length === 9) {
     sx = sx || 0;
     sy = sy || 0;
@@ -19933,7 +19955,7 @@ p5.prototype.image =
  */
 p5.prototype.tint = function () {
   var c = this.color.apply(this, arguments);
-  this._renderer._tint = c.rgba;
+  this._renderer._tint = c.levels;
 };
 
 /**
@@ -20123,7 +20145,9 @@ p5.Image = function(width, height){
   this.canvas.width = this.width;
   this.canvas.height = this.height;
   this.drawingContext = this.canvas.getContext('2d');
-  this.pixelDensity = 1;
+  this._pixelDensity = 1;
+  //used for webgl texturing only
+  this.isTexture = false;
   /**
    * Array containing the values for all the pixels in the display window.
    * These values are numbers. This array is the size (include an appropriate
@@ -20390,7 +20414,7 @@ p5.Image.prototype.mask = function(p5Image) {
 
   var scaleFactor = 1;
   if (p5Image instanceof p5.Renderer) {
-    scaleFactor = p5Image._pInst.pixelDensity;
+    scaleFactor = p5Image._pInst._pixelDensity;
   }
 
   var copyArgs = [
@@ -20490,6 +20514,17 @@ p5.Image.prototype.save = function(filename, extension) {
 
   //Make the browser download the file
   p5.prototype.downloadFile(imageData, filename, extension);
+};
+
+/**
+ * creates a gl texture
+ * used in WEBGL mode only
+ * @param  {[type]} tex [description]
+ * @return {[type]}     [description]
+ */
+p5.Image.prototype.createTexture = function(tex){
+  //this.texture = tex;
+  return this;
 };
 
 module.exports = p5.Image;
@@ -20941,7 +20976,7 @@ p5.prototype.loadPixels = function() {
  * <p>Changes the color of any pixel, or writes an image directly to the
  * display window.</p>
  * <p>The x and y parameters specify the pixel to change and the c parameter
- * specifies the color value. This can be a p5.COlor object, or [R, G, B, A]
+ * specifies the color value. This can be a p5.Color object, or [R, G, B, A]
  * pixel array. It can also be a single grayscale value.
  * When setting an image, the x and y parameters define the coordinates for
  * the upper-left corner of the image, regardless of the current imageMode().
@@ -21073,7 +21108,7 @@ p5._getDecrementPreload = function() {
 
   // when in preload decrementPreload will always be the last arg as it is set
   // with args.push() before invocation in _wrapPreload
-  if ((window.preload || this.preload) &&
+  if ((window.preload || (this && this.preload)) &&
     typeof decrementPreload === 'function') {
     return decrementPreload;
   } else {
@@ -21133,6 +21168,21 @@ p5._getDecrementPreload = function() {
  *
  * </code></div>
  *
+ * <p>You can also use the string name of the font to style other HTML
+ * elements.</p>
+ *
+ * <div><code>
+ * var myFont;
+ *
+ * function preload() {
+ *   myFont = loadFont('assets/Avenir.otf');
+ * }
+ *
+ * function setup() {
+ *   var myDiv = createDiv('hello there');
+ *   myDiv.style('font-family', 'Avenir');
+ * }
+* </code></div>
  */
 p5.prototype.loadFont = function(path, onSuccess, onError) {
 
@@ -21157,6 +21207,19 @@ p5.prototype.loadFont = function(path, onSuccess, onError) {
     if (decrementPreload && (onSuccess !== decrementPreload)) {
       decrementPreload();
     }
+    /*jshint multistr: true */
+    var exp =/\/[a-zA-Z]*((.ttf)|(.otf)|(.woff)|(.woff2))$/i;
+    if(!exp) {
+      return p5Font;
+    }
+    var i = (exp).exec( path ).index + 1;
+    var fontName = path.substring(i);
+    fontName = fontName.match(/[A-Za-z]*/);
+    var fontFamily = fontName[0];
+    var newStyle = document.createElement('style');
+    newStyle.appendChild(document.createTextNode('\n@font-face {\
+      \nfont-family: '+fontFamily+';\nsrc: url('+path+');\n}\n'));
+    document.head.appendChild(newStyle);
 
   });
 
@@ -21188,9 +21251,11 @@ p5.prototype.loadBytes = function() {
  * @method loadJSON
  * @param  {String}        path       name of the file or url to load
  * @param  {Function}      [callback] function to be executed after
- *                                    loadJSON()
- *                                    completes, Array is passed in as first
- *                                    argument
+ *                                    loadJSON() completes, data is passed
+ *                                    in as first argument
+ * @param  {Function}      [errorCallback] function to be executed if
+ *                                    there is an error, response is passed
+ *                                    in as first argument
  * @param  {String}        [datatype] "json" or "jsonp"
  * @return {Object|Array}             JSON data
  * @example
@@ -21201,7 +21266,8 @@ p5.prototype.loadBytes = function() {
  * <div><code>
  * var weather;
  * function preload() {
- *   var url = 'http://api.openweathermap.org/data/2.5/weather?q=London,UK';
+ *   var url = 'http://api.openweathermap.org/data/2.5/weather?q=London,UK'+
+ *    '&APPID=7bbbb47522848e8b9c26ba35c226c734';
  *   weather = loadJSON(url);
  * }
  *
@@ -21224,7 +21290,8 @@ p5.prototype.loadBytes = function() {
  * <div><code>
  * function setup() {
  *   noLoop();
- *   var url = 'http://api.openweathermap.org/data/2.5/weather?q=NewYork,USA';
+ *   var url = 'http://api.openweathermap.org/data/2.5/weather?q=NewYork'+
+ *    '&APPID=7bbbb47522848e8b9c26ba35c226c734';
  *   loadJSON(url, drawWeather);
  * }
  *
@@ -21244,6 +21311,7 @@ p5.prototype.loadBytes = function() {
 p5.prototype.loadJSON = function() {
   var path = arguments[0];
   var callback = arguments[1];
+  var errorCallback;
   var decrementPreload = p5._getDecrementPreload.apply(this, arguments);
 
   var ret = []; // array needed for preload
@@ -21251,9 +21319,14 @@ p5.prototype.loadJSON = function() {
   var t = 'json'; //= path.indexOf('http') === -1 ? 'json' : 'jsonp';
 
   // check for explicit data type argument
-  if (typeof arguments[2] === 'string'){
-    if (arguments[2] === 'jsonp' || arguments[2] === 'json') {
-      t = arguments[2];
+  for (var i=2; i<arguments.length; i++) {
+    var arg = arguments[i];
+    if (typeof arg === 'string'){
+      if (arg === 'jsonp' || arg === 'json') {
+        t = arg;
+      }
+    } else if (typeof arg === 'function') {
+      errorCallback = arg;
     }
   }
 
@@ -21261,12 +21334,12 @@ p5.prototype.loadJSON = function() {
     url: path,
     type: t,
     crossOrigin: true,
-    error: function (resp, msg, err) {
-      if (msg) {
-        console.log(msg);
-      }
-      if (err && err.message) {
-        console.log(err.message);
+    error: function (resp) {
+      // pass to error callback if defined
+      if (errorCallback) {
+        errorCallback(resp);
+      } else { // otherwise log error msg
+        console.log(resp.statusText);
       }
     },
     success: function(resp) {
@@ -21303,6 +21376,9 @@ p5.prototype.loadJSON = function() {
  * @param  {Function} [callback] function to be executed after loadStrings()
  *                               completes, Array is passed in as first
  *                               argument
+ * @param  {Function} [errorCallback] function to be executed if
+ *                               there is an error, response is passed
+ *                               in as first argument
  * @return {Array}               Array of Strings
  * @example
  *
@@ -21337,13 +21413,17 @@ p5.prototype.loadJSON = function() {
  * }
  * </code></div>
  */
-p5.prototype.loadStrings = function (path, callback) {
+p5.prototype.loadStrings = function (path, callback, errorCallback) {
   var ret = [];
   var req = new XMLHttpRequest();
   var decrementPreload = p5._getDecrementPreload.apply(this, arguments);
 
-  req.addEventListener('error', function () {
-    console.log('An error occurred loading strings: ' + path);
+  req.addEventListener('error', function (resp) {
+    if (errorCallback) {
+      errorCallback(resp);
+    } else {
+      console.log(resp.responseText);
+    }
   });
 
   req.open('GET', path, true);
@@ -21361,7 +21441,12 @@ p5.prototype.loadStrings = function (path, callback) {
           decrementPreload();
         }
       } else {
-        p5._friendlyFileLoadError(3, path);
+        if (errorCallback) {
+          errorCallback(req);
+        } else {
+          console.log(req.statusText);
+        }
+        //p5._friendlyFileLoadError(3, path);
       }
     }
   };
@@ -21679,9 +21764,12 @@ function makeObject(row, headers) {
  * @param  {Function} [callback] function to be executed after loadXML()
  *                               completes, XML object is passed in as
  *                               first argument
+ * @param  {Function} [errorCallback] function to be executed if
+ *                               there is an error, response is passed
+ *                               in as first argument
  * @return {Object}              XML object containing data
  */
-p5.prototype.loadXML = function(path, callback) {
+p5.prototype.loadXML = function(path, callback, errorCallback) {
   var ret = document.implementation.createDocument(null, null);
   var decrementPreload = p5._getDecrementPreload.apply(this, arguments);
 
@@ -21689,20 +21777,26 @@ p5.prototype.loadXML = function(path, callback) {
     url: path,
     type: 'xml',
     crossOrigin: true,
-    error: function(err){
-      p5._friendlyFileLoadError(1,path);
+    error: function(resp){
+      // pass to error callback if defined
+      if (errorCallback) {
+        errorCallback(resp);
+      } else { // otherwise log error msg
+        console.log(resp.statusText);
+      }
+      //p5._friendlyFileLoadError(1,path);
     }
   })
-    .then(function(resp){
-      var x = resp.documentElement;
-      ret.appendChild(x);
-      if (typeof callback !== 'undefined') {
-        callback(ret);
-      }
-      if (decrementPreload && (callback !== decrementPreload)) {
-        decrementPreload();
-      }
-    });
+  .then(function(resp){
+    var x = resp.documentElement;
+    ret.appendChild(x);
+    if (typeof callback !== 'undefined') {
+      callback(ret);
+    }
+    if (decrementPreload && (callback !== decrementPreload)) {
+      decrementPreload();
+    }
+  });
   return ret;
 };
 
@@ -21741,6 +21835,9 @@ p5.prototype.selectInput = function() {
  * @param  {Function}      [callback] function to be executed after
  *                                    httpGet() completes, data is passed in
  *                                    as first argument
+ * @param  {Function}      [errorCallback] function to be executed if
+ *                                    there is an error, response is passed
+ *                                    in as first argument
  */
 p5.prototype.httpGet = function () {
   var args = Array.prototype.slice.call(arguments);
@@ -21760,6 +21857,9 @@ p5.prototype.httpGet = function () {
  * @param  {Function}      [callback] function to be executed after
  *                                    httpGet() completes, data is passed in
  *                                    as first argument
+ * @param  {Function}      [errorCallback] function to be executed if
+ *                                    there is an error, response is passed
+ *                                    in as first argument
  */
 p5.prototype.httpPost = function () {
   var args = Array.prototype.slice.call(arguments);
@@ -21769,7 +21869,11 @@ p5.prototype.httpPost = function () {
 
 /**
  * Method for executing an HTTP request. If data type is not specified,
- * p5 will try to guess based on the URL, defaulting to text.
+ * p5 will try to guess based on the URL, defaulting to text.<br><br>
+ * You may also pass a single object specifying all parameters for the
+ * request following the examples inside the reqwest() calls here:
+ * <a href='https://github.com/ded/reqwest#api'
+ * >https://github.com/ded/reqwest#api</a>
  *
  * @method httpDo
  * @param  {String}        path       name of the file or url to load
@@ -21780,56 +21884,75 @@ p5.prototype.httpPost = function () {
  * @param  {Function}      [callback] function to be executed after
  *                                    httpGet() completes, data is passed in
  *                                    as first argument
+ * @param  {Function}      [errorCallback] function to be executed if
+ *                                    there is an error, response is passed
+ *                                    in as first argument
  */
 p5.prototype.httpDo = function() {
-  var method = 'GET';
-  var path = arguments[0];
-  var data = {};
-  var type = '';
-  var callback;
+  if (typeof arguments[0] === 'object') {
+    reqwest(arguments[0]);
+  } else {
+    var method = 'GET';
+    var path = arguments[0];
+    var data = {};
+    var type = '';
+    var callback;
+    var errorCallback;
 
-  for (var i=1; i<arguments.length; i++) {
-    var a = arguments[i];
-    if (typeof a === 'string') {
-      if (a === 'GET' || a === 'POST' || a === 'PUT') {
-        method = a;
-      } else {
-        type = a;
-      }
-    } else if (typeof a === 'object') {
-      data = a;
-    } else if (typeof a === 'function') {
-      callback = a;
-    }
-  }
-
-  // do some sort of smart type checking
-  if (type === '') {
-    if (path.indexOf('json') !== -1) {
-      type = 'json';
-    } else if (path.indexOf('xml') !== -1) {
-      type = 'xml';
-    } else {
-      type = 'text';
-    }
-  }
-
-  reqwest({
-    url: path,
-    method: method,
-    data: data,
-    type: type,
-    crossOrigin: true,
-    success: function (resp) {
-      if (typeof callback !== 'undefined') {
-        if (type === 'text') {
-          callback(resp.response);
+    for (var i=1; i<arguments.length; i++) {
+      var a = arguments[i];
+      if (typeof a === 'string') {
+        if (a === 'GET' || a === 'POST' || a === 'PUT') {
+          method = a;
         } else {
-          callback(resp);
+          type = a;
+        }
+      } else if (typeof a === 'object') {
+        data = a;
+      } else if (typeof a === 'function') {
+        if (!callback) {
+          callback = a;
+        } else {
+          errorCallback = a;
         }
       }
     }
-  });
+
+    // do some sort of smart type checking
+    if (type === '') {
+      if (path.indexOf('json') !== -1) {
+        type = 'json';
+      } else if (path.indexOf('xml') !== -1) {
+        type = 'xml';
+      } else {
+        type = 'text';
+      }
+    }
+
+    reqwest({
+      url: path,
+      method: method,
+      data: data,
+      type: type,
+      crossOrigin: true,
+      success: function(resp) {
+        if (typeof callback !== 'undefined') {
+          if (type === 'text') {
+            callback(resp.response);
+          } else {
+            callback(resp);
+          }
+        }
+      },
+      error: function(resp) {
+        if (errorCallback) {
+          errorCallback(resp);
+        } else {
+          console.log(resp.statusText);
+        }
+      }
+    });
+  }
 };
 
 
@@ -22131,7 +22254,7 @@ p5.prototype.saveStream = function() {
 p5.prototype.saveStrings = function(list, filename, extension) {
   var ext = extension || 'txt';
   var pWriter = this.createWriter(filename, ext);
-  for (var i in list) {
+  for (var i = 0; i < list.length; i++) {
     if (i < list.length - 1) {
       pWriter.println(list[i]);
     } else {
@@ -23745,8 +23868,10 @@ p5.prototype.constrain = function(n, low, high) {
  * @method dist
  * @param  {Number} x1 x-coordinate of the first point
  * @param  {Number} y1 y-coordinate of the first point
+ * @param  {Number} [z1] z-coordinate of the first point
  * @param  {Number} x2 x-coordinate of the second point
  * @param  {Number} y2 y-coordinate of the second point
+ * @param  {Number} [z2] z-coordinate of the second point
  * @return {Number}    distance between the two points
  * @example
  * <div><code>
@@ -23779,8 +23904,13 @@ p5.prototype.constrain = function(n, low, high) {
  * }
  * </code></div>
  */
-p5.prototype.dist = function(x1, y1, x2, y2) {
-  return Math.sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
+p5.prototype.dist = function(x1, y1, z1, x2, y2, z2) {
+  if (arguments.length === 4) {
+    // In the case of 2d: z1 means x2 and x2 means y2
+    return Math.sqrt( (z1-x1)*(z1-x1) + (x2-y1)*(x2-y1) );
+  } else if (arguments.length === 6) {
+    return Math.sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1) );
+  }
 };
 
 /**
@@ -28048,9 +28178,25 @@ p5.prototype.split = function(str, delim) {
  * </code>
  */
 p5.prototype.splitTokens = function() {
-  var d;
+  var d,sqo,sqc,str;
+  str = arguments[1];
   if (arguments.length > 1) {
-    d = new RegExp('[' + arguments[1] + ']', 'g');
+    sqc = /\]/g.exec(str);
+    sqo = /\[/g.exec(str);
+    if ( sqo && sqc ) {
+      str = str.slice(0, sqc.index) + str.slice(sqc.index+1);
+      sqo = /\[/g.exec(str);
+      str = str.slice(0, sqo.index) + str.slice(sqo.index+1);
+      d = new RegExp('[\\['+str+'\\]]','g');
+    } else if ( sqc ) {
+      str = str.slice(0, sqc.index) + str.slice(sqc.index+1);
+      d = new RegExp('[' + str + '\\]]', 'g');
+    } else if(sqo) {
+      str = str.slice(0, sqo.index) + str.slice(sqo.index+1);
+      d = new RegExp('[' + str + '\\[]', 'g');
+    } else {
+      d = new RegExp('[' + str + ']', 'g');
+    }
   } else {
     d = /\s/g;
   }
