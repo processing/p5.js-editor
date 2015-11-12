@@ -56,7 +56,7 @@ var latestDir = Path.join(Path.join(builderOptions.buildDir, 'latest'));
 
 var jsPath = ['./app/*.js', './app/**/*.js', './app/**/*.html', './public/index.html'];
 var cssPath = './app/**/*.scss';
-var debugClientPath = './app/debug/client.js';
+var debugClientPath = ['./app/debug/client.js', './app/debug/cycle.js'];
 
 
 gulp.task('browserify', function() {
@@ -74,7 +74,7 @@ gulp.task('browserify', function() {
 });
 
 gulp.task('injected-js', function(){
-  return gulp.src([debugClientPath])
+  return gulp.src(debugClientPath)
     .pipe(concat('debug-console.js'))
     .pipe(gulp.dest('./public/js/'));
 });
