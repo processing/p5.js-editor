@@ -6,19 +6,27 @@
   z-index: 999;
   box-shadow: 0px 12px 12px rgba(0, 0, 0, 0.16);
   color: #fff;
-  width: 276px;
+  width: 241px;
   padding: 14px 14px 8px 19px;
+}
+
+#settingsPane p {
+  padding: 0;
+  margin: 0;
 }
 
 #settingsPane {
   width: 100%;
   font-family: montserrat;
   font-size: 16px;
+  margin: 0;
+  padding: 0;
 
   #titleBar {
     font-family: montserrat-bold;
     font-size: 21px;
     color: rgba(51, 51, 51, 0.87);
+    margin-bottom: 19px;
   }
 
   #optionsZone {
@@ -31,11 +39,19 @@
   .label {
     color: #333333;
     font-size: 16px;
+    margin-bottom: 7px;
   }
 
   .section {
     border-bottom: dashed 1px #b5b5b5;
-    margin-bottom: 10px;
+    margin-bottom: 13.5px;
+    padding-bottom: 13.5px;
+  }
+
+  .section:last-child {
+    border: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   input[type="text"] {
@@ -47,12 +63,14 @@
     font-size: 16px;
     font-family: inconsolata;
     text-align: center;
+    margin-right: 22px;
   }
 
   .adjustButton {
     width: 36px;
     height: 36px;
     cursor: pointer;
+    margin-right: 22px;
   }
 
   input:focus {
@@ -71,11 +89,6 @@
     &:hover {
       fill: #fff;
     }
-  }
-
-  #consoleText {
-    position: relative;
-    top: 5px;
   }
 
   .console {
@@ -128,11 +141,10 @@
   }
 
   #browserIcon {
-    width: 23px;
-    float: left;
-    position: relative;
-    top: 8px;
-    left: 5px;
+    width: 44px;
+    height: 44px;
+    margin-right: 20px;
+    cursor: pointer;
   }
 
   .fade {
@@ -191,6 +203,8 @@
   }
 
   #indentOptions .radioSelection {
+    margin-bottom: 10px;
+    margin-right: 0px;
     display: block;
   }
 
@@ -198,6 +212,7 @@
 
     display: inline-block;
     color: #b5b5b5;
+    font-size: 12px;
     input[type="radio"]:checked + label {
       color: #333333;
     }
@@ -215,7 +230,8 @@
   .radioSelection {
     color: #828384;
     border-radius: 4px;
-    text-align: center;
+    text-align: left;
+    margin-right: 44px;
     transition: all 0.15s ease;
   }
 

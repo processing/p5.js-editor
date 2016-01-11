@@ -7,18 +7,18 @@
     <!-- Text size -->
     <div class="section">
       <p class="label">Text size</p>
-      <img class="adjustButton button" src="images/minus-button.svg">
+      <img class="adjustButton button" src="images/minus-button.svg" v-on="click: decreaseFontSize">
       <input id="textAdjustInput" type="text" v-model="fontSize" size=3>
-      <img class="adjustButton button" src="images/plus-button.svg">
+      <img class="adjustButton button" src="images/plus-button.svg" v-on="click: increaseFontSize">
     </div>
 
     <!-- Indentation amount -->
     <div id="indentation" class="section">
       <p class="label">Indentation amount</p>
       <div id="indentationAmount">
-        <img class="adjustButton button" src="images/minus-button.svg">
+        <img class="adjustButton button" src="images/minus-button.svg" v-on="click: decreaseTabSize">
         <input id="tabSize" type="text"  v-model="tabSizeDisplay" size=3 v-on="change: updateTabSize">
-        <img class="adjustButton button" src="images/plus-button.svg">
+        <img class="adjustButton button" src="images/plus-button.svg" v-on="click: increaseTabSize">
       </div>
 
       <div id="indentOptions" class="hiddenRadio radioOptions">
@@ -28,8 +28,6 @@
         <label class="radioSelection" for="tabTypeT">tabs</label>
       </div>
     </div>
-
-
 
     <!-- Word wrap -->
     <div id="ww" class="section">
@@ -69,11 +67,16 @@
     </div>
 
     <!-- Show sidebar -->
-    <div class="hiddenCheckbox" id="libs">
-      <img id="libraryIcon" src="images/sidebar.svg">
-      <input id="showSidebar" type="checkbox" v-model="showSidebar">
-      <label id="showSidebarLabel" class="highlight fade" for="showSidebar" data-show="Show Sidebar" data-hide="Hide Sidebar">Show Sidebar</label>
+    <div id="ss" class="section">
+      <p class="label">Show sidebar</p>
+      <div id="ssOptions" class="hiddenRadio radioOptions">
+        <input type="radio" value="true" id="showSidebarOn" v-model="showSidebar">
+        <label class="radioSelection" for="showSidebarOn">on</label>
+        <input type="radio" value="false" id="showSidebarOff" v-model="showSidebar">
+        <label class="radioSelection" for="showSidebarOff">off</label>
+      </div>
     </div>
+
 
 
   </div>

@@ -113,7 +113,7 @@ module.exports = {
     gui.App.clearCache();
 
     if (this.outputWindow) {
-      if (this.settings.runInBrowser) {
+      if ((String(this.settings.runInBrowser) === "true")) {
         gui.Shell.openExternal(url);
       } else {
         this.outputWindow.reloadIgnoringCache();
