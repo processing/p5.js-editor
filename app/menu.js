@@ -11,11 +11,13 @@ var fileMenu = new gui.Menu();
 var help = new gui.Menu();
 
 var view = new gui.Menu();
+var serial = new gui.Menu();
 var win = gui.Window.get();
 var recentFilesMenu = new gui.Menu();
 var exampleCategoryMenu = new gui.Menu();
 var openRecent, examples;
 var fs = nodeRequire('fs');
+// var p5serial = nodeRequire('p5.serialserver');
 
 /* setup the menubar menus, submenus, functions and shortcuts. Conceptually the
  * menubar is an array of Menus, each of which is an array of MenuItems.
@@ -224,6 +226,23 @@ module.exports.setup = function(app) {
     examples.submenu = exampleCategoryMenu;
     fileMenu.append(examples);
 
+    var importLibsLabel = new gui.MenuItem({label: 'Import Library'});
+    var importLibsMenu = new gui.Menu();
+
+    var libfiles = fs.readdirSync(Path.join('mode_assets', 'p5', 'libraries'));
+    libfiles.forEach(function(lib) {
+      importLibsMenu.append(new gui.MenuItem({
+        label: Path.basename(lib),
+        click: function() {
+          app.modeFunction('addLibrary', lib);
+        }
+      }));
+    });
+
+    importLibsLabel.submenu = importLibsMenu;
+    // importLibs.append(new gui.MenuItem({label: 'Serial'}));
+    fileMenu.append(importLibsLabel);
+
     fileMenu.append(new gui.MenuItem({ type: 'separator' }));
 
     fileMenu.append(new gui.MenuItem({ label: 'Run',
@@ -267,6 +286,32 @@ module.exports.setup = function(app) {
       modifiers: 'cmd', key: '-', click: function(){
         app.changeFontSize(-1);
     }}))
+
+    var serialLabel = 'Start Serial Server';
+    if (nodeGlobal.serialrunning) {
+      serialLabel = 'Stop Serial Server';
+    }
+
+    var serialItem = new gui.MenuItem({
+      label: 'Start Serial Server',
+      modifiers: 'cmd',
+      key: 'e',
+      click: function(){
+        if (nodeGlobal.serialrunning) {
+          nodeGlobal.serialWindow.close(true);
+          nodeGlobal.serialrunning = false;
+          serialItem.label = 'Start Serial Server';
+        } else {
+          nodeGlobal.serialWindow = gui.Window.open('serial.html', {
+            'new-instance': true,
+            show: false
+          });
+          nodeGlobal.serialrunning = true;
+          serialItem.label = 'Stop Serial Server';
+        }
+    }});
+
+    serial.append(serialItem);
   }
 
   help.append(new gui.MenuItem({ label: 'Reference', click: function(){
@@ -278,6 +323,7 @@ module.exports.setup = function(app) {
     menubar.append(new gui.MenuItem({ label: 'View', submenu: view}));
   } else {
     menubar.insert(new gui.MenuItem({ label: 'File', submenu: fileMenu}),1);
+    menubar.insert(new gui.MenuItem({ label: 'Serial', submenu: serial}),3);
     menubar.insert(new gui.MenuItem({ label: 'View', submenu: view}), 3);
   }
 
@@ -437,6 +483,11 @@ module.exports.setup = function(app) {
 //reset the menubar to the current window's frame of reference. Used whenever
 //the user switches focus between windows
 module.exports.resetMenu = function() {
+  if (!isWin) {
+    // console.log(menubar);
+    var serialLabel = nodeGlobal.serialrunning ? 'Stop Serial Server' : 'Start Serial Server';
+    menubar.items[4].submenu.items[0].label = serialLabel;
+  }
   win.menu = menubar;
 };
 

@@ -2,6 +2,7 @@
 
   var original = window.console;
   window.console = {};
+  window._isNodeWebkit = true;
 
   ["log", "warn", "error"].forEach(function(func) {
     window.console[func] = function(msg) {
@@ -10,7 +11,7 @@
         style = arguments[1];
       }
       var data = {
-        msg: msg,
+        msg: JSON.stringify(JSON.decycle(msg, true), null, '  '),
         style: style,
         type: func
       };
@@ -25,6 +26,7 @@
   window.onerror = function(msg, url, num, column, errorObj) {
     var data = {
       num: num,
+      // msg: JSON.stringify(JSON.decycle(msg, true), null, '  '),
       msg: msg,
       type: 'error'
     };

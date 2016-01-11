@@ -35,7 +35,7 @@ function setup() {
 function draw() {
   background(20);
 
-  if (frameCount % 60 == 0) {
+  if (frameCount % 60 == 0 || frameCount == 1) {
     var midiValue = scaleArray[note];
     var freqValue = midiToFreq(midiValue);
     osc.freq(freqValue);

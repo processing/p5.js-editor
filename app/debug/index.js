@@ -74,12 +74,12 @@ module.exports = {
     },
 
     debugOut: function(data) {
-      var msg = data.msg;
+      var msg = data.msg;//.replace(/\\"/g, '"');
       var style = data.style;
       var line = data.num;
       var type = data.type;
-      if (typeof msg === 'object') msg = JSON.stringify(msg);
-      else msg = '' + msg;
+      // if (typeof msg === 'object') msg = JSON.stringify(msg);
+      // else msg = '' + msg;
       if (msg === 'Uncaught ReferenceError: require is not defined') return false;
       if (style) {
         msg = msg.replace(/%c/g, '');
@@ -87,7 +87,6 @@ module.exports = {
         msg = msg.replace(']', '');
       }
       msg = AutoLinker.link(msg);
-      // console.log(data);
       $('#debug').append('<div class="'+type+'" style="'+(style ? style : '')+'">' + (line ? line + ': ' : '') + msg + '</div>');
       $('#debug').scrollTop($('#debug')[0].scrollHeight);
     }

@@ -1,11 +1,14 @@
 /**
  *  @name soundFormats
- *  @description <p>There is no single sound format that is supported
- *  by all web browsers. For example, mp3 support is not native to
- *  Firefox and Opera because the mp3 codec is patented.</p>
+ *  @description <p>Technically, due to patent issues, there is no single
+ *  sound format that is supported by all web browsers. While
+ *  <a href="http://caniuse.com/#feat=mp3">mp3 is supported</a> across the
+ *  latest versions of major browsers on OS X and Windows, for example,
+ *  it may not be available on some less mainstream operating systems and
+ *  browsers.</p>
  *
- *  <p>To ensure compatability, you can include the same sound file
- *  in multiple formats, i.e. 'sound.mp3' and 'sound.ogg'. (Ogg is an
+ *  <p>To ensure full compatibility, you can include the same sound file
+ *  in multiple formats, e.g. 'sound.mp3' and 'sound.ogg'. (Ogg is an
  *  open source alternative to mp3.) You can convert audio files
  *  into web friendly formats for free online at <a href="
  *  http://media.io/">media.io</a></p>.
