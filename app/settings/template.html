@@ -7,25 +7,35 @@
     <!-- Text size -->
     <div class="section">
       <p class="label">Text size</p>
-      <img class="adjustButton button" src="images/minus-button.svg" v-on="click: decreaseFontSize">
+      <span class="adjustButtonContainer">
+        <img class="adjustButton button" src="images/minus-button.svg" v-on="click: decreaseFontSize">
+        <label>Decrease</label>
+      </span>
       <input id="textAdjustInput" type="text" v-model="fontSize" size=3>
-      <img class="adjustButton button" src="images/plus-button.svg" v-on="click: increaseFontSize">
+      <span class="adjustButtonContainer">
+        <img class="adjustButton button" src="images/plus-button.svg" v-on="click: increaseFontSize">
+        <label>Increase</label>
+      </span>
     </div>
 
     <!-- Indentation amount -->
     <div id="indentation" class="section">
       <p class="label">Indentation amount</p>
-      <div id="indentationAmount">
+      <span class="adjustButtonContainer">
         <img class="adjustButton button" src="images/minus-button.svg" v-on="click: decreaseTabSize">
-        <input id="tabSize" type="text"  v-model="tabSizeDisplay" size=3 v-on="change: updateTabSize">
+        <label>Decrease</label>
+      </span>
+      <input id="tabSize" type="text"  v-model="tabSizeDisplay" size=3 v-on="change: updateTabSize">
+      <span class="adjustButtonContainer">
         <img class="adjustButton button" src="images/plus-button.svg" v-on="click: increaseTabSize">
-      </div>
+        <label>Increase</label>
+      </span>
 
       <div id="indentOptions" class="hiddenRadio radioOptions">
         <input type="radio" value="spaces" id="tabTypeS" v-model="tabType">
-        <label class="radioSelection" for="tabTypeS">spaces</label>
+        <label class="radioSelection" for="tabTypeS">Spaces</label>
         <input type="radio" value="tabs" id="tabTypeT" v-model="tabType">
-        <label class="radioSelection" for="tabTypeT">tabs</label>
+        <label class="radioSelection" for="tabTypeT">Tabs</label>
       </div>
     </div>
 
@@ -34,9 +44,9 @@
       <p class="label">Word wrap</p>
       <div id="wwOptions" class="hiddenRadio radioOptions">
         <input type="radio" value="true" id="wordWrapOn" v-model="wordWrap">
-        <label class="radioSelection" for="wordWrapOn">on</label>
+        <label class="radioSelection" for="wordWrapOn">On</label>
         <input type="radio" value="false" id="wordWrapOff" v-model="wordWrap">
-        <label class="radioSelection" for="wordWrapOff">off</label>
+        <label class="radioSelection" for="wordWrapOff">Off</label>
       </div>
     </div>
 
@@ -45,9 +55,9 @@
       <p class="label">Run in browser</p>
       <div id="ribOptions" class="hiddenRadio radioOptions">
         <input type="radio" value=true id="runInBrowserOn" v-model="runInBrowser">
-        <label class="radioSelection" for="runInBrowserOn">on</label>
+        <label class="radioSelection" for="runInBrowserOn">On</label>
         <input type="radio" value=false id="runInBrowserOff" v-model="runInBrowser">
-        <label class="radioSelection" for="runInBrowserOff">off</label>
+        <label class="radioSelection" for="runInBrowserOff">Off</label>
       </div>
     </div>
 
@@ -71,9 +81,9 @@
       <p class="label">Show sidebar</p>
       <div id="ssOptions" class="hiddenRadio radioOptions">
         <input type="radio" value="true" id="showSidebarOn" v-model="showSidebar">
-        <label class="radioSelection" for="showSidebarOn">on</label>
+        <label class="radioSelection" for="showSidebarOn">On</label>
         <input type="radio" value="false" id="showSidebarOff" v-model="showSidebar">
-        <label class="radioSelection" for="showSidebarOff">off</label>
+        <label class="radioSelection" for="showSidebarOff">Off</label>
       </div>
     </div>
 

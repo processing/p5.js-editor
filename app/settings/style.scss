@@ -63,14 +63,28 @@
     font-size: 16px;
     font-family: inconsolata;
     text-align: center;
-    margin-right: 22px;
+    margin: 0 18px;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .adjustButtonContainer {
+    width: 43px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
   }
 
   .adjustButton {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     cursor: pointer;
-    margin-right: 22px;
+  }
+
+  .adjustButtonContainer label {
+    font-size: 9px;
+    color: #b5b5b5;
+    margin-top: 8px;
   }
 
   input:focus {
@@ -200,6 +214,10 @@
   #indentationAmount {
     width: 200px;
     display: inline;
+  }
+
+  #indentOptions {
+    margin-left: 12px;
   }
 
   #indentOptions .radioSelection {
