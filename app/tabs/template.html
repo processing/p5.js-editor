@@ -1,14 +1,3 @@
-  <div id ="button_header">
-
-    <img id="logo" src="images/p5-logo.png">
-    <img src="images/play-button.svg" class="button" id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()">
-  <h1 id="project-name" v-text="projectName"></h1>
-    <div id="toolbar">
-      <div id="actions">
-        <img id="settings" class="button" title="Preferences" src="images/settings-button.svg" v-on="click: $root.toggleSettingsPane()">
-      </div>
-    </div>
-  </div>
   <div id="tabs"> 
     <ul id="tab-list"> 
       <li v-repeat="tabs | orderBy 'name'" v-component="tab"></li>

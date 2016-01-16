@@ -1,60 +1,13 @@
 
-#header-container {
+#tab-container {
   font-size: 12px;
   display: flex;
   flex: 1;
   flex-direction: column;
-  max-height: 85px;
+  max-height: 30px;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
 }
-
-#logo {
-  height: 43px;
-  float: left;
-  margin-right: 25px;
-  margin-left: -35px;
-}
-
-#play {
-  background: none;
-  background-image: url('../images/play-button.svg');
-  border: 0;
-  width: 44px;
-  height: 44px;
-  font-size: 25px;
-  display: inline;
-  outline: 0; 
-  float: left;
-
-  &.running {
-    background-image: url('../images/stop-button.svg');
-  }
-}  
-
-#settings {
-  width: 44px;
-  height: 44px;
-}
-
-
-
-#button_header {
-  margin-left: 15px;
-  height: 75px;
-  margin-bottom: 33px;
-}
-
-#project-name {
-  font-size: 12px;
-  padding-left: 20px;
-  color: #b5b5b5;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  cursor: default; 
-  float:left;
-}
-
 
 #toolbar {
   height: 60px;

@@ -24,10 +24,17 @@ body, html {
 
 body {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
   overflow: hidden;
+  height: 100%;
+}
+
+#flex-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
 }
 
 .file-handler {
@@ -56,3 +63,65 @@ body {
 .button:hover {
   opacity: 0.6;
 }
+
+#header-container {
+  height: 44px;
+  margin-top: 30px;
+  margin-left: 102px;
+}
+
+#logo {
+  height: 43px;
+  float: left;
+  margin-right: 25px;
+}
+
+#play {
+  background: none;
+  background-image: url('../images/play-button.svg');
+  border: 0;
+  width: 44px;
+  height: 44px;
+  font-size: 25px;
+  display: inline;
+  outline: 0; 
+  float: left;
+
+  &.running {
+    background-image: url('../images/stop-button.svg');
+  }
+}  
+
+#settings {
+  width: 44px;
+  height: 44px;
+}
+
+#project-name {
+  font-size: 12px;
+  padding-left: 20px;
+  color: #b5b5b5;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  cursor: default; 
+  float:left;
+}
+
+
+#toolbar {
+  height: 60px;
+  width: 100%;
+}
+
+#actions {
+  
+  #add, #export {
+    float: left;
+  }
+
+  #settings {
+    float: right;
+    margin-right: 15px;
+  }
+}
+
