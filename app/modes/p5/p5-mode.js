@@ -124,7 +124,7 @@ module.exports = {
       }
     } else {
       startServer(this.projectPath, this, function(url) {
-        if (self.settings.runInBrowser) {
+        if ((String(this.settings.runInBrowser) === "true")) {
           gui.Shell.openExternal(url);
         } else {
           fs.readFile(Path.join(self.projectPath, 'sketch.js'), function(err, data){
