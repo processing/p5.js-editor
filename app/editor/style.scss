@@ -13,6 +13,9 @@ div#editor-container {
   display: flex;
   flex: 1;
   flex-direction: row;
+  border-top: 1px solid #f4f4f4;
+  border-right: 1px solid #f4f4f4;
+  border-bottom: 1px solid #f4f4f4;
 }
 
 #main {
@@ -30,7 +33,9 @@ div#editor-container {
   background: rgba(207, 207, 207, 0.2);
 }
 
-
+.ace_print-margin {
+  visibility: hidden !important;
+}
 
 .ace_gutter {
   color: #b5b5b5 !important;
