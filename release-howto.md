@@ -1,3 +1,7 @@
+# Setup
+
+1. Install wine (and xquartz), instructions [here](http://www.davidbaumgold.com/tutorials/wine-mac/).
+
 # How to make a release
 
 First, it's a good idea to download the latest build of p5 and examples:
