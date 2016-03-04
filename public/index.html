@@ -8,7 +8,7 @@
 <body class="{{orientation}}">
   <div id="header-container">
     <img id="logo" src="images/p5-logo.png">
-    <img src="images/play-button.svg" class="button" id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()">
+    <button class="button" id="play" v-class="running: $root.running" v-on="click: $root.toggleRun()"></button>
     <h1 id="project-name" v-text="projectName"></h1>
     <div id="toolbar">
       <div id="actions">
