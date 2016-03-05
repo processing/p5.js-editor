@@ -42,7 +42,7 @@ module.exports = {
     this.$on('settings-changed', this.updateSettings);
 
     this.ace = window.ace = ace.edit('editor');
-    this.ace.setTheme('ace/theme/tomorrow');
+    //this.ace.setTheme('ace/theme/tomorrow');
     this.ace.setReadOnly(true);
     // this.ace.$worker.send("changeOptions", [{asi: false}]);
 
