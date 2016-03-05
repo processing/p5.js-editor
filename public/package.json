@@ -1,6 +1,6 @@
 {
   "name": "p5",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "main": "boot.html",
   "window": {
     "title": "Untitled",

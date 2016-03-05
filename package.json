@@ -2,7 +2,7 @@
   "author": "Sam Lavigne",
   "name": "p5",
   "description": "Javascript IDE for beginners",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "devDependencies": {
     "autolinker": "^0.17.1",
     "br-mousetrap": "~1.1.3",
