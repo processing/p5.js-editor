@@ -30,11 +30,12 @@ div#editor-container {
 }
 
 .ace_scroller {
-  top: 21px !important;
+  /*padding-top: 21px !important; PEND */
 }
 
 .ace_editor {
   overflow: visible !important;
+  padding-bottom: 21px !important;
 }
 
 .ace_active-line {
@@ -53,12 +54,12 @@ div#editor-container {
 }
 
 .ace_gutter-active-line {
-  margin-top: 21px;  
+  /*margin-top: 21px;  PEND */
 }
 
 .ace_gutter-layer {
   width: 53px !important;
-  margin-top: 21px !important;
+  /*margin-top: 21px !important; PEND */
 }
 
 .ace_gutter-cell {
