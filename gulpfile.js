@@ -23,7 +23,7 @@ var builderOptions = {
   buildType: 'versioned',
   files: [ './public/**'],
   buildDir: './dist',
-  platforms: ['osx64', 'win64'],
+  platforms: ['osx64', 'win64', 'linux64'],
   macIcns: './icons/p5js.icns',
   winIco: './icons/p5js.ico',
   macPlist: {
