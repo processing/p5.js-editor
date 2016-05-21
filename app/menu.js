@@ -4,7 +4,7 @@ var _ = require('underscore');
 var Files = require('./files');
 
 var menubar = new gui.Menu({ type: 'menubar' });
-if (!isWin) {
+if (isMac) {
   menubar.createMacBuiltin("p5");
 }
 var fileMenu = new gui.Menu();
