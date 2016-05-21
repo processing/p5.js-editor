@@ -148,7 +148,15 @@ function latest () {
   console.log('Compressing...');
 
   builderOptions.platforms.forEach(function(p){
-    var output = 'p5-' + (p.indexOf('win') > -1 ? 'win' : 'mac') + '.zip';
+    // var output = 'p5-' + (p.indexOf('win') > -1 ? 'win' : 'mac') + '.zip';
+    var output = 'p5-';
+    if (p.indexOf('win') > -1) {
+      output += 'win.zip';
+    } else if (p.indexOf('osx') > -1) {
+      output += 'mac.zip';
+    } else {
+      output += 'linux.zip';
+    }
     gulp.src(binaryDir + '/' + p +'/**').
       pipe(zip(output)).
       pipe(gulp.dest(latestDir)).
