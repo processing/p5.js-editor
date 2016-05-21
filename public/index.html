@@ -39,6 +39,8 @@
 
       //platform
       var isWin = /^win/.test(process.platform);
+      var isMac = /^darwin/.test(process.platform);
+      var isLinux = /^linux/.test(process.platform);
 
       //preserve node keywords
       var nodeRequire = require;

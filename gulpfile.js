@@ -17,6 +17,7 @@ var request = require('request');
 
 var isWin = process.platform.indexOf('win') > -1;
 var isMac = process.platform.indexOf('darwin') > -1;
+var isLinux = process.platform.indexOf('linux') > -1;
 
 var builderOptions = {
   version: info.devDependencies.nw,
