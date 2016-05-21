@@ -125,6 +125,11 @@ function copyFfmpegBuild() {
   gulp.src('./lib/ffmpegsumo.dll')
     .pipe(gulp.dest(binaryDir + '/win64',
        {overwrite: true}));
+
+  /*console.log('copying libffmpegsumo.so to ./dist');
+  gulp.src('./lib/libffmpegsumo.so')
+    .pipe(gulp.dest(binaryDir + '/linux64',
+       {overwrite: true}));*/
 }
 
 
@@ -135,11 +140,16 @@ gulp.task('copy-ffmpeg-default', function() {
     gulp.src('./lib/ffmpegsumo.dll')
       .pipe(gulp.dest('./node_modules/nw/nwjs/',
          {overwrite: true}));
-  } else {
+  } else if (isMac) {
     gulp.src('./lib/ffmpegsumo.so')
       .pipe(gulp.dest('./node_modules/nw/nwjs/nwjs.app/Contents/Frameworks/nwjs Framework.framework/Libraries/',
          {overwrite: true}));
-    }
+  }
+  /* else if (isLinux) {
+    gulp.src('./lib/libffmpegsumo.so')
+      .pipe(gulp.dest('./node_modules/nw/nwjs/',
+         {overwrite: true}));
+  }*/
 });
 
 
