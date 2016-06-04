@@ -15,9 +15,9 @@ var fs = require('fs');
 var info = require('./package.json');
 var request = require('request');
 
-var isWin = /^win/.test(process.platform);
-var isMac = /^darwin/.test(process.platform);
-var isLinux = /^linux/.test(process.platform);
+var isWin = process.platform === 'win32';
+var isMac = process.platform === 'darwin';
+var isLinux = process.platform === 'linux';
 
 var builderOptions = {
   version: info.devDependencies.nw,
