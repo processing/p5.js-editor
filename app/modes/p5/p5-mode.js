@@ -128,7 +128,7 @@ module.exports = {
           gui.Shell.openExternal(url);
         } else {
           fs.readFile(Path.join(self.projectPath, 'sketch.js'), function(err, data){
-            var matches = (""+data).match(/createCanvas\((.*),(.*)\)/);
+            var matches = (""+data).match(/createCanvas\(\s*(\d*)\s*,\s*(\d*)\s*(?:,.+)?\s*\)/);
             canvasWidth = matches && matches[1] ? +matches[1] : 400;
             canvasHeight = matches && matches[2] ? +matches[2] : 400;
 
