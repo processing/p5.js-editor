@@ -7,19 +7,11 @@
   ["log", "warn", "error"].forEach(function(func) {
     window.console[func] = function(msg) {
       var style = null;
-      var messages = Array.prototype.slice.call(arguments);
-
-      // e.g. console.log('%cHello', 'background: red', 'foobar');
-      if (arguments.length > 1 &&
-          typeof arguments[0] === 'string' &&
-          typeof arguments[1] === 'string' &&
-          arguments[0].indexOf('%c') > -1) {
+      if (arguments[2] && arguments[0].indexOf('%c') > -1) {
         style = arguments[1];
-        messages.splice(1, 1); // remove style string from console output
       }
-
       var data = {
-        msg: messages.map(toMessage).join(' '),
+        msg: JSON.stringify(JSON.decycle(msg, true), null, '  '),
         style: style,
         type: func
       };
@@ -43,10 +35,6 @@
 
     return false;
   };
-
-  function toMessage (msg) {
-    return JSON.stringify(JSON.decycle(msg, true), null, '  ');
-  }
 
   function downloadFile() {
     window.opener.postMessage(JSON.stringify({ downloadFile: arguments }), 'file://');

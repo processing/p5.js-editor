@@ -3,7 +3,8 @@
  * @name Spirograph
  * @description This sketch uses simple transformations to create a
  * Spirograph-like effect with interlocking circles (called sines).
- * Press the spacebar to switch between tracing and showing the underlying geometry.
+ * Press the spacebar to switch between tracing and showing the underlying geometry.<br>
+ * Example created by <a href='http://lukedubois.com/' target='_blank'>R. Luke DuBois</a>.<br>
  * <a href='http://en.wikipedia.org/wiki/Spirograph'>http://en.wikipedia.org/wiki/Spirograph</a>
  */
 var NUMSINES = 20; // how many of these things can we do at once?

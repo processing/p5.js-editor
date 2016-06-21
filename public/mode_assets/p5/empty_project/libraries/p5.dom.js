@@ -1,4 +1,4 @@
-/*! p5.dom.js v0.2.9 March 3, 2016 */
+/*! p5.dom.js v0.2.11 June 17, 2016 */
 /**
  * <p>The web is much more than just canvas and p5.dom makes it easy to interact
  * with other HTML5 objects, including text, hyperlink, image, input, video,
@@ -109,7 +109,7 @@
    * @param  {String} [container] id, p5.Element, or HTML element to search within
    * @return {Array} Array of p5.Elements containing nodes found
    * @example
-   * <div ><code class='norender'>
+   * <div class='norender'><code>
    * function setup() {
    *   createButton('btn');
    *   createButton('2nd btn');
@@ -121,7 +121,7 @@
    *   }
    * }
    * </code></div>
-   * <div ><code class='norender'>
+   * <div class='norender'><code>
    * // these are all valid calls to selectAll()
    * var a = selectAll('.moo');
    * var b = selectAll('div');
@@ -375,6 +375,7 @@
    * @param  {Number} min minimum value of the slider
    * @param  {Number} max maximum value of the slider
    * @param  {Number} [value] default value of the slider
+   * @param  {Number} [step] step size for each tick of the slider
    * @return {Object/p5.Element} pointer to p5.Element holding created node
    * @example
    * <div><code>
@@ -388,6 +389,21 @@
    * function draw() {
    *   var val = slider.value();
    *   background(val);
+   * }
+   * </code></div>
+   *
+   * <div><code>
+   * var slider;
+   * function setup() {
+   *   colorMode(HSB);
+   *   slider = createSlider(0, 360, 60, 40);
+   *   slider.position(10, 10);
+   *   slider.style('width', '80px');
+   * }
+   *
+   * function draw() {
+   *   var val = slider.value();
+   *   background(val, 100, 100, 1);
    * }
    * </code></div>
    */
@@ -456,25 +472,30 @@
    *
    * function myCheckedEvent() {
    *   if (this.checked()) {
-   *     console.log("Unchecking!");
-   *   } else {
    *     console.log("Checking!");
+   *   } else {
+   *     console.log("Unchecking!");
    *   }
-   *
+   * }
    * </code></div>
    */
   p5.prototype.createCheckbox = function() {
-    var elt = document.createElement('input');
-    elt.type = 'checkbox';
+    var elt = document.createElement('div');
+    var checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    elt.appendChild(checkbox);
     //checkbox must be wrapped in p5.Element before label so that label appears after
     var self = addElement(elt, this);
     self.checked = function(){
-      if (arguments.length === 0){
-        return self.elt.checked;
-      }else if(arguments[0]){
-        self.elt.checked = true;
-      }else{
-        self.elt.checked = false;
+      var cb = self.elt.getElementsByTagName('input')[0];
+      if (cb) {
+        if (arguments.length === 0){
+          return cb.checked;
+        }else if(arguments[0]){
+          cb.checked = true;
+        }else{
+          cb.checked = false;
+        }
       }
       return self;
     };
@@ -485,14 +506,14 @@
     if (arguments[0]){
       var ran = Math.random().toString(36).slice(2);
       var label = document.createElement('label');
-      elt.setAttribute('id', ran);
+      checkbox.setAttribute('id', ran);
       label.htmlFor = ran;
       self.value(arguments[0]);
       label.appendChild(document.createTextNode(arguments[0]));
-      addElement(label, this);
+      elt.appendChild(label);
     }
     if (arguments[1]){
-      elt.checked = true;
+      checkbox.checked = true;
     }
     return self;
   };
@@ -564,10 +585,52 @@
 
   /**
    * Creates a radio button &lt;input&gt;&lt;/input&gt; element in the DOM.
+   * The .option() method can be used to set options for the radio after it is
+   * created. The .value() method will return the currently selected option.
    *
    * @method createRadio
    * @param  {String} [divId] the id and name of the created div and input field respectively
    * @return {Object/p5.Element} pointer to p5.Element holding created node
+   * @example
+   * <div><code>
+   * var radio;
+   *
+   * function setup() {
+   *   radio = createRadio();
+   *   radio.option("black");
+   *   radio.option("white");
+   *   radio.option("gray");
+   *   radio.style('width', '60px');
+   *   textAlign(CENTER);
+   *   fill(255, 0, 0);
+   * }
+   *
+   * function draw() {
+   *   var val = radio.value();
+   *   background(val);
+   *   text(val, width/2, height/2);
+   * }
+   * </code></div>
+   * <div><code>
+   * var radio;
+   *
+   * function setup() {
+   *   radio = createRadio();
+   *   radio.option('apple', 1);
+   *   radio.option('bread', 2);
+   *   radio.option('juice', 3);
+   *   radio.style('width', '60px');
+   *   textAlign(CENTER);
+   * }
+   *
+   * function draw() {
+   *   background(200);
+   *   var val = radio.value();
+   *   if (val) {
+   *     text('item cost is $'+val, width/2, height/2);
+   *   }
+   * }
+   * </code></div>
    */
   p5.prototype.createRadio = function() {
     var radios = document.querySelectorAll("input[type=radio]");
@@ -768,6 +831,9 @@
     elt.addEventListener('loadedmetadata', function() {
       c.width = elt.videoWidth;
       c.height = elt.videoHeight;
+      // set elt width and height if not set
+      if (c.elt.width === 0) c.elt.width = elt.videoWidth;
+      if (c.elt.height === 0) c.elt.height = elt.videoHeight;
       c.loadedmetadata = true;
     });
 
@@ -838,13 +904,17 @@
                             navigator.msGetUserMedia;
 
   /**
-   * Creates a new &lt;video&gt; element that contains the audio/video feed
-   * from a webcam. This can be drawn onto the canvas using video(). More
-   * specific properties of the stream can be passing in a Constraints object.
+   * <p>Creates a new &lt;video&gt; element that contains the audio/video feed
+   * from a webcam. This can be drawn onto the canvas using video().</p>
+   * <p>More specific properties of the feed can be passing in a Constraints object.
    * See the
-   * <a href="http://w3c.github.io/mediacapture-main/getusermedia.html">W3C
+   * <a href="http://w3c.github.io/mediacapture-main/getusermedia.html#media-track-constraints"> W3C
    * spec</a> for possible properties. Note that not all of these are supported
-   * by all browsers.
+   * by all browsers.</p>
+   * <p>Security note: A new browser security specification requires that getUserMedia,
+   * which is behind createCapture(), only works when you're running the code locally,
+   * or on HTTPS. Learn more <a href="http://stackoverflow.com/questions/34197653/getusermedia-in-chrome-47-without-using-https">here</a>
+   * and <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia">here</a>.</p>
    *
    * @method createCapture
    * @param  {String|Constant|Object}   type type of capture, either VIDEO or
@@ -914,12 +984,9 @@
 
       navigator.getUserMedia(constraints, function(stream) {
         elt.src = window.URL.createObjectURL(stream);
-        elt.onloadedmetadata = function(e) {
-          elt.play();
           if (cb) {
             cb(stream);
           }
-        };
       }, function(e) { console.log(e); });
     } else {
       throw 'getUserMedia not supported in this browser';
@@ -928,8 +995,9 @@
     c.loadedmetadata = false;
     // set width and height onload metadata
     elt.addEventListener('loadedmetadata', function() {
-      c.width = elt.videoWidth;
-      c.height = elt.videoHeight;
+      elt.play();
+      c.width = elt.videoWidth = elt.width;
+      c.height = elt.videoHeight = elt.height;
       c.loadedmetadata = true;
     });
     return c;
@@ -1371,7 +1439,7 @@
    * @example
    * <div class='norender'><code>
    * var div = createDiv('div');
-   * div.attribute("display", "none");
+   * div.style("display", "none");
    * div.show(); // turns display to block
    * </code></div>
    */
@@ -1694,9 +1762,9 @@
       this.drawingContext = this.canvas.getContext('2d');
     }
     if (this.loadedmetadata) { // wait for metadata for w/h
-      if (this.canvas.width !== this.elt.videoWidth) {
-        this.canvas.width = this.elt.videoWidth;
-        this.canvas.height = this.elt.videoHeight;
+      if (this.canvas.width !== this.elt.width) {
+        this.canvas.width = this.elt.width;
+        this.canvas.height = this.elt.height;
         this.width = this.canvas.width;
         this.height = this.canvas.height;
       }
@@ -1714,7 +1782,11 @@
   p5.MediaElement.prototype.get = function(x, y, w, h){
     if (this.loadedmetadata) { // wait for metadata
       return p5.Renderer2D.prototype.get.call(this, x, y, w, h);
-    } else return [0, 0, 0, 255];
+    } else if (!x) {
+      return new p5.Image(1, 1);
+    } else {
+      return [0, 0, 0, 255];
+    }
   };
   p5.MediaElement.prototype.set = function(x, y, imgOrCol){
     if (this.loadedmetadata) { // wait for metadata
