@@ -38,7 +38,9 @@
       var gui = window.require('nw.gui');
 
       //platform
-      var isWin = /^win/.test(process.platform);
+      var isWin = process.platform === 'win32';
+      var isMac = process.platform === 'darwin';
+      var isLinux = process.platform === 'linux';
 
       //preserve node keywords
       var nodeRequire = require;

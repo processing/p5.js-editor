@@ -4,7 +4,7 @@ var _ = require('underscore');
 var Files = require('./files');
 
 var menubar = new gui.Menu({ type: 'menubar' });
-if (!isWin) {
+if (isMac) {
   menubar.createMacBuiltin("p5");
 }
 var fileMenu = new gui.Menu();
@@ -24,7 +24,7 @@ var fs = nodeRequire('fs');
  * Menuitems may themselves be a submenu
  */
 module.exports.setup = function(app) {
-  if (isWin) {
+  if (isWin || isLinux) {
     //Setup menus for windows  
     fileMenu.append(new gui.MenuItem({ 
       label: 'New Project                          Ctrl+Shift+N',
@@ -318,7 +318,7 @@ module.exports.setup = function(app) {
     app.showHelp();
   }}));
 
-  if (isWin) {
+  if (isWin || isLinux) {
     menubar.append(new gui.MenuItem({ label: 'File', submenu: fileMenu}));
     menubar.append(new gui.MenuItem({ label: 'View', submenu: view}));
   } else {
@@ -335,7 +335,7 @@ module.exports.setup = function(app) {
   // Many of these menuItems are different because the ace/brace editor has
   // native shortcuts for these commands. Their respective menuItmes only react
   // to being clicked on, so the shortcuts work without interference.
-  if (isWin) {
+  if (isWin || isLinux) {
     var edit = new gui.Menu();
 
     var undo = new gui.MenuItem(
@@ -483,7 +483,7 @@ module.exports.setup = function(app) {
 //reset the menubar to the current window's frame of reference. Used whenever
 //the user switches focus between windows
 module.exports.resetMenu = function() {
-  if (!isWin) {
+  if (isMac) {
     // console.log(menubar);
     var serialLabel = nodeGlobal.serialrunning ? 'Stop Serial Server' : 'Start Serial Server';
     menubar.items[4].submenu.items[0].label = serialLabel;

@@ -15,14 +15,16 @@ var fs = require('fs');
 var info = require('./package.json');
 var request = require('request');
 
-var isWin = process.platform.indexOf('win') > -1;
+var isWin = process.platform === 'win32';
+var isMac = process.platform === 'darwin';
+var isLinux = process.platform === 'linux';
 
 var builderOptions = {
   version: info.devDependencies.nw,
   buildType: 'versioned',
   files: [ './public/**'],
   buildDir: './dist',
-  platforms: ['osx64', 'win64'],
+  platforms: ['osx64', 'win64', 'linux64'],
   macIcns: './icons/p5js.icns',
   winIco: './icons/p5js.ico',
   macPlist: {
@@ -123,6 +125,11 @@ function copyFfmpegBuild() {
   gulp.src('./lib/ffmpegsumo.dll')
     .pipe(gulp.dest(binaryDir + '/win64',
        {overwrite: true}));
+
+  /*console.log('copying libffmpegsumo.so to ./dist');
+  gulp.src('./lib/libffmpegsumo.so')
+    .pipe(gulp.dest(binaryDir + '/linux64',
+       {overwrite: true}));*/
 }
 
 
@@ -133,11 +140,16 @@ gulp.task('copy-ffmpeg-default', function() {
     gulp.src('./lib/ffmpegsumo.dll')
       .pipe(gulp.dest('./node_modules/nw/nwjs/',
          {overwrite: true}));
-  } else {
+  } else if (isMac) {
     gulp.src('./lib/ffmpegsumo.so')
       .pipe(gulp.dest('./node_modules/nw/nwjs/nwjs.app/Contents/Frameworks/nwjs Framework.framework/Libraries/',
          {overwrite: true}));
-    }
+  }
+  /* else if (isLinux) {
+    gulp.src('./lib/libffmpegsumo.so')
+      .pipe(gulp.dest('./node_modules/nw/nwjs/',
+         {overwrite: true}));
+  }*/
 });
 
 
@@ -147,7 +159,15 @@ function latest () {
   console.log('Compressing...');
 
   builderOptions.platforms.forEach(function(p){
-    var output = 'p5-' + (p.indexOf('win') > -1 ? 'win' : 'mac') + '.zip';
+    // var output = 'p5-' + (p.indexOf('win') > -1 ? 'win' : 'mac') + '.zip';
+    var output = 'p5-';
+    if (p.indexOf('win') > -1) {
+      output += 'win.zip';
+    } else if (p.indexOf('osx') > -1) {
+      output += 'mac.zip';
+    } else {
+      output += 'linux.zip';
+    }
     gulp.src(binaryDir + '/' + p +'/**').
       pipe(zip(output)).
       pipe(gulp.dest(latestDir)).
