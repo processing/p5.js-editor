@@ -203,8 +203,8 @@ gulp.task('p5', function () {
 
 });
 
-gulp.task('getOfflineRefrence', function(){
-  
+gulp.task('getOfflineReference', function(){
+
 // get latest .zip data from p5js website and unzip it.
 request('http://p5js.org/offline-reference/p5-reference.zip')
   // .pipe(fs.createWriteStream('./public/mode_assets/p5/p5-reference.zip'))
