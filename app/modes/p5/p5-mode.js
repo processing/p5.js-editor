@@ -272,10 +272,10 @@ module.exports = {
     var url = 'mode_assets/p5/p5-reference/index.html'
     self.outputWindow = self.newWindow(url, {
       toolbar: true,
-      x: self.outX+100,
-      y: self.outY+100,
-      width: 1000,
-      height: 500,
+      x: self.outX+30,
+      y: self.outY+30,
+      width: 1024,
+      height: 768,
       nodejs: false,
       'page-cache': false,
     });
