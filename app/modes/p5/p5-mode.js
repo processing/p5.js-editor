@@ -256,14 +256,46 @@ module.exports = {
 
   referenceURL: 'http://p5js.org/reference/',
 
+  // offlineRef: function(){
+  //   var path = window.location.pathname;
+  //   path = path.substr(0, path.lastIndexOf('/'));
+  //   var orDir = Path.join(path,'mode_assets', 'p5', 'p5-reference');
+  //   console.log(orDir);
+  //   startServer(orDir, this, function(url) {
+  //     gui.Shell.openExternal(url);
+  //   })
+  // }
+
   offlineRef: function(){
-    var path = window.location.pathname;
-    path = path.substr(0, path.lastIndexOf('/'));
-    var orDir = Path.join(path,'mode_assets', 'p5', 'p5-reference');
-    console.log(orDir);
-    startServer(orDir, this, function(url) {
-      gui.Shell.openExternal(url);
-    })
+    self = this;
+    //mode_assets/p5/empty_project
+    var url = 'mode_assets/p5/p5-reference/index.html'
+    self.outputWindow = self.newWindow(url, {
+      toolbar: true,
+      x: self.outX+100,
+      y: self.outY+100,
+      width: 1000,
+      height: 500,
+      nodejs: false,
+      'page-cache': false,
+    });
+
+    self.outputWindow.on('document-start', function(){
+      self.outputWindow.show();
+    });
+
+    self.outputWindow.on("close", function(){
+      this.close(true);
+    });
+
+    self.outputWindow.on('focus', function(){
+      self.resetMenu();
+    });
+
+    self.outputWindow.on('resize', function() {
+      self.resizedOutputWindow = true;
+    });
+
   }
 }
 
