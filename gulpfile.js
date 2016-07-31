@@ -14,6 +14,7 @@ var Path = require('path');
 var fs = require('fs');
 var info = require('./package.json');
 var request = require('request');
+var unzip = require('unzip');
 
 var isWin = process.platform === 'win32';
 var isMac = process.platform === 'darwin';
@@ -201,6 +202,19 @@ gulp.task('p5', function () {
   });
 
 });
+
+gulp.task('getOfflineRefrence', function(){
+  
+// get latest .zip data from p5js website and unzip it.
+request('http://p5js.org/offline-reference/p5-reference.zip')
+  // .pipe(fs.createWriteStream('./public/mode_assets/p5/p5-reference.zip'))
+  .pipe(unzip.Extract({ path: './public/mode_assets/p5/p5-reference' }))
+  .on('close', function () {
+    console.log('offline-Refrence Retrieved!');
+  });
+
+
+})
 
 gulp.task('release', function(){
   build(function(){

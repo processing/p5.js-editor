@@ -254,9 +254,18 @@ module.exports = {
     });
   },
 
-  referenceURL: 'http://p5js.org/reference/'
+  referenceURL: 'http://p5js.org/reference/',
 
-};
+  offlineRef: function(){
+    var path = window.location.pathname;
+    path = path.substr(0, path.lastIndexOf('/'));
+    var orDir = Path.join(path,'mode_assets', 'p5', 'p5-reference');
+    console.log(orDir);
+    startServer(orDir, this, function(url) {
+      gui.Shell.openExternal(url);
+    })
+  }
+}
 
 var running = false;
 var url = '';
