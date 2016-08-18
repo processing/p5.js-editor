@@ -9,7 +9,7 @@ First, it's a good idea to download the latest build of p5, examples & offline r
 ```
 gulp p5
 gulp getExamples
-gulp getOfflineRefrence
+gulp getOfflineReference
 ```
 
 Update the version number in `package.json` and `public/package.json`
