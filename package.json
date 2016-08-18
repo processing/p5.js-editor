@@ -26,7 +26,8 @@
     "partialify": "^3.1.1",
     "request": "^2.56.0",
     "underscore": "~1.6.0",
-    "vue": "^0.10.3"
+    "vue": "^0.10.3",
+    "unzip": "^0.1.11"
   },
   "scripts": {
     "app": "nw public"
@@ -34,8 +35,5 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/antiboredom/jside.git"
-  },
-  "dependencies": {
-    "unzip": "^0.1.11"
   }
 }
