@@ -2,7 +2,7 @@
   "author": "Sam Lavigne",
   "name": "p5",
   "description": "Javascript IDE for beginners",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "devDependencies": {
     "autolinker": "^0.17.1",
     "br-mousetrap": "~1.1.3",
@@ -34,5 +34,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/antiboredom/jside.git"
+  },
+  "dependencies": {
+    "unzip": "^0.1.11"
   }
 }
