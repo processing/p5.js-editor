@@ -25,26 +25,26 @@ var fs = nodeRequire('fs');
  */
 module.exports.setup = function(app) {
   if (isWin || isLinux) {
-    //Setup menus for windows  
-    fileMenu.append(new gui.MenuItem({ 
+    //Setup menus for windows
+    fileMenu.append(new gui.MenuItem({
       label: 'New Project                          Ctrl+Shift+N',
       modifiers: 'shift-ctrl', key: 'n', click: function(){
         app.newWindow(app.windowURL);
     }}));
 
-    fileMenu.append(new gui.MenuItem({ 
+    fileMenu.append(new gui.MenuItem({
       label: 'New File                                           Ctrl+N',
       modifiers: 'ctrl', key: 'n', click: function(){
         app.newFile();
     }}));
 
-    fileMenu.append(new gui.MenuItem({ 
+    fileMenu.append(new gui.MenuItem({
       label: 'New Folder',
       click: function(){
         app.newFolder();
     }}));
 
-    fileMenu.append(new gui.MenuItem({ 
+    fileMenu.append(new gui.MenuItem({
       label: 'Open                                                 Ctrl+O',
       modifiers: 'ctrl', key: 'o', click: function(){
         $('#openFile').trigger('click');
@@ -54,25 +54,25 @@ module.exports.setup = function(app) {
     module.exports.updateRecentFiles(app);
     fileMenu.append(openRecent);
 
-    fileMenu.append(new gui.MenuItem({ 
+    fileMenu.append(new gui.MenuItem({
       label: 'Close                                                Ctrl+W',
       modifiers: 'ctrl', key: 'w', click: function(){
         app.closeProject();
     }}));
 
-    fileMenu.append(new gui.MenuItem({ 
+    fileMenu.append(new gui.MenuItem({
       label: 'Save                                                   Ctrl+S',
       modifiers: 'ctrl', key: 's', click: function(){
         app.saveFile();
     }}));
 
-    // fileMenu.append(new gui.MenuItem({ 
+    // fileMenu.append(new gui.MenuItem({
     //   label: 'Save File As...                         Ctrl+Shift+S',
     //   modifiers: 'shift-ctrl', key: 's', click: function(){
     //     app.saveFileAs(app.currentFile.path);
     // }}));
 
-    fileMenu.append(new gui.MenuItem({ 
+    fileMenu.append(new gui.MenuItem({
       label: 'Save As...           Ctrl+Shift+S',
       modifiers: 'shift-ctrl', key: 's', click: function(){
         $('#saveProject').trigger('click');
@@ -107,13 +107,13 @@ module.exports.setup = function(app) {
 
     fileMenu.append(new gui.MenuItem({ type: 'separator' }));
 
-    fileMenu.append(new gui.MenuItem({ 
+    fileMenu.append(new gui.MenuItem({
       label: 'Run                           Ctrl+R',
       modifiers: 'ctrl', key: 'r', click: function(){
         app.run();
     }}));
 
-    view.append(new gui.MenuItem({ 
+    view.append(new gui.MenuItem({
       label: 'Show Sketch Folder             Ctrl+K',
         modifiers: 'ctrl', key: 'k', click: function(){
           gui.Shell.showItemInFolder(app.projectPath);
@@ -121,7 +121,7 @@ module.exports.setup = function(app) {
 
     view.append(new gui.MenuItem({ type: 'separator' }));
 
-    view.append(new gui.MenuItem({ 
+    view.append(new gui.MenuItem({
       label: 'Reformat                               Ctrl+T',
         modifiers: 'ctrl', key: 't', click: function(){
           app.$.editor.reformat();
@@ -129,13 +129,13 @@ module.exports.setup = function(app) {
 
     view.append(new gui.MenuItem({ type: 'separator' }));
 
-    view.append(new gui.MenuItem({ 
+    view.append(new gui.MenuItem({
       label: 'Toggle Settings Panel           Ctrl+,',
       modifiers: 'ctrl', key: ',', click: function(){
         app.toggleSettingsPane();
     }}))
 
-    view.append(new gui.MenuItem({ 
+    view.append(new gui.MenuItem({
       label: 'Toggle Sidebar                       Ctrl+.',
       modifiers: 'ctrl', key: '.', click: function(){
         app.toggleSidebar();
@@ -143,13 +143,13 @@ module.exports.setup = function(app) {
 
     view.append(new gui.MenuItem({ type: 'separator' }));
 
-    view.append(new gui.MenuItem({ 
+    view.append(new gui.MenuItem({
       label: 'Increase Font Size                 Ctrl+=',
       modifiers: 'ctrl', key: '=', click: function(){
         app.changeFontSize(1);
     }}))
 
-    view.append(new gui.MenuItem({ 
+    view.append(new gui.MenuItem({
       label: 'Decrease Font Size                Ctrl+-',
       modifiers: 'ctrl', key: '-', click: function(){
         app.changeFontSize(-1);
@@ -248,7 +248,7 @@ module.exports.setup = function(app) {
     fileMenu.append(new gui.MenuItem({ label: 'Run',
       modifiers: 'cmd', key: 'r', click: function(){
         app.run();
-        
+
     }}));
 
     view.append(new gui.MenuItem({ label: 'Show Sketch Folder',
@@ -318,6 +318,10 @@ module.exports.setup = function(app) {
     app.showHelp();
   }}));
 
+  help.append(new gui.MenuItem({ label: 'Offline Reference', click: function(){
+    app.offlineRef();
+  }}));
+
   if (isWin || isLinux) {
     menubar.append(new gui.MenuItem({ label: 'File', submenu: fileMenu}));
     menubar.append(new gui.MenuItem({ label: 'View', submenu: view}));
@@ -339,7 +343,7 @@ module.exports.setup = function(app) {
     var edit = new gui.Menu();
 
     var undo = new gui.MenuItem(
-        { label: 'Undo                                       Ctrl+Z', 
+        { label: 'Undo                                       Ctrl+Z',
           modifiers: 'ctrl', key: 'z', click: function(){
         }});
     undo.on('click', function(){
@@ -348,7 +352,7 @@ module.exports.setup = function(app) {
     edit.append(undo);
 
     var redo = new gui.MenuItem(
-        { label: 'Redo                             Ctrl+Shift+Z', 
+        { label: 'Redo                             Ctrl+Shift+Z',
           modifiers: 'shift-ctrl', key: 'z', click: function(){
         }});
     redo.on('click', function(){
@@ -359,7 +363,7 @@ module.exports.setup = function(app) {
     edit.append(new gui.MenuItem({ type: 'separator' }));
 
     var cut = new gui.MenuItem(
-        { label: 'Cut                                          Ctrl+X', 
+        { label: 'Cut                                          Ctrl+X',
           modifiers: 'ctrl', key: 'x', click: function(){
         }});
     cut.on('click', function(){
@@ -368,7 +372,7 @@ module.exports.setup = function(app) {
     edit.append(cut);
 
     var copy = new gui.MenuItem(
-        { label: 'Copy                                       Ctrl+C', 
+        { label: 'Copy                                       Ctrl+C',
           modifiers: 'ctrl', key: 'c', click: function(){
         }});
     copy.on('click', function(){
@@ -377,7 +381,7 @@ module.exports.setup = function(app) {
     edit.append(copy);
 
     var paste = new gui.MenuItem(
-        { label: 'Paste                                       Ctrl+V', 
+        { label: 'Paste                                       Ctrl+V',
           modifiers: 'ctrl', key: 'v', click: function(){
         }});
     paste.on('click', function(){
@@ -386,7 +390,7 @@ module.exports.setup = function(app) {
     edit.append(paste);
 
     var del = new gui.MenuItem(
-        { label: 'Delete                                     Ctrl+D', 
+        { label: 'Delete                                     Ctrl+D',
           modifiers: 'ctrl', key: 'd', click: function(){
         }});
     del.on('click', function(){
@@ -395,7 +399,7 @@ module.exports.setup = function(app) {
     edit.append(del);
 
     var selAll  = new gui.MenuItem(
-        { label: 'Select All                                Ctrl+A', 
+        { label: 'Select All                                Ctrl+A',
           modifiers: 'ctrl', key: 'a', click: function(){
         }});
     selAll.on('click', function(){
@@ -406,7 +410,7 @@ module.exports.setup = function(app) {
     edit.append(new gui.MenuItem({ type: 'separator' }));
 
     var findItem = new gui.MenuItem(
-        { label: 'Find                                         Ctrl+F', 
+        { label: 'Find                                         Ctrl+F',
         modifiers: 'ctrl', key: 'f', click: function(){
         }});
     findItem.on('click', function(){

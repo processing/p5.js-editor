@@ -4,11 +4,12 @@
 
 # How to make a release
 
-First, it's a good idea to download the latest build of p5 and examples:
+First, it's a good idea to download the latest build of p5, examples & offline reference:
 
 ```
 gulp p5
 gulp getExamples
+gulp getOfflineReference
 ```
 
 Update the version number in `package.json` and `public/package.json`

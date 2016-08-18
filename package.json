@@ -34,5 +34,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/antiboredom/jside.git"
+  },
+  "dependencies": {
+    "unzip": "^0.1.11"
   }
 }
