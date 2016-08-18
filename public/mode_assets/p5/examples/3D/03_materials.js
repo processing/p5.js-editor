@@ -19,21 +19,13 @@ function draw(){
   ambientLight(100, 80, 80);
   pointLight(200, 200, 200, locX, locY, 0);
 
+  translate(-200, -250, 0);
   push();
   rotateZ(frameCount * 0.02);
   rotateX(frameCount * 0.02);
   rotateY(frameCount * 0.02);
   texture(img);
   box(80);
-  pop();
-  
-  translate(-200, -250, 0);
-  push();
-  rotateZ(frameCount * 0.02);
-  rotateX(frameCount * 0.02);
-  rotateY(frameCount * 0.02);
-  basicMaterial(250, 0, 0);
-  torus(80, 20, 64, 64);
   pop();
 
   translate(400, 0, 0);
