@@ -1,7 +1,7 @@
 /*
  * @name Background Image
  * @description This example presents the fastest way to load a
- * background image into Processing. To load an image as the background,
+ * background image. To load an image as the background,
  * it must be the same width and height as the program.
  * <p><em><span class="small"> To run this example locally, you will need an
  * image file, and a running <a href="https://github.com/processing/p5.js/wiki/Local-server">

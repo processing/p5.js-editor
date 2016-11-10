@@ -249,7 +249,7 @@ gulp.task('getExamples', function(){
   var headers = {'User-Agent': 'p5.js-editor/0.0.1'};
   // get example source files
   var options = {
-      url: 'https://api.github.com/repos/processing/p5.js-website/contents/examples/examples_src',
+      url: 'https://api.github.com/repos/processing/p5.js-website/contents/src/data/examples/en',
       method: 'GET',
       headers: headers
   };
@@ -264,7 +264,7 @@ gulp.task('getExamples', function(){
     saveDataForCategory(requestParams);
   });
   // get example assets
-  options.url = 'https://api.github.com/repos/processing/p5.js-website/contents/examples/examples/assets';
+  options.url = 'https://api.github.com/repos/processing/p5.js-website/contents/src/data/examples/assets';
   request(options, function (error, response, body) {
     var assetsDest = "./public/mode_assets/p5/example_assets/";
     if (!error && response.statusCode == 200) {

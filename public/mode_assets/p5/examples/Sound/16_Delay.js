@@ -1,5 +1,5 @@
 /**
- *  @name  Delay
+ *  @name Delay
  *  @description
  *  Click the mouse to hear the p5.Delay process a SoundFile.
  *  MouseX controls the p5.Delay Filter Frequency.

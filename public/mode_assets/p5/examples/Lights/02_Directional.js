@@ -1,10 +1,10 @@
 /*
  * @name Directional
  * @frame 710,400
- * @description Move the mouse the change the direction of the light.
+ * @description Move the mouse to change the direction of the light.
  * Directional light comes from one direction and is stronger when hitting a
  * surface squarely and weaker if it hits at a a gentle angle. After hitting a
- * surface, a directional lights scatters in all directions.
+ * surface, a directional light scatters in all directions.
  */
 var radius = 200;
 

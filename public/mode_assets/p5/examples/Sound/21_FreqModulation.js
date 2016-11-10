@@ -33,7 +33,7 @@
  * half or twice that of the carrier. This is the basis for FM Synthesis, developed by John Chowning
  * in the 1960s, which came to revolutionize synthesis in the 1980s and is often used to synthesize
  * brass and bell-like sounds.
- * 
+ *
  * <p>In this example,</p><p>
  * - MouseX controls the modulation depth (the amplitude of the modulator) from -150 to 150.
  * When the modulator's amplitude is set to 0 (in the middle), notice how the modulation
@@ -49,7 +49,7 @@
  * and above it, especially in a harmonic relationship to the carrier frequency (which is 220hz, so
  * try half that, 1/3, 1/4 etc...).
  *
- * <p><em><span class="small">You will need to include the 
+ * <p><em><span class="small">You will need to include the
  * <a href="http://p5js.org/reference/#/libraries/p5.sound">p5.sound library</a>
  * for this example to work in your own project.</em></span></p>
  */
@@ -57,7 +57,7 @@
 var carrier; // this is the oscillator we will hear
 var modulator; // this oscillator will modulate the frequency of the carrier
 
-var analyzer; // we'll use this visualize the waveform 
+var analyzer; // we'll use this visualize the waveform
 
 // the carrier frequency pre-modulation
 var carrierBaseFreq = 220;
@@ -101,7 +101,7 @@ function draw() {
 
   // change the amplitude of the modulator
   // negative amp reverses the sawtooth waveform, and sounds percussive
-  // 
+  //
   var modDepth = map(mouseX, 0, width, modMinDepth, modMaxDepth);
   modulator.amp(modDepth);
 

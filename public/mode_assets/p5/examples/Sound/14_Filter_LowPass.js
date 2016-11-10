@@ -1,5 +1,5 @@
 /**
- *  @name  Filter LowPass
+ *  @name Filter LowPass
  *  @description Apply a p5.LowPass filter to a p5.SoundFile.
  *  Visualize the sound with FFT.
  *  Map mouseX to the the filter's cutoff frequency

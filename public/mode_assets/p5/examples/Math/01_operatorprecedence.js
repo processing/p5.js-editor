@@ -1,5 +1,5 @@
 /*
- * @name Operator Precedence 
+ * @name Operator Precedence
  * @description If you don't explicitly state the order in which an
  * expression is evaluated, they are evaluated based on the operator 
  * precedence. For example, in the statement "4+2*8", the 2 will

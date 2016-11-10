@@ -1,5 +1,5 @@
 /**
- * @name  Record Save Audio
+ * @name Record Save Audio
  * @description Record a sound, play it back and save
  * it as a .wav file to the client's computer.
  * We need three objects: a p5.AudioIn (mic / sound source),

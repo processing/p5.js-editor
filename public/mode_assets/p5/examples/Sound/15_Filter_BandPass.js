@@ -1,5 +1,5 @@
 /**
- *  @name  Filter BandPass
+ *  @name Filter BandPass
  *  @description Apply a p5.BandPass filter to white noise.
  *  Visualize the sound with FFT.
  *  Map mouseX to the bandpass frequency

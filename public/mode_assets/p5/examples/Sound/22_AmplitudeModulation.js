@@ -3,11 +3,11 @@
  * @description <p>Amplitude Modulation involves two oscillators, referred
  * to as the carrier and the modulator, where the modulator controls
  * the carrier's amplitude.</p>
- * 
+ *
  * <p>The carrier is typically set at an audible frequency (i.e. 440 Hz)
  * and connected to master output by default. The carrier.amp is
  * set to zero because we will have the modulator control its amplitude.</p>
- * 
+ *
  * <p>The modulator is disconnected from master output. Instead, it is connected
  * to the amplitude of the Carrier, like this: carrier.amp(modulator).</p>
  *
@@ -15,21 +15,21 @@
  * <p>- MouseX controls the amplitude of the modulator
  * from 0 to 1. When the modulator's amplitude is set to 0, the
  * amplitude modulation has no effect.</p>
- * 
+ *
  * <p>- MouseY controls the frequency of the modulator from 0 to 20hz.
  * This range is lower frequencies than humans can hear, and we perceive the
  * modulation as a rhythm. This range can simulate effects such as Tremolo.
  * Ring Modulation is a type of Amplitude Modulation where the original
  * carrier signal is not present, and often involves modulation at a faster
  * frequency. </p>
- * 
- * <p><em><span class="small">You will need to include the 
+ *
+ * <p><em><span class="small">You will need to include the
  * <a href="http://p5js.org/reference/#/libraries/p5.sound">p5.sound library</a>
  * for this example to work in your own project.</em></span></p>
  */
 var carrier; // this is the oscillator we will hear
 var modulator; // this oscillator will modulate the amplitude of the carrier
-var fft; // we'll visualize the waveform 
+var fft; // we'll visualize the waveform
 
 function setup() {
   createCanvas(800,400);

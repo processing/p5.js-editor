@@ -1,5 +1,5 @@
 /**
- * @name  Convolution Reverb
+ * @name Convolution Reverb
  * @description <p>The p5.Convolver can recreate the sound of actual
  * spaces using convolution. Convolution takes an Impulse Response,
  * (the sound of a room reverberating), and uses that to

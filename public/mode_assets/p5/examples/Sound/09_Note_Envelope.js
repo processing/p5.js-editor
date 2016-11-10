@@ -1,5 +1,5 @@
 /**
- *  @name  Note Envelope
+ *  @name Note Envelope
  *  @description  <p>An Envelope is a series of fades, defined
  *  as time / value pairs. In this example, the envelope
  *  will be used to "play" a note by controlling the output

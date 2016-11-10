@@ -9,8 +9,7 @@
  * <a href="http://p5js.org/reference/#/libraries/p5.sound">p5.sound library</a>
  * and a running <a href="https://github.com/processing/p5.js/wiki/Local-server">local server</a>.</span></em></p>
  */
-var input;
-var analyzer;
+var mic;
 
 function setup() {
   createCanvas(710, 200);

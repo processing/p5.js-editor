@@ -1,15 +1,15 @@
 /**
- * @name  Measuring Amplitude
+ * @name Measuring Amplitude
  * @description <p>Analyze the amplitude of sound with
  * p5.Amplitude.</p>
- * 
+ *
  *  <p><b>Amplitude</b> is the magnitude of vibration. Sound is vibration,
  *  so its amplitude is is closely related to volume / loudness.</p>
- * 
+ *
  * <p>The <code>getLevel()</code> method takes an array
  * of amplitude values collected over a small period of time (1024 samples).
  * Then it returns the <b>Root Mean Square (RMS)</b> of these values.</p>
- * 
+ *
  * <p>The original amplitude values for digital audio are between -1.0 and 1.0.
  * But the RMS will always be positive, because it is squared.
  * And, rather than use instantanous amplitude readings that are sampled at a rate

@@ -1,5 +1,5 @@
 /**
- *  @name  Reverb
+ *  @name Reverb
  *  @description Reverb gives depth and perceived space to a sound. Here,
  *  noise is processed with reverb.
  *
