@@ -15,6 +15,7 @@ var menu = require('./menu');
 var windowstate = require('./windowstate');
 var updater = require('./updater');
 var settings = require('./settings');
+var settingsPane = require('./settings/index');
 var modes = {
   p5: require('./modes/p5/p5-mode')
 };
@@ -545,6 +546,11 @@ var appConfig = {
 
     toggleSidebar: function() {
       this.settings.showSidebar = !this.settings.showSidebar;
+      if (this.settings.showSidebar) {
+        settingsPane.methods.showSidebarOn();
+      } else {
+        settingsPane.methods.showSidebarOff();
+      }
     },
 
     showHelp: function() {

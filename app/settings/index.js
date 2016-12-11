@@ -1,3 +1,4 @@
+var $ = require('jquery');
 module.exports = {
   template: require('./template.html'),
 
@@ -29,6 +30,22 @@ module.exports = {
     },
     increaseFontSize: function(e) {
       this.fontSize++;
+    },
+    showSidebarOn: function() {
+      $('#showSidebarOn + label').addClass('labelSelected');
+      $('#showSidebarOff + label').removeClass('labelSelected');
+      $('#showSidebarOn').prop('checked', true);
+      $('#showSidebarOff + label').click(function(){
+        $('#showSidebarOn + label').removeClass('labelSelected');
+      });
+    },
+    showSidebarOff: function() {
+      $('#showSidebarOff + label').addClass('labelSelected');
+      $('#showSidebarOn + label').removeClass('labelSelected');
+      $('#showSidebarOff').prop('checked', true);
+      $('#showSidebarOn + label').click(function(){
+        $('#showSidebarOff + label').removeClass('labelSelected');
+      });
     }
   }
 
