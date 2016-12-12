@@ -473,11 +473,13 @@ var appConfig = {
 
     // create a new file and save it in the project path
     newFile: function(basepath) {
-      var title = prompt('Choose a file name and type: \nSupported types: ' + this.fileTypes.toString()).replace(/ /g,'');
-      var dotSplit = title.split(".");
-      var re = /(?:\.([^.]+))?$/;
+      var title = prompt('Choose a file name and type: \nSupported types: ' + this.fileTypes.toString());
 
       if (!title) return false;
+
+      title = title.replace(/ /g,'');
+      var dotSplit = title.split(".");
+      var re = /(?:\.([^.]+))?$/;
 
       if (this.fileTypes.indexOf(re.exec(title)[1]) < 0 || (dotSplit.length > 2)){
         window.alert("unsupported/improper file type selected.\nAutomaticallly adding a .js extension");
