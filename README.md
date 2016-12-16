@@ -1,3 +1,6 @@
+# This editor has been deprecated, we will not be making further releases. We are turning our energy toward a web editor which will be released sometime next year. For now we recommend using editors like [Brackets](http://brackets.io), [Atom](https://atom.io/), [Sublime Text](https://www.sublimetext.com/3), or [OpenProcessing](https://www.openprocessing.org/).
+
+
 ## p5.js Editor: a code editor designed for p5.js
 
 The p5.js Editor is a simple coding environment designed for new programmers to get started with p5.js. It's modeled off of the Processing editor, and intended to provide a similar experience.
@@ -22,7 +25,6 @@ To get started, [download the editor here](https://github.com/processing/p5.js-e
 
 ## Development
 
-If you're interested in contributing to the development of the editor, check out our issues page, or email [Sam Lavigne](mailto:lavigne@saaaam.com).
 
 When you're ready to get started, follow the direction below:
 
